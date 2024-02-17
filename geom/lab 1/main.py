@@ -13,18 +13,34 @@ D1 = 100
 D2 = 150
 initial_point = [[0, D1], [D2, 0], [0, -D1], [-D2, 0]]
 SHAPES = []
-COLORS = ['blue', 'red', 'green', 'yellow', 'pink',]
+COLORS = ['blue', 'red', 'green', 'black', 'grey', 'pink',]
+
+def add_xy_elements():
+    xy_frame.pack()
+    # Position the x label in the first column in the second row
+    x_label.grid(column=0, row=1)
+    # Position the x_textbox from the second column to the third column in the second row
+    xo.grid(column=1, row=1, columnspan=2, padx=10)
+    # Position the y label in the 4th colum
+    y_label.grid(column=3, row=1)
+    # Position the y_textbox from the 5th column to the 6th column in the second row
+    yo.grid(column=4, row=1, columnspan=2, padx=10)
+
+def remove_elements():
+    for element in entries:
+        if element.winfo_exists():
+            element.grid_forget()
+        else:
+            continue
+
 def optionmenu_callback(choice):
     global choice_
     choice_ = choice
 
     if choice == "Rotate":
         try:
-            for element in entries:
-                if element.winfo_exists():
-                    element.grid_forget()
-                else:
-                    continue
+            remove_elements()
+
         except UnboundLocalError:
             angle.pack(pady=5)
         else:
@@ -32,9 +48,7 @@ def optionmenu_callback(choice):
 
     elif choice == "Scale":
         try:
-            for element in entries:
-                if element.winfo_exists():
-                    element.pack_forget()
+            remove_elements()
         except:
             scale.pack(pady=5)
         else:
@@ -43,34 +57,13 @@ def optionmenu_callback(choice):
     elif choice == "Move":
         # Removing other elements if they exist
         try:
-            for element in entries:
-                if element.winfo_exists():
-                    element.pack_forget()
-                else:
-                    continue
-
+            remove_elements()
         except UnboundLocalError:
             # Adding the new elements
-            xy_frame.pack()
-            # Position the x label in the first column in the second row
-            x_label.grid(column=0, row=1)
-            # Position the x_textbox from the second column to the third column in the second row
-            xo.grid(column=1, row=1, columnspan=2, padx=10)
-            # Position the y label in the 4th colum
-            y_label.grid(column=3, row=1)
-            # Position the y_textbox from the 5th column to the 6th column in the second row
-            yo.grid(column=4, row=1, columnspan=2, padx=10)
+            add_xy_elements()
         else:
             # Adding the new elements
-            xy_frame.pack()
-            # Position the x label in the first column in the second row
-            x_label.grid(column=0, row=1, padx=0)
-            # Position the x_textbox from the second column to the third column in the second row
-            xo.grid(column=1, row=1, columnspan=2, padx=0)
-            # Position the y label in the 4th colum
-            y_label.grid(column=3, row=1, padx=0)
-            # Position the y_textbox from the 5th column to the 6th column in the second row
-            yo.grid(column=4, row=1, columnspan=2, padx=0)
+            add_xy_elements()
 
 
 def reset():
