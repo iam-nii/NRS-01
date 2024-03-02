@@ -13,7 +13,7 @@ D1 = 100
 D2 = 150
 initial_point = [[0, D1], [D2, 0], [0, -D1], [-D2, 0]]
 SHAPES = []
-COLORS = ['blue', 'red', 'green', 'black', 'grey', 'pink',]
+COLORS = ['blue']
 
 def add_xy_elements():
     xy_frame.pack()
@@ -25,22 +25,17 @@ def add_xy_elements():
     y_label.grid(column=3, row=1)
     # Position the y_textbox from the 5th column to the 6th column in the second row
     yo.grid(column=4, row=1, columnspan=2, padx=10)
-
-def remove_elements():
-    for element in entries:
-        if element.winfo_exists():
-            element.grid_forget()
-        else:
-            continue
-
 def optionmenu_callback(choice):
     global choice_
     choice_ = choice
 
     if choice == "Rotate":
         try:
-            remove_elements()
-
+            for element in entries:
+                if element.winfo_exists():
+                    element.grid_forget()
+                else:
+                    continue
         except UnboundLocalError:
             angle.pack(pady=5)
         else:
@@ -48,7 +43,9 @@ def optionmenu_callback(choice):
 
     elif choice == "Scale":
         try:
-            remove_elements()
+            for element in entries:
+                if element.winfo_exists():
+                    element.pack_forget()
         except:
             scale.pack(pady=5)
         else:
@@ -57,7 +54,12 @@ def optionmenu_callback(choice):
     elif choice == "Move":
         # Removing other elements if they exist
         try:
-            remove_elements()
+            for element in entries:
+                if element.winfo_exists():
+                    element.pack_forget()
+                else:
+                    continue
+
         except UnboundLocalError:
             # Adding the new elements
             add_xy_elements()
