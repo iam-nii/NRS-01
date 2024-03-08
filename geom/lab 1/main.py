@@ -1,141 +1,165 @@
-from tkinter import *
-from tkinter.ttk import *
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from matplotlib.patches import Polygon
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from customtkinter import *
-import math
-
-FONT = ('san-serif',20,'normal')
-# button = customtkinter.CTkButton(app, font=("<family name>", <size in px>, "<optional keywords>"))
-
-choice = 'menu'
+import matplotlib as mpl
+import random
 
 
-def optionmenu_callback(choice_):
-    global choice
-    choice = choice_
+# Initial dimensions
+D1 = 100
+D2 = 150
+initial_point = [[0, D1], [D2, 0], [0, -D1], [-D2, 0]]
+SHAPES = []
+COLORS = ['blue']
 
-    # Moving the figure
-    if choice_.lower() == 'move':
+def add_xy_elements():
+    xy_frame.pack()
+    # Position the x label in the first column in the second row
+    x_label.grid(column=0, row=1)
+    # Position the x_textbox from the second column to the third column in the second row
+    xo.grid(column=1, row=1, columnspan=2, padx=10)
+    # Position the y label in the 4th colum
+    y_label.grid(column=3, row=1)
+    # Position the y_textbox from the 5th column to the 6th column in the second row
+    yo.grid(column=4, row=1, columnspan=2, padx=10)
+def optionmenu_callback(choice):
+    global choice_
+    choice_ = choice
 
+    if choice == "Rotate":
+        try:
+            for element in entries:
+                if element.winfo_exists():
+                    element.grid_forget()
+                else:
+                    continue
+        except UnboundLocalError:
+            angle.pack(pady=5)
+        else:
+            angle.pack(pady=5)
+
+    elif choice == "Scale":
+        try:
+            for element in entries:
+                if element.winfo_exists():
+                    element.pack_forget()
+        except:
+            scale.pack(pady=5)
+        else:
+            scale.pack(pady=5)
+
+    elif choice == "Move":
         # Removing other elements if they exist
         try:
             for element in entries:
                 if element.winfo_exists():
-                    element.grid_forget()
+                    element.pack_forget()
                 else:
                     continue
 
         except UnboundLocalError:
             # Adding the new elements
-
-            # Position the x label in the first column in the second row
-            x_label.grid(column=0, row=1)
-            # Position the x_textbox from the second column to the third column in the second row
-            xo.grid(column=1, row=1,columnspan=2)
-            # Position the y label in the 4th colum
-            y_label.grid(column=3, row=1)
-            # Position the y_textbox from the 5th column to the 6th column in the second row
-            yo.grid(column=4, row=1, columnspan=2)
+            add_xy_elements()
         else:
             # Adding the new elements
-            # Position the x label in the first column in the second row
-            x_label.grid(column=0, row=1, padx=0)
-            # Position the x_textbox from the second column to the third column in the second row
-            xo.grid(column=1, row=1, columnspan=2, padx=0)
-            # Position the y label in the 4th colum
-            y_label.grid(column=3, row=1, padx=0)
-            # Position the y_textbox from the 5th column to the 6th column in the second row
-            yo.grid(column=4, row=1, columnspan=2,padx=0)
+            add_xy_elements()
 
-    # Rotating the figure
 
-    elif choice_.lower() == 'rotate':
+def reset():
+    # Removing the shapes so that a new one can be drawn
+    for shape in SHAPES[:]:
+        popped = SHAPES.pop(SHAPES.index(shape))
         try:
-            for element in entries:
-                if element.winfo_exists():
-                    element.grid_forget()
-                else:
-                    continue
-        except UnboundLocalError:
-            angle.grid(row=1, pady=5)
-        else:
-            angle.grid(row=1, pady=5)
-
-    # Scaling the element
-    elif choice_.lower() == 'scale':
-        try:
-            for element in entries:
-                if element.winfo_exists():
-                    element.grid_forget()
-        except:
-
-            scale.grid(row=1, pady=5)
-        else:
-            scale.grid(row=1, pady=5)
-
-
-def draw_rhombus(x ,y , scale = 1,angle = 0):
-    # Clear previous drawing
-    canvas.delete("all")
-
-    # Length of the diagonals
-    D1 = 100 # First diagonal
-    D2 = 200 # Second diagonal
-
-    d1 = D1 * scale
-    d2 = D2 * scale
-
-    # Calculate the coordinates of the rhombus based on the new center
-    points = [
-        x + d2 / 2 * math.cos(math.radians(angle)), y - d1 / 2 * math.sin(math.radians(angle)),  # Top
-        x + d2 / 2 * math.cos(math.radians(angle + 90)), y - d1 / 2 * math.sin(math.radians(angle + 90)),  # Right
-        x + d2 / 2 * math.cos(math.radians(angle + 180)), y - d1 / 2 * math.sin(math.radians(angle + 180)),  # Bottom
-        x + d2 / 2 * math.cos(math.radians(angle + 270)), y - d1 / 2 * math.sin(math.radians(angle + 270))  # Left
-    ]
-
-    # Draw the rhombus
-    canvas.create_polygon(points, outline='black', fill='lightblue')
-
+            popped.remove()
+        except ValueError:
+            continue
+    print(SHAPES)
 def go_callback(choice):
-    global x0, y0
     if choice == 'menu':
-        warning.grid(column=0, row=1, pady=5)
+        warning.pack(pady=5)
+    elif choice == 'move':
+
+        reset()
+
+        new_x = float(options['move']['xo'].get())
+        new_y = float(options['move']['yo'].get())
+
+
+        # Creating the new rhombus with the same dimensions
+        new_coordinates = [[point[0] + new_x,point[1] + new_y] for point in initial_point]
+
+        # Drawing the new rhombus with the new coordinates
+        new_poly = Polygon(new_coordinates, closed=True,color=COLORS[random.randint(0, len(COLORS)-1)])
+        SHAPES.append(new_poly)
+        ax.add_patch(new_poly)
+
+        fig.canvas.draw()
+
     else:
-        if choice == 'move':
-            canvas.delete('all')
+        option_value = float(options[choice].get())
+        if choice == 'rotate':
 
-            new_x = float(options['move']['xo'].get())
-            new_y = float(options['move']['yo'].get())
-            draw_rhombus(x=x0+new_x,y=y0-new_y)
+            reset()
 
-        else:
-            option_value = float(options[choice].get())
-            if choice == 'rotate':
-                draw_rhombus(x = x0,y = y0, angle=option_value)
-            if choice == 'scale':
+            # Creating the new rhombus with the same dimensions
+            new_rhombus = Polygon(initial_point, closed=True,color=COLORS[random.randint(0,len(COLORS)-1)])
+            SHAPES.append(new_rhombus)
+
+            # Creating the affine transformation based on the given angle
+
+            # Setting the transformation to the new rhombus
+            new_rhombus.set_transform(t2)
+
+            # Adding the new rhombus to the axes
+            ax.add_patch(new_rhombus)
+
+        elif choice == 'scale':
+            reset()
+            # Creating the new rhombus with the same dimensions
+            new_rhombus = Polygon(initial_point, closed=True, color=COLORS[random.randint(0,len(COLORS)-1)])
+            SHAPES.append(new_rhombus)
+
+            # Creating the affine transformation based on the given scale
+            try:
                 if option_value < 0:
-                    value = 1/option_value
-                    draw_rhombus(x = x0,y = y0, scale=value)
-                else:
-                    draw_rhombus(x=x0, y=y0, scale=option_value)
+                    t2 = mpl.transforms.Affine2D().scale(1/option_value) + ax.transData
+                elif option_value > 0:
+                    t2 = mpl.transforms.Affine2D().scale(option_value) + ax.transData
+
+                # Setting the transformation to the new rhombus
+                new_rhombus.set_transform(t2)
+            except:
+                pass
+            finally:
+                # Adding the new rhombus to the axes
+                ax.add_patch(new_rhombus)
+
+        fig.canvas.draw()
 
 
-# Window settings
-# app = TK()
+
+
+
+# Create a Tkinter application
 app = CTk()
-app.title('Создание изображений  плоских геометрических объектов')
-app.geometry("900x600")
+app.geometry("800x800")
 
+choice_ = 'Menu'
 
 # Variable elements
-x_label = CTkLabel(app,text="X: ")
-y_label = CTkLabel(app,text="Y: ")
-xo = CTkEntry(app, placeholder_text='New Center (x)')
-yo = CTkEntry(app, placeholder_text='New Center (y)')
+xy_frame = CTkFrame(app)
+x_label = CTkLabel(master=xy_frame,text="X: ")
+y_label = CTkLabel(master=xy_frame,text="Y: ")
+xo = CTkEntry(master=xy_frame, placeholder_text='New Center (x)')
+yo = CTkEntry(master=xy_frame, placeholder_text='New Center (y)')
 angle = CTkEntry(app, placeholder_text='Угол поворота')
 scale = CTkEntry(app, placeholder_text='Маштаб')
 warning = CTkLabel(app, text='Select an operation',text_color='red',font=('Arial',22,'italic'))
 
-entries = [xo, yo,x_label,y_label, angle, scale, warning]
+entries = [xo, yo,x_label,y_label, angle, scale, warning,xy_frame]
 options = {
     'move': {
         'xo':entries[0],
@@ -145,46 +169,40 @@ options = {
     'scale': entries[5],
 }
 
-# Menu
-title = StringVar(value="Menu")
+# Add options to the menu
+optionmenu_var = StringVar(value="Menu")
+optionmenu = CTkOptionMenu(app,values=["Rotate", "Scale", "Move"],
+                                         command=optionmenu_callback,
+                                         variable=optionmenu_var)
+optionmenu.pack()
 
-optionmenu = CTkOptionMenu(app, values=["Rotate", "Move", "Scale"],
-                                font=FONT, variable=title, dropdown_font=FONT,
-                                command=optionmenu_callback,width=300)
-
-
-# Position the menu from the first column to the third in the first row
-optionmenu.grid(row=0, pady=3,column=0, columnspan=3)
-# Canvas
-canvas = CTkCanvas(app)
-canvas.config(width=1800,height=900)
-
-# Size of the canvas
-canvas_width = canvas.winfo_reqwidth()
-canvas_height = canvas.winfo_reqheight()
-
-# Calculate the center of the canvas
-x0 = canvas_width / 2
-y0 = canvas_height / 2
+fig = plt.figure()
+ax = fig.add_subplot(111)
+fig, ax = plt.subplots(figsize=(20, 15))
+polygon = Polygon(initial_point, closed=True,color=COLORS[random.randint(0, len(COLORS)-1)])
+# Test
+# polygon = Polygon([[90.0, 190.0], [240.0, 90.0], [90.0, -10.0], [-60.0, 90.0]], closed=True,color=COLORS[random.randint(0, len(COLORS)-1)])
+SHAPES.append(polygon)
+# r1 = patches.Rectangle((0,0), 20, 40, color="blue", alpha=0.50)
+# r2 = patches.Rectangle((0,0), 20, 40, color="red",  alpha=0.50)
 
 
-# Calculate the corner points of the rhombus
-# points = [
-#     x0, y0 - d1/2,  # Top
-#     x0 + d2/2, y0,  # Right
-#     x0, y0 + d1/2,  # Bottom
-#     x0 - d2/2, y0    # Left
-# ]
-canvas.grid(column=0,row=2, padx=70,pady=80, columnspan=8)
 
-# Drawing the rhombus
-draw_rhombus(x0,y0)
+# ax.add_patch(r1)
+# ax.add_patch(r2)
+ax.add_patch(polygon)
 
-# rhombus = canvas.create_polygon(points,outline="black", fill="lightblue")
+ax.set_aspect('equal')
+canvas = FigureCanvasTkAgg(fig, master=app)
+canvas.get_tk_widget().pack(pady=10)
 
+go = CTkButton(app,command=lambda: go_callback(choice_.lower()),text='Go')
+go.pack(side=RIGHT, padx=50)
 
-# Go button
-button = CTkButton(app, text="Go", command=lambda :go_callback(choice.lower()))
-button.grid(padx=5, pady=2,column=3)
+plt.xlim(-500, 500)
+plt.ylim(-500, 500)
 
+plt.grid(True)
+
+# plt.show()
 app.mainloop()
