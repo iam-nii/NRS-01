@@ -1,7 +1,8 @@
 from optimization_methods.windows.root import App
 import customtkinter as c
 import tkinter
-from optimization_methods.windows.utils import User,Database
+from optimization_methods.windows.utils import User,Database,EncDecPass
+from sqlalchemy import select
 
 ROLE = ''
 
@@ -9,7 +10,7 @@ class Login(App):
     def __init__(self):
         super().__init__()
         width = 500
-        height = 400
+        height = 500
         x = (self.winfo_screenwidth() // 2) - (width // 2)
         y = (self.winfo_screenheight() // 2) - (height // 2)
 
@@ -97,7 +98,12 @@ class Login(App):
         print("user interface")
 
     def login_button(self):
-        print('Login according to the user class')
+        database = Database()
+
+        user = select(User).where(User.username == self.username.get())
+        # print(user)
+        database.select_user(user)
+
 
     def signup_command(self, event):
         self.destroy()

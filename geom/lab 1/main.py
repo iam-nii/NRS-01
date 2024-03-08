@@ -109,7 +109,7 @@ def go_callback(choice):
             SHAPES.append(new_rhombus)
 
             # Creating the affine transformation based on the given angle
-            t2 = mpl.transforms.Affine2D().rotate_deg(option_value) + ax.transData
+
             # Setting the transformation to the new rhombus
             new_rhombus.set_transform(t2)
 
