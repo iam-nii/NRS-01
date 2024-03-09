@@ -45,7 +45,7 @@ class User(Base):
 class Database():
     def __init__(self):
         # Creating the database file
-        self.engine = create_engine("sqlite:///optimization.db", echo=True)
+        self.engine = create_engine("sqlite:///chemresearch.db", echo=True)
 
         # Take all the classes that extends from base and create the tables
         Base.metadata.create_all(bind=self.engine)

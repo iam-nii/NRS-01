@@ -3,6 +3,9 @@ import tkinter
 from utilities import User,Database,EncDecPass
 from sqlalchemy import select
 
+width = 500
+height = 500
+
 class App(c.CTk):
     def __init__(self):
         super().__init__()
@@ -15,8 +18,7 @@ ROLE = ''
 class Login(App):
     def __init__(self):
         super().__init__()
-        width = 500
-        height = 500
+
         x = (self.winfo_screenwidth() // 2) - (width // 2)
         y = (self.winfo_screenheight() // 2) - (height // 2)
 
@@ -75,7 +77,6 @@ class Login(App):
         self.login_button = c.CTkButton(self, text='LOGIN', command=self.login_button, width=200, fg_color='#17203D',
                                         corner_radius=15)
         self.login_button.grid(row=4, pady=5)
-        print(self.login_button.cget('corner_radius'))
 
         # No account
         self.no_account_frame = c.CTkFrame(self, fg_color='#232E33', width=200, height=30)
@@ -93,8 +94,6 @@ class Login(App):
     def user_select_event(self):
         print("admin interface")
 
-    def user_event(self):
-        print("user interface")
 
     def login_button(self):
         database = Database()
@@ -113,78 +112,66 @@ class Login(App):
 class SignUp(App):
     def __init__(self):
         super().__init__()
-        width = 500
-        height = 400
         x = (self.winfo_screenwidth() // 2) - (width // 2)
         y = (self.winfo_screenheight() // 2) - (height // 2)
 
         self.geometry("{}x{}+{}+{}".format(width, height, x, y))
-        self.title("Sign up")
-        self.configure(fg_color='#466AE2', pady=80, padx=0)
+        self.title("Login")
+        self.configure(fg_color='#232E33', pady=80, padx=0)
 
         # Login label
-        self.login = c.CTkLabel(self, text="Sign Up", font=('Cooper Black', 30))
+        self.login = c.CTkLabel(self, text="Sign up", font=('Bell MT', 60))
         self.login.grid(row=0, pady=10)
 
         # Username
         # Frame
-        self.username_frame = c.CTkFrame(self, fg_color='#466AE2')
+        self.username_frame = c.CTkFrame(self, fg_color='#232E33')
         self.username_frame.grid_rowconfigure(2, weight=0)
         self.username_frame.grid(row=1, pady=10)
 
         # Label
-        self.username_label = c.CTkLabel(self.username_frame, text='Username', anchor="w", justify="left",
-                                         width=200, height=30)
-        self.username_label.grid(row=0)
+        # self.username_label = c.CTkLabel(self.username_frame, text='Username', anchor="w", justify="left",
+        #                                  width=200, height=30)
+        # self.username_label.grid(row=0)
 
         # Entry
-        self.username = c.CTkEntry(self.username_frame, placeholder_text='Enter you username',
-                                   placeholder_text_color='#4A70EF', fg_color='#2047C9', border_width=0,
-                                   width=200, height=30)
+        self.username = c.CTkEntry(self.username_frame, placeholder_text='Username', text_color='#000000',
+                                   placeholder_text_color='#000000', fg_color='#D9D9D9', border_width=0,
+                                   width=200, height=40, corner_radius=30)
         self.username.grid(row=1)
 
         # Password
         # Frame
-        self.password_frame = c.CTkFrame(self, fg_color='#466AE2')
+        self.password_frame = c.CTkFrame(self, fg_color='#232E33')
         self.password_frame.grid_rowconfigure(2, weight=0)
-        self.password_frame.grid(row=2, pady=10)
-
-        # Label
-        self.password_label = c.CTkLabel(self.password_frame, text='Password', anchor="w", justify="left",
-                                         width=200, height=30)
-        self.password_label.grid(row=0)
+        self.password_frame.grid(row=2, pady=15)
 
         # Entry
-        self.password = c.CTkEntry(self.password_frame, placeholder_text='Enter your password', show='*',
-                                   placeholder_text_color='#4A70EF', fg_color='#2047C9', border_width=0,
-                                   width=200, height=30)
+        self.password = c.CTkEntry(self.password_frame, placeholder_text='Password', show='*', text_color='#000000',
+                                   placeholder_text_color='#000000', fg_color='#D9D9D9', border_width=0,
+                                   width=200, height=40, corner_radius=30)
         self.password.grid(row=1)
 
         # Admin / user frame
-        self.frame = c.CTkFrame(self, fg_color='#466AE2', width=200)
+        self.frame = c.CTkFrame(self, fg_color='#232E33')
         self.frame.grid_rowconfigure(2, weight=1)
-        self.frame.grid(row=3, pady=10)
+        self.frame.grid(row=3)
 
         radio_var = tkinter.IntVar(value=0)
-
         # Admin radio
-        self.admin_radio = c.CTkRadioButton(self.frame, text="Администратор", command=self.admin_event,
-                                            variable=radio_var, value=1)
-        self.admin_radio.grid(column=0, row=0, padx=5)
-
-        # user radio
-        self.user_radio = c.CTkRadioButton(self.frame, text='Исследователь', command=self.user_event,
-                                           variable=radio_var, value=2)
-        self.user_radio.grid(column=0, row=1)
+        self.combobox_var = c.StringVar(value="role")
+        self.combobox = c.CTkComboBox(self.frame, values=["admin", "user"], corner_radius=30, fg_color='#D9D9D9',
+                                      command=self.user_select_event, variable=self.combobox_var, width=200,
+                                      text_color='#000000', state='readonly', height=40, dropdown_font=('', 20))
+        self.combobox.grid(column=0, row=0, pady=10)
 
         # Login button
-        self.login_button = c.CTkButton(self, text='SIGN UP', command=self.signup_button_click, width=200, fg_color='#17203D',
+        self.login_button = c.CTkButton(self, text='LOGIN', command=self.signup_button_click, width=200, fg_color='#17203D',
                                         corner_radius=15)
         self.login_button.grid(row=4, pady=5)
-        print(self.login_button.cget('corner_radius'))
 
         # No account
-        self.no_account_frame = c.CTkFrame(self, fg_color='#466AE2', width=200, height=30)
+        self.no_account_frame = c.CTkFrame(self, fg_color='#232E33', width=200, height=30)
         self.no_account_frame.grid_columnconfigure(2, weight=0)
         self.no_account_frame.grid(row=5)
 
@@ -193,16 +180,11 @@ class SignUp(App):
         self.no_account_label.grid(column=0, row=0, padx=5)
 
         self.signup = c.CTkLabel(self.no_account_frame, text='Login', text_color='#3DB3FF', cursor='mouse')
-        self.signup.bind("<Button-1>", self.signup_command)
+        self.signup.bind("<Button-1>", self.login_command)
         self.signup.grid(column=1, row=0)
 
-    def admin_event(self):
-        global ROLE
-        ROLE = 'admin'
-
-    def user_event(self):
-        global ROLE
-        ROLE = 'analyst'
+    def user_select_event(self):
+        print("admin interface")
 
     def signup_button_click(self):
         global ROLE
@@ -224,7 +206,7 @@ class SignUp(App):
 
 
 
-    def signup_command(self, event):
+    def login_command(self, event):
         self.destroy()
         login = Login()
         login.mainloop()
