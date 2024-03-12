@@ -9,7 +9,7 @@ height = 500
 class App(c.CTk):
     def __init__(self):
         super().__init__()
-        self.grid_rowconfigure(6, weight=1)  # configure grid system
+        self.grid_rowconfigure(7, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
 
 
@@ -65,7 +65,7 @@ class Login(App):
         self.frame.grid(row=3)
 
         radio_var = tkinter.IntVar(value=0)
-        # Admin radio
+        # Combobox
         self.combobox_var = c.StringVar(value="role")
         self.combobox = c.CTkComboBox(self.frame, values=["admin", "user"], corner_radius=30,fg_color='#D9D9D9',
                                              command=self.user_select_event, variable=self.combobox_var, width=200,
@@ -78,10 +78,13 @@ class Login(App):
                                         corner_radius=15)
         self.login_button.grid(row=4, pady=5)
 
+        # Invalid user
+        self.label = c.CTkLabel(self, text='User not found !', text_color='red')
+
         # No account
         self.no_account_frame = c.CTkFrame(self, fg_color='#232E33', width=200, height=30)
         self.no_account_frame.grid_columnconfigure(2, weight=0)
-        self.no_account_frame.grid(row=5)
+        self.no_account_frame.grid(row=6)
 
         # No account label
         self.no_account_label = c.CTkLabel(self.no_account_frame, text='Dont have an account?')
@@ -91,8 +94,8 @@ class Login(App):
         self.signup.bind("<Button-1>", self.signup_command)
         self.signup.grid(column=1, row=0)
 
-    def user_select_event(self):
-        print("admin interface")
+    def user_select_event(self, selection):
+        print(selection)
 
 
     def login_button(self):
@@ -100,7 +103,18 @@ class Login(App):
 
         user = select(User).where(User.username == self.username.get())
         # print(user)
-        database.select_user(user)
+        # result = database.select_user(user)
+
+        result = database.select_user(User,self.username.get())
+        print(f'User password: {result.password}')
+
+        decryptor = EncDecPass()
+        user_password = decryptor.decrypt_password(encoded_password=result.password)
+        print(f'Decrypted password: {user_password}')
+        if result == None:
+            self.label.grid(row=5)
+        else:
+            print('Login success')
 
 
     def signup_command(self, event):
@@ -158,7 +172,8 @@ class SignUp(App):
         self.frame.grid(row=3)
 
         radio_var = tkinter.IntVar(value=0)
-        # Admin radio
+
+        # combobox - User role
         self.combobox_var = c.StringVar(value="role")
         self.combobox = c.CTkComboBox(self.frame, values=["admin", "user"], corner_radius=30, fg_color='#D9D9D9',
                                       command=self.user_select_event, variable=self.combobox_var, width=200,
@@ -166,7 +181,7 @@ class SignUp(App):
         self.combobox.grid(column=0, row=0, pady=10)
 
         # Login button
-        self.login_button = c.CTkButton(self, text='LOGIN', command=self.signup_button_click, width=200, fg_color='#17203D',
+        self.login_button = c.CTkButton(self, text='SIGN UP', command=self.signup_button_click, width=200, fg_color='#17203D',
                                         corner_radius=15)
         self.login_button.grid(row=4, pady=5)
 
@@ -183,17 +198,19 @@ class SignUp(App):
         self.signup.bind("<Button-1>", self.login_command)
         self.signup.grid(column=1, row=0)
 
-    def user_select_event(self):
-        print("admin interface")
+    def user_select_event(self, role):
+        print(role)
+        global ROLE
+        ROLE = role
 
     def signup_button_click(self):
         global ROLE
         print('Sign up according to the user class')
         username = self.username.get()
         password = self.password.get()
-        role = ROLE
-        print((username,password,role))
-        user = User(username,password,role)
+        # role = ROLE
+        print((username,password,ROLE))
+        user = User(username,password,ROLE)
         database = Database()
         try:
             database.session.add(user)

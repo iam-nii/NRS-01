@@ -21,7 +21,7 @@ class EncDecPass():
         return self.fernet.encrypt(password.encode())
 
     def decrypt_password(self, encoded_password):
-        return self.fernet.decrypt(self.encoded_password).decode()
+        return self.fernet.decrypt(encoded_password.decode())
 
 Base = declarative_base()
 
@@ -53,10 +53,10 @@ class Database():
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
 
-    def select_user(self,user:User):
+    def select_user(self,user:User,username):
 
-        row = self.session.execute(select(User)).first()
-        print(row)
+        row = self.session.query(user).filter(user.username == username).first()
+        return row
 
 
 
