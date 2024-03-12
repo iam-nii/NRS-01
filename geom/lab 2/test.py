@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import tkinter as tk
+import customtkinter as ctk
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
 
 def generate_cube():
     fig = plt.figure()
@@ -32,6 +31,7 @@ def generate_cube():
     ]]
 
     ax.add_collection3d(Poly3DCollection(faces, facecolors='darkgrey', linewidths=0.3, edgecolors='k', alpha=0.6))
+    ax.set_aspect('equal')
 
     ax.set_xlim([-3, 3])
     ax.set_ylim([-3, 3])
@@ -39,17 +39,24 @@ def generate_cube():
 
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas.draw()
-    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    # canvas.get_tk_widget().pack(side=ctk.TOP, fill=ctk.BOTH, expand=0)
+    canvas.get_tk_widget().grid(row=1,column=1)
 
 
-# Создание главного окна tkinter
-window = tk.Tk()
+def optionmenu_callback(choice):
+    print(choice)
+
+
+window = ctk.CTk()
 window.geometry("800x600")
-window.title("Отображение октаэдра с помощью Matplotlib")
+window.title("2 Лаба - Вариант 2")
+window.grid_rowconfigure(4, weight=1)
+window.grid_columnconfigure(3, weight=1)
 
-# Создание кнопки для отображения октаэдра
-btn_generate = tk.Button(window, text="Отобразить октаэдр", command=generate_cube)
-btn_generate.pack()
+optionmenu_var = ctk.StringVar(value="Menu")
+optionmenu = ctk.CTkOptionMenu(window,values=["Rotate", "Scale", "Move"],
+                                         command=optionmenu_callback, fg_color='#6B6A65')
+optionmenu.grid(row=0,column=1,pady=5, padx=20)
 
-# Запуск главного цикла
+
 window.mainloop()
