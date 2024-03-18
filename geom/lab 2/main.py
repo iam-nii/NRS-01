@@ -40,8 +40,6 @@ def add_xy_elements():
 
 def generate_cube(faces=faces):
     global axis, fig, ax
-    # fig = plt.figure(figsize=(20, 15))
-    # ax = fig.add_subplot(111, projection='3d')
     ax.set_box_aspect([2, 2, 3])
 
     # # Set the initial viewpoint
