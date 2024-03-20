@@ -25,6 +25,7 @@ def add_xy_elements():
     y_label.grid(column=3, row=1)
     # Position the y_textbox from the 5th column to the 6th column in the second row
     yo.grid(column=4, row=1, columnspan=2, padx=10)
+
 def optionmenu_callback(choice):
     global choice_
     choice_ = choice
