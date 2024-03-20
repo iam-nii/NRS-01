@@ -1,10 +1,11 @@
 import customtkinter as c
 import tkinter
-from utilities import User,Database,EncDecPass
+from utilities import User, Database, EncDecPass
 from sqlalchemy import select
 
 width = 500
 height = 500
+
 
 class App(c.CTk):
     def __init__(self):
@@ -14,6 +15,7 @@ class App(c.CTk):
 
 
 ROLE = ''
+
 
 class Login(App):
     def __init__(self):
@@ -42,7 +44,7 @@ class Login(App):
         # self.username_label.grid(row=0)
 
         # Entry
-        self.username = c.CTkEntry(self.username_frame, placeholder_text='Логин',text_color='#000000',
+        self.username = c.CTkEntry(self.username_frame, placeholder_text='Логин', text_color='#000000',
                                    placeholder_text_color='#000000', fg_color='#D9D9D9', border_width=0,
                                    width=200, height=40, corner_radius=30)
         self.username.grid(row=1)
@@ -67,11 +69,11 @@ class Login(App):
         radio_var = tkinter.IntVar(value=0)
         # Combobox
         self.combobox_var = c.StringVar(value="Роль")
-        self.combobox = c.CTkComboBox(self.frame, values=["Администратор", "Исследователь"], corner_radius=30,fg_color='#D9D9D9',
-                                             command=self.user_select_event, variable=self.combobox_var, width=200,
-                                                  text_color='#000000',state='readonly',height=40,dropdown_font=('',20))
+        self.combobox = c.CTkComboBox(self.frame, values=["Администратор", "Исследователь"], corner_radius=30,
+                                      fg_color='#D9D9D9',
+                                      command=self.user_select_event, variable=self.combobox_var, width=200,
+                                      text_color='#000000', state='readonly', height=40, dropdown_font=('', 20))
         self.combobox.grid(column=0, row=0, pady=10)
-
 
         # Login button
         self.login_button = c.CTkButton(self, text='Войти', command=self.login_button, width=200, fg_color='#17203D',
@@ -97,25 +99,30 @@ class Login(App):
     def user_select_event(self, selection):
         print(selection)
 
-
     def login_button(self):
         database = Database()
 
-        user = select(User).where(User.username == self.username.get())
+        # user = select(User).where(User.username == self.username.get())
         # print(user)
         # result = database.select_user(user)
 
-        result = database.select_user(User,self.username.get())
-        print(f'User password: {result.password}')
+        username = self.username.get()
+        password = self.password.get()
+        role = self.combobox.get()
+        user = User(username,password,role)
 
-        decryptor = EncDecPass()
-        user_password = decryptor.decrypt_password(encoded_password=result.password)
-        print(f'Decrypted password: {user_password}')
-        if result == None:
-            self.label.grid(row=5)
-        else:
+        result = database.select_user(user, self.username.get())
+        print(result)
+        if result is not None:
+            print(f'User password: {result.password}')
+            decryptor = EncDecPass()
+            user_password = decryptor.decrypt_password(encoded_password=result.password)
+            print(f'Decrypted password: {user_password}')
+
             print('Login success')
 
+        else :
+            self.label.grid(row=5)
 
     def signup_command(self, event):
         try:
@@ -125,7 +132,6 @@ class Login(App):
         finally:
             signup = SignUp()
             signup.mainloop()
-
 
 
 class SignUp(App):
@@ -180,13 +186,15 @@ class SignUp(App):
 
         # combobox - User role
         self.combobox_var = c.StringVar(value="Роль")
-        self.combobox = c.CTkComboBox(self.frame, values=["Администратор", "Исследователь"], corner_radius=30, fg_color='#D9D9D9',
+        self.combobox = c.CTkComboBox(self.frame, values=["Администратор", "Исследователь"], corner_radius=30,
+                                      fg_color='#D9D9D9',
                                       command=self.user_select_event, variable=self.combobox_var, width=200,
                                       text_color='#000000', state='readonly', height=40, dropdown_font=('', 20))
         self.combobox.grid(column=0, row=0, pady=10)
 
         # Login button
-        self.login_button = c.CTkButton(self, text='Зарегистрироваться', command=self.signup_button_click, width=200, fg_color='#17203D',
+        self.login_button = c.CTkButton(self, text='Зарегистрироваться', command=self.signup_button_click, width=200,
+                                        fg_color='#17203D',
                                         corner_radius=15)
         self.login_button.grid(row=4, pady=5)
 
@@ -214,21 +222,21 @@ class SignUp(App):
         username = self.username.get()
         password = self.password.get()
         # role = ROLE
-        print((username,password,ROLE))
-        user = User(username,password,ROLE)
+        print((username, password, ROLE))
+        user = User(username, password, ROLE)
         database = Database()
         try:
             database.session.add(user)
             database.session.commit()
             print('User successfully added...')
-            signup_command(True)
+            self.signup_command(True)
         except Exception:
             print(Exception)
-
-
-
 
     def login_command(self, event):
         self.destroy()
         login = Login()
         login.mainloop()
+
+    def signup_command(self, event: bool):
+        pass
