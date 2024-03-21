@@ -24,7 +24,7 @@ faces = [[vertices[i] for i in face] for face in [
     [1, 2, 5],
     [1, 3, 5]
 ]]
-axis = []
+rotation_axis = 'x'
 
 def add_xy_elements():
     xy_frame.grid(row=3, column=1, pady=5)
@@ -39,14 +39,14 @@ def add_xy_elements():
 
 
 def generate_cube(faces=faces):
-    global axis, fig, ax
+    global fig, ax
     ax.set_box_aspect([2, 2, 3])
 
     # # Set the initial viewpoint
     # ax.view_init(elev=0, azim=0)
 
     ax.add_collection3d(Poly3DCollection(faces, antialiased=True, facecolors='darkgrey',
-                                         linewidths=0.2, edgecolors='k', alpha=0.6))
+                                         linewidths=0.2, edgecolors='black', alpha=1.0))
     ax.set_aspect('equal')
 
     ax.set_xlim([-5, 5])
@@ -74,12 +74,29 @@ def update_plot(scale=1, x_shift=0, y_shift=0, z_shift=0, rotation_angle=0):
         [v[0] + x_shift, v[1] + y_shift, v[2] + z_shift] for v in vertices_scaled
     ])
 
-    # Rotate the vertices around the z-axis
-    rotation_matrix = np.array([
-        [np.cos(rotation_angle), -np.sin(rotation_angle), 0],
-        [np.sin(rotation_angle), np.cos(rotation_angle), 0],
-        [0, 0, 1]
-    ])
+    rotation_axis = rotation_var.get()
+
+    if rotation_axis == 'x':
+        # Rotate the vertices around the x-axis
+        rotation_matrix = np.array([
+            [1, 0, 0],
+            [0, np.cos(rotation_angle), -np.sin(rotation_angle)],
+            [0, np.sin(rotation_angle), np.cos(rotation_angle)]
+        ])
+    else:
+        # Rotate the vertices around the y-axis
+        rotation_matrix = np.array([
+            [np.cos(rotation_angle), 0, np.sin(rotation_angle)],
+            [0, 1, 0],
+            [-np.sin(rotation_angle), 0, np.cos(rotation_angle)]
+        ])
+
+    # # Rotate the vertices around the z-axis
+    # rotation_matrix = np.array([
+    #     [np.cos(rotation_angle), -np.sin(rotation_angle), 0],
+    #     [np.sin(rotation_angle), np.cos(rotation_angle), 0],
+    #     [0, 0, 1]
+    # ])
     vertices_rotated = np.dot(vertices_shifted, rotation_matrix)
 
     # Clear the previous plot
@@ -108,7 +125,7 @@ def update_plot(scale=1, x_shift=0, y_shift=0, z_shift=0, rotation_angle=0):
 
     # Plot the updated octahedron
     ax.add_collection3d(Poly3DCollection(faces, antialiased=True, facecolors='darkgrey',
-                                         linewidths=0.2, edgecolors='k', alpha=0.6))
+                                         linewidths=0.2, edgecolors='black', alpha=1.0))
     canvas.draw()
 
 
@@ -118,20 +135,20 @@ def optionmenu_callback(choice):
 
     if choice == "Rotate":
         try:
-            print("Before")
-
             for element in entries:
-                print(element.winfo_exists())
                 if element.winfo_exists():
                     element.grid_forget()
                 else:
                     continue
-            print("After")
-            print(entries)
         except UnboundLocalError:
             angle.grid(row=3, column=1, pady=5)
+            go.grid(row=4, column=2, pady=20)
+            rotation_frame.grid(row=3,column=2,pady=5)
+
         else:
             angle.grid(row=3, column=1, pady=5)
+            go.grid(row=4, column=2, pady=20)
+            rotation_frame.grid(row=3, column=2, pady=5)
 
     elif choice == "Scale":
         try:
@@ -140,8 +157,10 @@ def optionmenu_callback(choice):
                     element.grid_forget()
         except:
             print('exception')
+            go.grid(row=3, column=2, pady=20)
             scale.grid(row=3, column=1, pady=5)
         else:
+            go.grid(row=3, column=2, pady=20)
             scale.grid(row=3, column=1, pady=5)
 
     elif choice == "Move":
@@ -155,6 +174,9 @@ def optionmenu_callback(choice):
 
         except UnboundLocalError:
             print(UnboundLocalError)
+
+            go.grid(row=3, column=2, pady=20)
+
             # Adding the new elements
             xy_frame.grid(row=3, column=1, pady=5)
             # Position the x label in the first column in the second row
@@ -170,6 +192,8 @@ def optionmenu_callback(choice):
             # Position the z_textbox from the 5th column to the 6th column in the second row
             zo.grid(column=7, row=1, columnspan=2, padx=10)
         else:
+            go.grid(row=3, column=2, pady=20)
+
             # Adding the new elements
             xy_frame.grid(row=3, column=1, pady=5)
             # Position the x label in the first column in the second row
@@ -212,8 +236,8 @@ def go_callback(choice):
 window = ctk.CTk()
 window.geometry("900x750")
 window.title("2 Лаба - Вариант 2")
-window.grid_rowconfigure(4, weight=1, pad=100)
-window.grid_columnconfigure(4, weight=1)
+window.grid_rowconfigure(5, weight=1, pad=100)
+window.grid_columnconfigure(5, weight=1)
 
 # Setting the canvas,fig and axis
 fig = plt.figure(figsize=(20, 15))
@@ -234,7 +258,16 @@ angle = ctk.CTkEntry(window, placeholder_text='Угол поворота')
 scale = ctk.CTkEntry(window, placeholder_text='Маштаб')
 warning = ctk.CTkLabel(window, text='Select an operation', text_color='red', font=('Arial', 22, 'italic'))
 
-entries = [xo, yo, zo, x_label, y_label, angle, scale, warning, xy_frame]
+# Radio Buttons
+rotation_frame = ctk.CTkFrame(master=window)
+rotation_var = ctk.StringVar(value='')
+rotate_x = ctk.CTkRadioButton(rotation_frame, text="X",variable= rotation_var, value='x')
+rotate_y = ctk.CTkRadioButton(rotation_frame, text="Y", variable= rotation_var, value='y')
+
+rotate_x.grid(row=0,column=0)
+rotate_y.grid(row=0,column=1)
+
+entries = [xo, yo, zo, x_label, y_label, angle, scale, warning, xy_frame,rotation_frame]
 options = {
     'move': {
         'xo': entries[0],
