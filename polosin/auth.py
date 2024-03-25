@@ -1,6 +1,6 @@
 import customtkinter as c
 import tkinter
-from utilities import User, Database, EncDecPass
+from utilities import User, Database, EncDecPass, Table
 from sqlalchemy import select
 from CTkMenuBar import *
 
@@ -49,7 +49,7 @@ class Main(c.CTk):
         self.left_frame.grid(row=1, column=1, pady=30, padx=30)
 
         # Main frame
-        self.main_frame = c.CTkFrame(self,bg_color='black',width=800)
+        self.main_frame = c.CTkFrame(self,bg_color='black', height=900,width=900)
         self.main_frame.grid(row=1,column=2,pady=30,padx=30)
 
         database = Database()
@@ -61,19 +61,24 @@ class Main(c.CTk):
         #         frame.grid(row=i, column=j, padx=1, pady=1)
         #         label = c.CTkLabel(frame, text=f"Row {i + 1}, Column {j + 1}")
         #         label.pack()
+        #
+        # for i in range(len(table)):
+        #     for j in range(2):
+        #         frame = c.CTkFrame(self.main_frame)
+        #         frame.grid(row=i,column=j,padx=1,pady=1)
+        #         if j == 0:
+        #             print(j)
+        #             label = c.CTkLabel(frame,text="user",width=70, height=30)
+        #             label.pack()
+        #         else:
+        #             print(j)
+        #             label = c.CTkLabel(frame,text="role",width=70, height=30)
+        #             label.pack()
 
-        for i in range(len(table)):
-            for j in range(2):
-                frame = c.CTkFrame(self.main_frame)
-                frame.grid(row=i,column=j,padx=1,pady=1)
-                if j == 0:
-                    print(j)
-                    label = c.CTkLabel(frame,text="user",width=70, height=30)
-                    label.pack()
-                else:
-                    print(j)
-                    label = c.CTkLabel(frame,text="role",width=70, height=30)
-                    label.pack()
+        table = Table(self.main_frame,table)
+
+
+
 
 
     def file_click(self):

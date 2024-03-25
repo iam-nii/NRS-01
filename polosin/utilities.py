@@ -2,7 +2,7 @@ from sqlalchemy import select, create_engine, Column, PrimaryKeyConstraint, Stri
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from cryptography.fernet import Fernet
-
+from customtkinter import CTkEntry
 KEY = b'4bZCJ0pWMDgVco8ejOR-L9UDMUVEbBjxLCQc5E7t4mY='
 print("key:")
 print(KEY)
@@ -141,6 +141,24 @@ class Database:
         # for user in users:
         #     print(user.id, user.name, user.age)
         users = self.session.query(User).all()
-        print(users)
         return users
 
+
+class Table:
+    def __init__(self, root,table):
+        print(type(table))
+        # code for creating table
+        for i in range(len(table)):
+            for j in range(2):
+                if j == 0:
+                    print(table[i].username)
+                    self.e = CTkEntry(root, width=20, fg_color='white', state='disabled', bg_color='black',
+                                  placeholder_text=f'{table[i].username}',
+                               font=('Arial', 16, 'bold'))
+                    self.e.grid(row=i, column=j)
+                else:
+                    print(table[i].role)
+                    self.e = CTkEntry(root, width=20, fg_color='white', state='disabled', bg_color='black',
+                                      placeholder_text=f'{table[i].role}',
+                                      font=('Arial', 16, 'bold'))
+                    self.e.grid(row=i, column=j)
