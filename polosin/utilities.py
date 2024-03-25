@@ -3,13 +3,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from cryptography.fernet import Fernet
 
+KEY = b'4bZCJ0pWMDgVco8ejOR-L9UDMUVEbBjxLCQc5E7t4mY='
+print("key:")
+print(KEY)
 
 class EncDecPass:
     def __init__(self):
         # generate a key for encryption and decryption
         # You can use fernet to generate the key or use random key generator
         # here I'm using fernet to generate key
-        self.key = Fernet.generate_key()
+        self.key = KEY
 
         # Instance the Fernet class with the key
         self.fernet = Fernet(self.key)
@@ -127,9 +130,17 @@ class Database:
         self.session = self.Session()
 
     def select_user(self, user: User, username):
-        # row = select(user).where(user.username == f'{username}')
-
-        # result = session.query(Customers).filter(Customers.id == 2)
 
         row = self.session.query(User).filter(User.username == username).first()
+        print(f"All users {self.get_users()}")
         return row
+
+    def get_users(self):
+        # # query the data from the table
+        # users = session.query(User).all()
+        # for user in users:
+        #     print(user.id, user.name, user.age)
+        users = self.session.query(User).all()
+        print(users)
+        return users
+

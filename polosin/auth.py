@@ -2,6 +2,7 @@ import customtkinter as c
 import tkinter
 from utilities import User, Database, EncDecPass
 from sqlalchemy import select
+from CTkMenuBar import *
 
 width = 500
 height = 500
@@ -16,7 +17,77 @@ class App(c.CTk):
 
 ROLE = ''
 
+# Main window
+class Main(c.CTk):
+    def __init__(self):
+        super().__init__()
+        self.main_width = 1028
+        self.main_height = 800
+        # self.root = c.CTk()
+        self.geometry(f"{self.main_width}x{self.main_height}")
+        self.configure(title='Main window', fg_color='#232E33', padx=0)
+        self.rowconfigure(2, weight=1)
+        self.columnconfigure(2, weight=1)
 
+        self.menu_frame = c.CTkFrame(self, width=width, height=25)
+        self.menu_frame.grid(column=0, row=0, columnspan=3)
+
+        self.menu = CTkMenuBar(master=self.menu_frame)
+        self.menu.pack(fill=c.X)
+
+        self.file = self.menu.add_cascade("File")
+        self.file.configure(command=self.file_click)
+
+        self.change_user = self.menu.add_cascade("Change User")
+        self.change_user.configure(command=self.change_user_click)
+
+        self.help = self.menu.add_cascade("Help")
+        self.help.configure(command=self.help_click)
+
+        # Left
+        self.left_frame = c.CTkFrame(master=self, bg_color='white', fg_color='white', height=(self.main_height - 100))
+        self.left_frame.grid(row=1, column=1, pady=30, padx=30)
+
+        # Main frame
+        self.main_frame = c.CTkFrame(self,bg_color='black',width=800)
+        self.main_frame.grid(row=1,column=2,pady=30,padx=30)
+
+        database = Database()
+        table = database.get_users()
+        print(table)
+        # for i in range(5):
+        #     for j in range(4):
+        #         frame = c.CTkFrame(self.main_frame, width=50, height=20)
+        #         frame.grid(row=i, column=j, padx=1, pady=1)
+        #         label = c.CTkLabel(frame, text=f"Row {i + 1}, Column {j + 1}")
+        #         label.pack()
+
+        for i in range(len(table)):
+            for j in range(2):
+                frame = c.CTkFrame(self.main_frame)
+                frame.grid(row=i,column=j,padx=1,pady=1)
+                if j == 0:
+                    print(j)
+                    label = c.CTkLabel(frame,text="user",width=70, height=30)
+                    label.pack()
+                else:
+                    print(j)
+                    label = c.CTkLabel(frame,text="role",width=70, height=30)
+                    label.pack()
+
+
+    def file_click(self):
+        print("file")
+
+    def change_user_click(self):
+        root.destroy()
+        login = Login()
+        login.mainloop()
+
+    def help_click(self):
+        print("Help")
+
+# Login window
 class Login(App):
     def __init__(self):
         super().__init__()
@@ -116,10 +187,14 @@ class Login(App):
         if result is not None:
             print(f'User password: {result.password}')
             decryptor = EncDecPass()
-            user_password = decryptor.decrypt_password(encoded_password=result.password)
+            user_password = decryptor.decrypt_password(encoded_password=result.password).decode()
             print(f'Decrypted password: {user_password}')
 
-            print('Login success')
+            if password == user_password:
+                print('Login success')
+                self.destroy()
+                main = Main()
+                main.mainloop()
 
         else :
             self.label.grid(row=5)
@@ -134,6 +209,7 @@ class Login(App):
             signup.mainloop()
 
 
+# Sign up window
 class SignUp(App):
     def __init__(self):
         super().__init__()
@@ -240,3 +316,6 @@ class SignUp(App):
 
     def signup_command(self, event: bool):
         pass
+
+
+
