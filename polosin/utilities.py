@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.engine import reflection
 from cryptography.fernet import Fernet
 from customtkinter import CTkLabel
-from databases import User
+from databases import User,Chanel,Material,MathModel,ProcessParams
 from sqlalchemy.ext.declarative import declarative_base
 
 KEY = b'4bZCJ0pWMDgVco8ejOR-L9UDMUVEbBjxLCQc5E7t4mY='
@@ -55,7 +55,20 @@ class Database:
         # for user in users:
         #     print(user.id, user.name, user.age)
         users = self.session.query(User).all()
-        return users
+        return [users,2]
+
+    def get_chanel_params(self):
+        chanel = self.session.query(Chanel).all()
+        return [chanel,3]
+
+    def get_materials(self):
+        pass
+
+    def get_math_module(self):
+        pass
+
+    def get_process_params(self):
+        pass
 
     def get_tables(self):
         insp = reflection.Inspector.from_engine(self.engine)
@@ -63,8 +76,10 @@ class Database:
         return insp.get_table_names()
 
 
-class Table:
-    def __init__(self, root,table):
+class User_Table:
+    def __init__(self, root,table,columns:int):
+
+        print([root,table,columns])
 
         # Header row
         self.label = CTkLabel(root, width=100, height=30, text='id', fg_color='grey',
@@ -81,7 +96,7 @@ class Table:
 
         # code for creating table
         for i in range(len(table)):
-            for j in range(3):
+            for j in range(columns + 1):
                 if j == 1:
                     self.label = CTkLabel(root, width=300, height=30,text=f'{table[i].username}', fg_color='grey',
                                           text_color='white',font=('Arial', 16, 'bold'))
