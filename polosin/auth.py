@@ -1,12 +1,25 @@
 import customtkinter as c
 import tkinter
-from utilities import User, Database, EncDecPass, Table
+from utilities import Database, EncDecPass, Table
+from databases import User,Chanel,Material,ProcessParams,MathModel
 from sqlalchemy import select
 from CTkMenuBar import *
 
 width = 500
 height = 500
-
+#
+# class CustomDropdownMenu(CTkMenuBar):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#
+#         self.menu_item = c.CTkOptionMenu(self, *args, **kwargs, command=self.option_selected)
+#         self.add_cascade(menu=self.menu_item)
+#
+#     def add_option(self, option):
+#         self.menu_item.add_command(label=option, command=lambda: self.option_selected(option))
+#
+#     def option_selected(self, option):
+#         print(f"Option '{option}' was selected")
 
 class App(c.CTk):
     def __init__(self):
@@ -14,83 +27,93 @@ class App(c.CTk):
         self.grid_rowconfigure(7, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
 
-
 ROLE = ''
+DATABASES = {
+    'users': User,
+    'chanel': Chanel,
+    'material': Material,
+    'math_model': MathModel,
+    'process_params': ProcessParams,
+}
+
+def donothing():
+    pass
+
+def combobox_callback(choice):
+    print("combobox dropdown clicked:", choice)
 
 # Main window
 class Main(c.CTk):
     def __init__(self):
         super().__init__()
+        # Geometry and window config
         self.main_width = 1028
         self.main_height = 800
-        # self.root = c.CTk()
+        self.database = Database()
         self.geometry(f"{self.main_width}x{self.main_height}")
         self.configure(title='Main window', fg_color='#232E33', padx=0)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(2, weight=1)
 
-        self.menu_frame = c.CTkFrame(self, width=width, height=25)
-        self.menu_frame.grid(column=0, row=0, columnspan=3)
+        # Create the menu bar
+        menubar = tkinter.Menu(self)
+        self.config(menu=menubar)
 
-        self.menu = CTkMenuBar(master=self.menu_frame)
-        self.menu.pack(fill=c.X)
+        # Create the file menu
+        filemenu = tkinter.Menu(menubar, tearoff=0)
 
-        self.file = self.menu.add_cascade("File")
-        self.file.configure(command=self.file_click)
+        # Add menu items to the file menu
+        filemenu.add_command(label="Change User", command=donothing, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Open", command=donothing, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Help", command=donothing, font=('Arial', 20, 'normal'))
+        filemenu.add_separator()
+        filemenu.add_command(label="Exit", command=self.quit, font=('Arial', 20, 'normal'))
 
-        self.change_user = self.menu.add_cascade("Change User")
-        self.change_user.configure(command=self.change_user_click)
+        # Add the file menu to the menu bar
+        menubar.add_cascade(label="Tools", menu=filemenu, font=('Arial', 20, 'normal'))
 
-        self.help = self.menu.add_cascade("Help")
-        self.help.configure(command=self.help_click)
+
 
         # Left
-        self.left_frame = c.CTkFrame(master=self, bg_color='white', fg_color='white', height=(self.main_height - 100))
-        self.left_frame.grid(row=1, column=1, pady=30, padx=30)
+        self.left_frame = c.CTkFrame(master=self, bg_color='white', fg_color='transparent', height=500)
+        self.left_frame.grid(row=1, column=0, pady=20, padx=30)
 
-        # Main frame
-        self.main_frame = c.CTkFrame(self,bg_color='black', height=900,width=900)
-        self.main_frame.grid(row=1,column=2,pady=30,padx=30)
+        # Table selection
 
-        database = Database()
-        table = database.get_users()
-        print(table)
-        # for i in range(5):
-        #     for j in range(4):
-        #         frame = c.CTkFrame(self.main_frame, width=50, height=20)
-        #         frame.grid(row=i, column=j, padx=1, pady=1)
-        #         label = c.CTkLabel(frame, text=f"Row {i + 1}, Column {j + 1}")
-        #         label.pack()
-        #
-        # for i in range(len(table)):
-        #     for j in range(2):
-        #         frame = c.CTkFrame(self.main_frame)
-        #         frame.grid(row=i,column=j,padx=1,pady=1)
-        #         if j == 0:
-        #             print(j)
-        #             label = c.CTkLabel(frame,text="user",width=70, height=30)
-        #             label.pack()
-        #         else:
-        #             print(j)
-        #             label = c.CTkLabel(frame,text="role",width=70, height=30)
-        #             label.pack()
+        self.selection_combobox = c.CTkComboBox(self.left_frame, values=self.database.get_tables(),width=200,
+                                             command=combobox_callback)
+        self.selection_combobox.pack()
 
-        table = Table(self.main_frame,table)
+        self.main_frame = c.CTkFrame(self, fg_color='#14282F',height=700, width=700)
+        self.main_frame.grid(row=1, column=1, pady=20, padx=30)  # specify row and column for the frame
+
+        # Table frame
+        self.table_frame = c.CTkFrame(self.main_frame)
+        self.table_frame.pack()
+
+        # Base frame
+        self.base_frame = c.CTkFrame(self.main_frame,fg_color='#14282F', height=200)
+        self.base_frame.pack()
 
 
-
+        self.table = self.database.get_users()
+        print(self.table)
+        self.table = Table(self.table_frame,self.table)
 
 
     def file_click(self):
         print("file")
 
     def change_user_click(self):
-        root.destroy()
+        self.destroy()
         login = Login()
         login.mainloop()
 
     def help_click(self):
         print("Help")
+
+main = Main()
+main.mainloop()
 
 # Login window
 class Login(App):
