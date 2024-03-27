@@ -1,6 +1,6 @@
 import customtkinter as c
 import tkinter as tk
-from utilities import Database, EncDecPass, User_Table
+from utilities import Database, EncDecPass, User_Table,Chanel_Table,Material_Table,MathModel_Table,ProcessParams_Table
 from databases import User,Chanel,Material,ProcessParams,MathModel
 from sqlalchemy import select
 from CTkMenuBar import *
@@ -23,14 +23,63 @@ DATABASES = {
 }
 database = Database()
 
-def tables_select(choice,frame):
-    frame.pack(pady=30)
-    if choice == 'users':
-        result = database.get_users()
-        table = result[0]
-        columns = result[1]
+def clear_frames(tables:list[c.CTkFrame]):
+    if len(tables) != 0:
+        for frame in tables:
+            frame.pack_forget()
 
-        table = User_Table(frame, table, columns)
+tables:list[c.CTkFrame] = []
+
+def tables_select(choice,frame:c.CTkFrame):
+    frame.pack(pady=30)
+
+    match choice:
+        case 'users':
+            print(len(tables))
+            clear_frames(tables)
+
+            result = database.get_users()
+            table = result[0]
+            columns = result[1]
+
+            table = User_Table(frame, table, columns)
+            tables.append(table)
+        case 'chanel':
+            print(len(tables))
+            clear_frames(tables)
+            result = database.get_chanel_params()
+            table = result[0]
+            columns = result[1]
+
+            table = Chanel_Table(frame, table, columns)
+            tables.append(table)
+        case 'material':
+            print(len(tables))
+            clear_frames(tables)
+            result = database.get_materials()
+            table = result[0]
+            columns = result[1]
+
+            table = Material_Table(frame, table, columns)
+            tables.append(table)
+        case 'math_model':
+            print(len(tables))
+            clear_frames(tables)
+            result = database.get_math_module()
+            table = result[0]
+            columns = result[1]
+
+            table = MathModel_Table(frame, table, columns)
+            tables.append(table)
+        case 'process_params':
+            print(len(tables))
+            clear_frames(tables)
+            result = database.get_process_params()
+            table = result[0]
+            columns = result[1]
+
+            table = ProcessParams_Table(frame, table, columns)
+            tables.append(table)
 
 
 def donothing():

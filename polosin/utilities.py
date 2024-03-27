@@ -58,17 +58,20 @@ class Database:
         return [users,2]
 
     def get_chanel_params(self):
-        chanel = self.session.query(Chanel).all()
-        return [chanel,3]
+        chanels = self.session.query(Chanel).all()
+        return [chanels,3]
 
     def get_materials(self):
-        pass
+        materials = self.session.query(Material).all()
+        return [materials,3]
 
     def get_math_module(self):
-        pass
+        math_modules = self.session.query(MathModel).all()
+        return [math_modules,5]
 
     def get_process_params(self):
-        pass
+        process_params = self.session.query(ProcessParams).all()
+        return [process_params,2]
 
     def get_tables(self):
         insp = reflection.Inspector.from_engine(self.engine)
@@ -109,4 +112,94 @@ class User_Table:
                     self.label = CTkLabel(root, width=100, height=30, text=f'{i+1}', fg_color='grey',
                                           text_color='white', font=('Arial', 16, 'bold'))
                     self.label.grid(row=i+1, column=j, padx=1, pady=1)  # position the entry within the frame
+
+
+
+class Chanel_Table:
+    def __init__(self, root,table,columns:int):
+
+        print([root,table,columns])
+
+        # Header row
+        self.label = CTkLabel(root, width=100, height=30, text='id', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='width', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='depth', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='length', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+
+class Material_Table:
+    def __init__(self, root, table, columns: int):
+        print([root, table, columns])
+
+        # Header row
+        self.label = CTkLabel(root, width=100, height=30, text='id', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Density', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Heat Capacity', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Melting Temperature', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+
+class MathModel_Table:
+    def __init__(self, root, table, columns: int):
+        print([root, table, columns])
+
+        # Header row
+        self.label = CTkLabel(root, width=100, height=30, text='id', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Consistency coefficient', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Temp Viscosity coefficient', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Flow index', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Cover heat transfer coefficient', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+
+
+class ProcessParams_Table:
+    def __init__(self, root, table, columns: int):
+        print([root, table, columns])
+
+        # Header row
+        self.label = CTkLabel(root, width=100, height=30, text='id', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Cover speed', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = CTkLabel(root, width=300, height=30, text='Heat Capacity', fg_color='grey',
+                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
 
