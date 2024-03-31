@@ -27,60 +27,77 @@ def clear_frames(tables:list[c.CTkFrame]):
     if len(tables) != 0:
         for frame in tables:
             frame.pack_forget()
+    print(f'tables:{len(tables)}')
 
-tables:list[c.CTkFrame] = []
+tables_list:list[c.CTkFrame] = []
 
 def tables_select(choice,frame:c.CTkFrame):
-    frame.pack(pady=30)
-
     match choice:
         case 'users':
-            print(len(tables))
-            clear_frames(tables)
+            try:
+                for widget in frame.winfo_children():
+                    widget.destroy()
+            except Exception as e:
+                print(e)
+            else:
+                result = database.get_users()
+                table = result[0]
+                columns = result[1]
 
-            result = database.get_users()
-            table = result[0]
-            columns = result[1]
-
-            table = User_Table(frame, table, columns)
-            tables.append(table)
+                table = User_Table(frame, table, columns)
+                frame.pack(pady=30)
         case 'chanel':
-            print(len(tables))
-            clear_frames(tables)
-            result = database.get_chanel_params()
-            table = result[0]
-            columns = result[1]
+            try:
+                for widget in frame.winfo_children():
+                    widget.destroy()
+            except Exception as e:
+                print(e)
+            else:
+                result = database.get_chanel_params()
+                table = result[0]
+                columns = result[1]
 
-            table = Chanel_Table(frame, table, columns)
-            tables.append(table)
+                table = Chanel_Table(frame, table, columns)
+                frame.pack(pady=30)
         case 'material':
-            print(len(tables))
-            clear_frames(tables)
-            result = database.get_materials()
-            table = result[0]
-            columns = result[1]
+            try:
+                for widget in frame.winfo_children():
+                    widget.destroy()
+            except Exception as e:
+                print(e)
+            else:
+                result = database.get_materials()
+                table = result[0]
+                columns = result[1]
 
-            table = Material_Table(frame, table, columns)
-            tables.append(table)
+                table = Material_Table(frame, table, columns)
+                frame.pack(pady=30)
         case 'math_model':
-            print(len(tables))
-            clear_frames(tables)
-            result = database.get_math_module()
-            table = result[0]
-            columns = result[1]
+            try:
+                for widget in frame.winfo_children():
+                    widget.destroy()
+            except Exception as e:
+                print(e)
+            else:
+                result = database.get_math_module()
+                table = result[0]
+                columns = result[1]
 
-            table = MathModel_Table(frame, table, columns)
-            tables.append(table)
+                table = MathModel_Table(frame, table, columns)
+                frame.pack(pady=30)
         case 'process_params':
-            print(len(tables))
-            clear_frames(tables)
-            result = database.get_process_params()
-            table = result[0]
-            columns = result[1]
+            try:
+                for widget in frame.winfo_children():
+                    widget.destroy()
+            except Exception as e:
+                print(e)
+            else:
+                result = database.get_process_params()
+                table = result[0]
+                columns = result[1]
 
-            table = ProcessParams_Table(frame, table, columns)
-            tables.append(table)
-
+                table = ProcessParams_Table(frame, table, columns)
+                frame.pack(pady=30)
 
 def donothing():
     pass
@@ -172,8 +189,6 @@ class Main(c.CTk):
     def help_click(self):
         print("Help")
 
-main = Main()
-main.mainloop()
 
 # Login window
 class Login(App):
@@ -225,7 +240,7 @@ class Login(App):
         self.frame.grid_rowconfigure(2, weight=1)
         self.frame.grid(row=3)
 
-        radio_var = tkinter.IntVar(value=0)
+        # radio_var = tkinter.IntVar(value=0)
         # Combobox
         self.combobox_var = c.StringVar(value="Роль")
         self.combobox = c.CTkComboBox(self.frame, values=["Администратор", "Исследователь"], corner_radius=30,
