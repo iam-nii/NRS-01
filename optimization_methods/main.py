@@ -1,5 +1,5 @@
-from optimization_methods.windows.userentry import Login
+import optimization_methods.windows.Login as Login
 
-app = Login()
+app = Login.Login()
 
 app.mainloop()
