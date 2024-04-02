@@ -74,11 +74,11 @@ class SignUp(App):
                                       text_color='#000000', state='readonly', height=40, dropdown_font=('', 20))
         self.combobox.grid(column=0, row=0, pady=10)
 
-        # Login button
-        self.login_button = c.CTkButton(self, text='Зарегистрироваться', command=self.signup_button_click, width=200,
+        # Signup button
+        self.signup_button = c.CTkButton(self, text='Зарегистрироваться', command=self.signup_button_click, width=200,
                                         fg_color='#17203D',
                                         corner_radius=15)
-        self.login_button.grid(row=4, pady=5)
+        self.signup_button.grid(row=4, pady=5)
 
         # No account
         self.no_account_frame = c.CTkFrame(self, fg_color='#232E33', width=200, height=30)

@@ -2,6 +2,7 @@ import customtkinter as c
 import tkinter as tk
 import optimization_methods.windows.utils as owu
 import optimization_methods.windows.Login as Login
+import optimization_methods.data.PasswordGen as PasswordGen
 
 database = owu.Database()
 def tables_select(choice,frame:c.CTkFrame):
@@ -139,14 +140,74 @@ class Main(c.CTk):
                                      border_width=0,border_color='black', width=150, text_color='black')
         self.table_role.pack(pady=10, padx=30)
 
+        # Buttons
         self.edit_button = c.CTkButton(self.left_frame, width=150, text='EDIT',fg_color='#238FB1')
         self.delete_button = c.CTkButton(self.left_frame, width=150, text='DELETE',fg_color='#FB5757')
+        self.add_button = c.CTkButton(self.left_frame, width=150, text='ADD', fg_color='#6CD63C',command=self.on_add_click)
         self.edit_button.pack(pady=10,padx=30)
         self.delete_button.pack(pady=10,padx=30)
+        self.add_button.pack(pady=10,padx=30)
 
     def file_click(self):
         print("file")
 
+    def on_add_click(self):
+        # Top level window
+        self.add_user_window = c.CTkToplevel(self,fg_color="#232E33")
+        self.add_user_window.geometry('400x250')
+        self.add_user_window.title('Add new user')
+        self.add_user_window.resizable(False,False)
+        self.add_user_window.attributes('-topmost', 'true')
+
+        # Username
+        self.new_username = c.CTkEntry(master=self.add_user_window,placeholder_text='Username',width=200)
+        # Role
+        self.combobox_var = c.StringVar(value="Роль")
+        self.new_role = c.CTkComboBox(self.add_user_window, values=["Администратор", "Исследователь"], corner_radius=10,
+                                      fg_color='#D9D9D9',
+                                      command=self.user_select_event, variable=self.combobox_var, width=200,
+                                      text_color='#000000', state='readonly', height=40, dropdown_font=('', 20))
+
+        # Password
+        self.new_password = c.CTkEntry(master=self.add_user_window,width=200)
+        self.new_password.delete(0,c.END)
+        self.new_password.insert(0,PasswordGen.generate_password())
+
+        # Add button
+        self.new_add_button = c.CTkButton(master=self.add_user_window,text='ADD',fg_color='#6CD63C',command=self.on_new_add_click)
+
+        # Warning
+        self.warning = c.CTkLabel(master=self.add_user_window,text='Error adding new user',text_color='red')
+
+        # Success
+        self.success = c.CTkLabel(master=self.add_user_window,text='User successfully added',text_color='green')
+
+        # Pack elements
+        self.new_username.pack(pady=10)
+        self.new_role.pack(pady=10)
+        self.new_password.pack(pady=10)
+        self.new_add_button.pack(pady=10)
+
+    def user_select_event(self,selection):
+        print(selection)
+
+    def on_new_add_click(self):
+        username = self.new_username.get()
+        password = self.new_password.get()
+        role = self.new_role.get()
+        print((username, password, role))
+        user = owu.User(username, password, role)
+        database = owu.Database()
+        try:
+            database.session.add(user)
+            database.session.commit()
+            print('User successfully added...')
+            self.success.pack(pady=10)
+            self.success.after(1000,self.success.destroy())
+        except Exception:
+            print(Exception)
+            self.warning.pack(pady=10)
+            self.warning.after(1000,self.warning.destroy())
     def change_user_click(self):
         self.destroy()
         login = Login.Login()
