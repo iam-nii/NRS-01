@@ -203,11 +203,11 @@ class Main(c.CTk):
             database.session.commit()
             print('User successfully added...')
             self.success.pack(pady=10)
-            self.success.after(1000,self.success.destroy())
+            self.success.after(3000,self.success.destroy())
         except Exception:
             print(Exception)
             self.warning.pack(pady=10)
-            self.warning.after(1000,self.warning.destroy())
+            self.warning.after(3000,self.warning.destroy())
     def change_user_click(self):
         self.destroy()
         login = Login.Login()
