@@ -4,6 +4,7 @@ import optimization_methods.windows.utils as owu
 import optimization_methods.windows.Login as Login
 import optimization_methods.data.PasswordGen as PasswordGen
 
+
 database = owu.Database()
 def tables_select(choice,frame:c.CTkFrame):
     match choice:
@@ -125,6 +126,8 @@ class Main(c.CTk):
 
         menubar.add_cascade(label="Select table", menu=tables_menu,font=('Arial', 20, 'normal'))
 
+
+        # Left frame
         self.left_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
         self.left_frame.grid(row=0,column=0,pady=30,padx=20, rowspan=3)
 

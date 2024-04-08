@@ -1,4 +1,4 @@
-from auth import Login
+from polosin.windows.Login import Login
 
 app = Login()
 

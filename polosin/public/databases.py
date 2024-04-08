@@ -1,5 +1,7 @@
 from sqlalchemy import select, create_engine, Column, PrimaryKeyConstraint, String, Integer, CHAR, Float
 from sqlalchemy.ext.declarative import declarative_base
+from polosin.public.Encryption import EncDecPass
+
 Base = declarative_base()
 class User(Base):
     __tablename__ = 'users'
@@ -38,17 +40,19 @@ class Material(Base):
     __tablename__ = 'material'
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
+    material = Column('material',String)
     density = Column('density', Integer)
     heat_capacity = Column('heat_capacity', Integer)
     melting_temperature = Column('melting_temperature', Integer)
 
-    def __init__(self, density, heat_capacity, melting_temperature):
+    def __init__(self,material, density, heat_capacity, melting_temperature):
+        self.material = material
         self.density = density
         self.heat_capacity = heat_capacity
         self.melting_temperature = melting_temperature
 
     def __repr__(self):
-        return f"({self.density}) {self.heat_capacity} {self.melting_temperature}"
+        return f"({self.material}) {self.density} {self.heat_capacity} {self.melting_temperature}"
 
 
 class ProcessParams(Base):
