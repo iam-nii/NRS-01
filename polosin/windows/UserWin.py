@@ -21,7 +21,7 @@ class UserWin(c.CTk):
         super().__init__()
         # Geometry and window config
         self.main_width = 1028
-        self.main_height = 800
+        self.main_height = 820
         self.title('Research window')
         self.geometry(f"{self.main_width}x{self.main_height}")
         self.configure(fg_color='#232E33', padx=0)
@@ -66,23 +66,55 @@ class UserWin(c.CTk):
         results = TABS.add('Результаты')
         graph = TABS.add('График')
 
+
+        self.parameters:[dict] = []
+
         # Params tab
         # ------------------------Geometric values-------------------------------------#
         geometric_values = Geometric(params)
+        geometric_dict = geometric_values.get_values()
+        self.parameters.append(geometric_dict)
 
         # ---------------------------Materials-----------------------------------#
         material_values = Material_values(params)
+        materials_dict = material_values.get_values()
+        self.parameters.append(materials_dict)
 
         # ---------------------------Process Parameters-----------------------------------#
         process_values = Process_values(params)
+        process_values_dict = process_values.get_values()
+        self.parameters.append(process_values_dict)
 
         # ----------------------------------------Math Model------------------------------------#
         math_model_values = Math_model_values(params)
+        math_model_dict = math_model_values.get_values()
+        self.parameters.append(materials_dict)
+
+        calculate = c.CTkButton(master=params,text='Расчёт',fg_color='#214569',command=self.calculate)
+        calculate.grid(row=2, column=1, padx=5, pady=10,sticky=tk.E)
+
+        self.warning = c.CTkLabel(master=params,text='Invalid inputs, all fields must be floating numbers',
+                                  anchor='w',text_color='red')
 
 
 
+    def calculate(self):
+        # Check for valid data
+        for model in self.parameters:
+            for key,value in model.items():
+                try:
+                    float(value)
+                except:
+                    self.warning.grid(row=2,column=0,sticky=tk.W,pady=10,padx=5)
+                else:
+                    self.warning.grid_forget()
 
 
+
+        # Process the data received
+
+
+        return
     def change_user_click(self):
         self.destroy()
         login = Login.Login()
