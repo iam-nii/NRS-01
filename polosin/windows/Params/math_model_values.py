@@ -67,7 +67,7 @@ class Math_model_values:
         self.flow_index_frame = c.CTkFrame(master=self.math_model_frame, fg_color='#1F2022')
         self.flow_index_frame.pack(pady=10)
         # Label
-        self.flow_index_label = c.CTkLabel(master=self.flow_index_frame, text='Шаг расчёта по длине канала  : ',wraplength=300,
+        self.flow_index_label = c.CTkLabel(master=self.flow_index_frame, text='Индекс течения  : ',wraplength=300,
                                         text_color='#D6D7D8',font=FONT, justify='right', width=250, anchor='e')
         self.flow_index_label.grid(row=0, column=0, padx=5, sticky='e')
         # Entry
@@ -98,5 +98,6 @@ class Math_model_values:
             'consistency_coefficient': self.const_coeff_entry.get(),
             'temp_viscosity_coeff':self.temp_viscosity_coeff_entry.get(),
             'casting_temp': self.casting_temp_entry.get(),
+            'flow_index': self.flow_index_entry.get(),
             'heat_transfer':self.heat_transfer_entry.get(),
         }

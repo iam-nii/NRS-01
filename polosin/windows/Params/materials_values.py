@@ -37,7 +37,7 @@ class Material_values:
         self.heat_capacity_frame = c.CTkFrame(master=self.material_props_frame, fg_color='#1F2022')
         self.heat_capacity_frame.pack(pady=10)
         # Label
-        self.heat_capacity_label = c.CTkLabel(master=self.heat_capacity_frame, text='Удельная температура : ',
+        self.heat_capacity_label = c.CTkLabel(master=self.heat_capacity_frame, text='Удельная теплоемкость : ',
                                          text_color='#D6D7D8',
                                          font=FONT, justify='right', width=250, anchor='e')
         self.heat_capacity_label.grid(row=0, column=0, padx=5, sticky='e')
@@ -47,7 +47,7 @@ class Material_values:
                                          text_color='#D6D7D8', width=60)
         self.heat_capacity_entry.grid(row=0, column=1, padx=5)
         # unit
-        self.heat_capacity_unit_label = c.CTkLabel(master=self.heat_capacity_frame, font=FONT, text='Дж/кг/°C',
+        self.heat_capacity_unit_label = c.CTkLabel(master=self.heat_capacity_frame, font=FONT, text='Дж/кг*°C',
                                               text_color='#D6D7D8')
         self.heat_capacity_unit_label.grid(row=0, column=2, padx=5)
 
