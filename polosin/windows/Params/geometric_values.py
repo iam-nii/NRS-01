@@ -28,7 +28,8 @@ class Geometric:
         self.width_label.grid(row=0, column=0, padx=5, sticky='e')
         # Entry
         self.width_entry = c.CTkEntry(master=self.width_frame, fg_color='#1F2022', font=ENTRY_FONT, validate="key",
-                                 validatecommand=(params.register(validate_float), "%S"), text_color='#D6D7D8', width=60)
+                                 validatecommand=(params.register(validate_float), "%S"), text_color='#D6D7D8',
+                                      width=60)
         self.width_entry.grid(row=0, column=1, padx=5)
         # unit
         self.width_unit_label = c.CTkLabel(master=self.width_frame, font=FONT, text='м', text_color='#D6D7D8')
