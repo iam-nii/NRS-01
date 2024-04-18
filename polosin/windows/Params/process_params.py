@@ -5,7 +5,7 @@ FONT = ("MS Serif",20)
 ENTRY_FONT = ("Arial",16)
 
 class Process_values:
-    def __init__(self,params):
+    def __init__(self,params,DATA):
         self.process_params_tab = c.CTkTabview(master=params, fg_color='#1F2022', width=430, height=350, state='disabled',
                                           segmented_button_selected_color='#4A4A4A')
         self.process_params_tab.grid(row=1, column=0, pady=5)
@@ -64,6 +64,9 @@ class Process_values:
         # unit
         self.calculation_step_unit_label = c.CTkLabel(master=self.calculation_step_frame, font=FONT, text='м', text_color='#D6D7D8')
         self.calculation_step_unit_label.grid(row=0, column=2, padx=5)
+
+        self.cover_speed_entry.insert(0,DATA['cover_speed'])
+        self.cover_temperature_entry.insert(0,DATA['cover_temperature'])
 
     def get_values(self):
         return {

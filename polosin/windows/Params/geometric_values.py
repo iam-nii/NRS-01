@@ -7,7 +7,7 @@ ENTRY_FONT = ("Arial", 16)
 
 
 class Geometric:
-    def __init__(self, params):
+    def __init__(self, params,DATA):
         # Geometric values
         self.geometric_tab = c.CTkTabview(master=params, fg_color='#1F2022', width=430, height=250, state='disabled',
                                      text_color='white',
@@ -64,6 +64,11 @@ class Geometric:
         # unit
         self.length_unit_label = c.CTkLabel(master=self.length_frame, font=FONT, text='м', text_color='#D6D7D8')
         self.length_unit_label.grid(row=0, column=2, padx=5)
+
+
+        self.width_entry.insert(0,DATA['width'])
+        self.depth_entry.insert(0,DATA['depth'])
+        self.length_entry.insert(0,DATA['length'])
 
     def get_values(self):
         return {

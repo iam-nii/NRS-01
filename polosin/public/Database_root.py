@@ -8,10 +8,7 @@ from polosin.public.databases import User,Chanel,Material,MathModel,ProcessParam
 class Database:
     def __init__(self,window='main'):
         # Creating the database file
-        if window == 'main':
-            self.engine = create_engine("sqlite:///chemresearch.db", echo=True)
-        else:
-            self.engine = create_engine("sqlite:///../chemresearch.db", echo=True)
+        self.engine = create_engine("sqlite:///chemresearch.db", echo=True)
 
 
         # Take all the classes that extends from base and create the tables
@@ -34,25 +31,33 @@ class Database:
         users = self.session.query(User).all()
         return [users,2]
 
-    def get_chanel_params(self):
-        chanels = self.session.query(Chanel).all()
+    def get_chanel_params(self,id):
+        if id:
+            chanels = self.session.query(Chanel).filter(Chanel.id == id).first()
+
+        else:
+            chanels = self.session.query(Chanel).all()
         return [chanels,3]
 
     def get_materials(self):
         materials = self.session.query(Material).all()
         return [materials,3]
 
-    def get_math_module(self):
-        math_modules = self.session.query(MathModel).all()
+    def get_math_module(self,id):
+        if id:
+            math_modules = self.session.query(MathModel).filter(MathModel.id == id).first()
+        else:
+            math_modules = self.session.query(MathModel).all()
         return [math_modules,5]
 
-    def get_process_params(self):
-        process_params = self.session.query(ProcessParams).all()
+    def get_process_params(self,id):
+        if id:
+            process_params = self.session.query(ProcessParams).filter(ProcessParams.id == id).first()
+        else:
+            process_params = self.session.query(ProcessParams).all()
         return [process_params,2]
 
     def get_tables(self):
         insp = reflection.Inspector.from_engine(self.engine)
         # Return the table names
         return insp.get_table_names()
-
-

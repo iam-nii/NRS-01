@@ -1,4 +1,5 @@
 import math
+from polosin.public.Save_to_excel import Save_to_excel
 import tkinter as tk
 from polosin.public.results import Results
 import customtkinter as c
@@ -10,16 +11,40 @@ from polosin.windows.Params.materials_values import Material_values
 from polosin.windows.Params.math_model_values import Math_model_values
 from polosin.windows.Params.process_params import Process_values
 
-database = Database(window='User')
+database = Database()
+
+# Import the materials from the database
+materials_list = [
+    {
+        'id':material.id,
+        'material':str(material.material),
+        'density':material.density,
+        'heat_capacity':material.heat_capacity,
+        'melting_temperature':material.melting_temperature,
+    }
+    for material in database.get_materials()[0]
+]
+print(materials_list)
 
 # Create a font object
 FONT = ("MS Serif", 20)
 ENTRY_FONT = ("Arial", 18)
 
-
-def print_materials(choice):
-    print("Selected material:", choice)
-
+DATA = {
+    'density': '',
+    'heat_capacity':'',
+    'melting_temperature':'',
+    'cover_speed':'',
+    'cover_temperature':'',
+    'width':'',
+    'depth':'',
+    'length':'',
+    'consistency_coefficient':'',
+    'temp_viscosity_coefficient':'',
+    'casting_temperature':'',
+    'flow_index':'',
+    'cover_heat_transfer_coefficient':''
+}
 
 class UserWin(c.CTk):
     def __init__(self):
@@ -32,6 +57,10 @@ class UserWin(c.CTk):
         self.configure(fg_color='#232E33', padx=0)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(2, weight=1)
+        self.coordinates = []
+        self.T = []
+        self.viscosity = []
+
 
         # Create the menu bar
         menubar = tk.Menu(self)
@@ -42,19 +71,17 @@ class UserWin(c.CTk):
 
         # Add menu items to the file menu
         filemenu.add_command(label="Change User", command=self.change_user_click, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Save data", command=self.save_data_click, font=('Arial', 20, 'normal'))
         filemenu.add_command(label="Help", command=self.help_click, font=('Arial', 20, 'normal'))
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.quit, font=('Arial', 20, 'normal'))
 
         # Add the file menu to the menu bar
-        menubar.add_cascade(label="Tools", menu=filemenu, font=('Arial', 20, 'normal'))
+        menubar.add_cascade(label="Menu", menu=filemenu, font=('Arial', 20, 'normal'))
 
-        # Import the materials from the database
-        materials_list = [str(material.material) for material in database.get_materials()[0]]
-        print(materials_list)
-
-        materials = c.CTkOptionMenu(self, values=materials_list,
-                                    command=print_materials)
+        material_menu_list = [material['material'] for material in materials_list]
+        materials = c.CTkOptionMenu(self, values=material_menu_list,
+                                    command=self.print_materials)
         materials.set("Materials")
         materials.pack(anchor='w')
 
@@ -85,21 +112,7 @@ class UserWin(c.CTk):
 
         self.parameters: [dict] = []
 
-        # Params tab
-        # ------------------------Geometric values-------------------------------------#
-        self.geometric_values = Geometric(self.params)
 
-
-        # ---------------------------Materials-----------------------------------#
-        self.material_values = Material_values(self.params)
-
-
-        # ---------------------------Process Parameters-----------------------------------#
-        self.process_values = Process_values(self.params)
-
-
-        # ----------------------------------------Math Model------------------------------------#
-        self.math_model_values = Math_model_values(self.params)
 
 
         calculate = c.CTkButton(master=self.params, text='Расчёт', fg_color='#214569', command=self.calculate)
@@ -107,6 +120,50 @@ class UserWin(c.CTk):
 
         self.warning = c.CTkLabel(master=self.params, text='Invalid inputs, all fields must be floating numbers',
                                   anchor='w', text_color='red')
+
+    def print_materials(self, choice):
+        id = 0
+        for material in materials_list:
+            if material['material'] == choice:
+                id = material['id']
+                # Material parameters
+                DATA['density'] = material['density']
+                DATA['heat_capacity'] = material['heat_capacity']
+                DATA['melting_temperature'] = material['melting_temperature']
+
+        # Process parameters
+        process_params = database.get_process_params(id)[0]
+        DATA['cover_speed'] = process_params.cover_speed,
+        DATA['cover_temperature'] = process_params.cover_temperature
+
+        # Chanel parameters
+        chanel_params = database.get_chanel_params(id)[0]
+        DATA['width'] = chanel_params.width
+        DATA['depth'] = chanel_params.depth
+        DATA['length'] = chanel_params.length
+
+        # Math Model parameters
+        math_model_params = database.get_math_module(id)[0]
+        DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
+        DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
+        DATA['casting_temperature'] = math_model_params.casting_temperature
+        DATA['flow_index'] = math_model_params.flow_index
+        DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
+
+        print(DATA)
+
+        # Params tab
+        # ------------------------Geometric values-------------------------------------#
+        self.geometric_values = Geometric(self.params, DATA)
+
+        # ---------------------------Materials-----------------------------------#
+        self.material_values = Material_values(self.params, DATA)
+
+        # ---------------------------Process Parameters-----------------------------------#
+        self.process_values = Process_values(self.params, DATA)
+
+        # ----------------------------------------Math Model------------------------------------#
+        self.math_model_values = Math_model_values(self.params, DATA)
 
     def calculate(self):
         # Get the data from the entries
@@ -171,7 +228,7 @@ class UserWin(c.CTk):
 
             Qch = ((H * W * Vu) / 2) * F
 
-            T = [
+            self.T = [
                 round(Tr + 1 / b * (math.log(
                     (((b * q_shear_rate) + (W * au)) / (b * q_a)) *
                     (1 - math.exp(-(b * q_a) * z / (p * c * Qch))) + (
@@ -179,40 +236,67 @@ class UserWin(c.CTk):
                     ))),4)
                 for z in numpy.arange(0, L + step, step)
             ]
-            print(T)
+            print(self.T)
 
             # material_temperature = float(self.math_model_dict['casting_temp']) + 1/
-            viscosity = [
+            self.viscosity = [
                 round(Uo * math.exp(-b * (temp - Tr)) * (shear_rate ** (n - 1)),4)
-                for temp in T
+                for temp in self.T
             ]
-            print(viscosity)
+            print(self.viscosity)
 
             # Channel output
             Q = p * Qch
             print(f'Производительность: {round(Q,2)}')
 
             # Product Temperature and viscosity
-            Tp = T[-1]
+            Tp = self.T[-1]
             print(f'Температура продукта: {round(Tp,2)}')
 
-            Viscosity_p = viscosity[-1]
+            Viscosity_p = self.viscosity[-1]
             print(f'Вязкость продукта: {round(Viscosity_p, 2)}')
 
             # Generate the table
-            coordinates = [round(n * step,1) for n in range(len(T))]
+            self.coordinates = [round(n * step,1) for n in range(len(self.T))]
             result = Results(self.results)
-            result.create_result_table(T,viscosity,coordinates)
+
+            prod_temp_visc = [Q,Tp,Viscosity_p]
+            result.create_result_table(self.T,self.viscosity,self.coordinates,prod_temp_visc)
 
             # def create_result_graph(self, frame, prop: list, coordinates: list, title: str):
 
-            temp_graph = result.create_result_graph(frame=self.temp_tab,prop=T,title='Температура, °C',coordinates=coordinates)
-            viscosity_graph = result.create_result_graph(frame=self.visco_tab,prop=viscosity,title='Вязкость, Па*с',coordinates=coordinates)
+            temp_graph = result.create_result_graph(frame=self.temp_tab,prop=self.T,title='Температура, °C',coordinates=self.coordinates)
+            viscosity_graph = result.create_result_graph(frame=self.visco_tab,prop=self.viscosity,title='Вязкость, Па*с',
+                                                         coordinates=self.coordinates)
         except Exception as e:
             self.warning.grid(row=2, column=0, sticky=tk.W, pady=10, padx=5)
             print(e)
 
         return
+
+    def save_data_click(self):
+        # Top level window
+        self.save_to_file_window = c.CTkToplevel(self, fg_color="#232E33")
+        self.save_to_file_window.geometry('400x250')
+        self.save_to_file_window.title('Save data to excel file')
+        self.save_to_file_window.resizable(False, False)
+        self.save_to_file_window.attributes('-topmost', 'true')
+
+        # Filename
+        self.filename = c.CTkEntry(master=self.save_to_file_window, placeholder_text='File name', width=200)
+
+        # Save button
+        self.save_button = c.CTkButton(master=self.save_to_file_window, text='SAVE', fg_color='#6CD63C',
+                                          command=self.on_save_click)
+
+        # Pack elements
+        self.filename.pack(pady=10)
+        self.save_button.pack(pady=10)
+
+    def on_save_click(self):
+        # Save Temperature
+        save = Save_to_excel(list1=self.coordinates,list2=self.T,list3=self.viscosity, file_name=self.filename.get())
+
 
     def change_user_click(self):
         self.destroy()
@@ -223,5 +307,5 @@ class UserWin(c.CTk):
         print('help')
 
 
-win = UserWin()
-win.mainloop()
+# win = UserWin()
+# win.mainloop()

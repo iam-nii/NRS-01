@@ -4,10 +4,11 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 class Results:
     def __init__(self,root):
-        self.table = c.CTkScrollableFrame(master=root,width=700,height=700)
+        self.root = root
+        self.table = c.CTkScrollableFrame(master=self.root,width=700,height=500)
 
 
-    def create_result_table(self,temperatures:list,viscosities:list,coordinates:list):
+    def create_result_table(self,temperatures:list,viscosities:list,coordinates:list,prod_temp_visc):
         # code for creating table
         n = c.CTkLabel(master=self.table, text='Координаты по длине канала, м', fg_color='black',width=250)
         temp_title = c.CTkLabel(master=self.table, text='Температура, °C', fg_color='black',width=250)
@@ -31,6 +32,9 @@ class Results:
                     self.col = c.CTkLabel(self.table, width=250, height=30, text=f'{coordinates[i]}', fg_color='black',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.col.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
+
+        self.results = c.CTkTextbox(self.root)
+        self.results.insert()
 
     def create_result_graph(self,frame,prop:list,coordinates:list,title:str):
         # Convert lists to numpy arrays

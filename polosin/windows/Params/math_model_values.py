@@ -5,19 +5,19 @@ FONT = ("MS Serif",20)
 ENTRY_FONT = ("Arial",16)
 
 class Math_model_values:
-    def __init__(self,params):
+    def __init__(self,params,DATA):
         # Math model
         self.math_model_tab = c.CTkTabview(master=params, fg_color='#1F2022', width=430, height=250, state='disabled',
                                       segmented_button_selected_color='#4A4A4A')
         self.math_model_tab.grid(row=1, column=1, pady=5)
-        self.math_model_frame = self.math_model_tab.add('Эмперические коеффициенты мат. модели')
+        self.math_model_frame = self.math_model_tab.add('Эмперические коеффициенты модели')
 
         # Consistence coefficient
         self.const_coeff_frame = c.CTkFrame(master=self.math_model_frame, fg_color='#1F2022')
         self.const_coeff_frame.pack(pady=10)
         # Label
         self.const_coeff_label = c.CTkLabel(master=self.const_coeff_frame,
-                                       text='Коеффициент консистенции при температуре плавления : ',wraplength=300,
+                                       text='Коеффициент консистенции при температуре приведения : ',wraplength=300,
                                        text_color='#D6D7D8',font=FONT, justify='right', width=300, anchor='e')
         self.const_coeff_label.grid(row=0, column=0, padx=5, sticky='e')
         # Entry
@@ -33,7 +33,7 @@ class Math_model_values:
         self.temp_viscosity_coeff_frame = c.CTkFrame(master=self.math_model_frame, fg_color='#1F2022')
         self.temp_viscosity_coeff_frame.pack(pady=10)
         # Label
-        self.temp_viscosity_coeff_label = c.CTkLabel(master=self.temp_viscosity_coeff_frame, text='Температурны коеффициент вязкости : ',
+        self.temp_viscosity_coeff_label = c.CTkLabel(master=self.temp_viscosity_coeff_frame, text='Температурный коеффициент вязкости : ',
                                          text_color='#D6D7D8',wraplength=300,font=FONT, justify='right', width=250, anchor='e')
         self.temp_viscosity_coeff_label.grid(row=0, column=0, padx=5, sticky='e')
         # Entry
@@ -92,6 +92,14 @@ class Math_model_values:
         # unit
         self.heat_transfer_unit_label = c.CTkLabel(master=self.heat_transfer_coeff_frame, font=FONT, text='Вт/м^2*С', text_color='#D6D7D8')
         self.heat_transfer_unit_label.grid(row=0, column=2, padx=5)
+
+
+        self.flow_index_entry.insert(0,DATA['flow_index'])
+        self.casting_temp_entry.insert(0,DATA['casting_temperature'])
+        self.const_coeff_entry.insert(0,DATA['consistency_coefficient'])
+        self.temp_viscosity_coeff_entry.insert(0,DATA['temp_viscosity_coefficient'])
+        self.heat_transfer_entry.insert(0,DATA['cover_heat_transfer_coefficient'])
+
 
     def get_values(self):
         return {

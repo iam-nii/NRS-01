@@ -7,7 +7,7 @@ ENTRY_FONT = ("Arial", 16)
 
 
 class Material_values:
-    def __init__(self, params):
+    def __init__(self, params,DATA):
         # Material properties
         self.material_props_tab = c.CTkTabview(master=params, fg_color='#1F2022', width=430, height=250, state='disabled',
                                           segmented_button_selected_color='#4A4A4A')
@@ -68,6 +68,9 @@ class Material_values:
         self.melting_temp_unit_label = c.CTkLabel(master=self.melting_temp_frame, font=FONT, text='°C', text_color='#D6D7D8')
         self.melting_temp_unit_label.grid(row=0, column=2, padx=5)
 
+        self.density_entry.insert(0,DATA['density'])
+        self.melting_temp_entry.insert(0,DATA['melting_temperature'])
+        self.heat_capacity_entry.insert(0,DATA['heat_capacity'])
 
     def get_values(self):
         return {
