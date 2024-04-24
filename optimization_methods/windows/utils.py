@@ -138,7 +138,10 @@ class SolutionMethods(Base):
     password = Column('password', String)
     role = Column('role', String)
 
-
+class Tasks(Base):
+    __tablename__ = 'tasks'
+    id = Column('id',Integer, primary_key=True,autoincrement=True)
+    text = Column('text',String)
 
 
 

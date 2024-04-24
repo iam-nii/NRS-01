@@ -1,4 +1,5 @@
 import customtkinter as c
+import tkinter as tk
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -33,8 +34,11 @@ class Results:
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.col.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
 
-        self.results = c.CTkTextbox(self.root)
-        self.results.insert()
+        self.results = c.CTkTextbox(self.root,width=200,height=90)
+        self.results.insert(c.END,f'{prod_temp_visc[0]}')
+        self.results.insert(c.END,prod_temp_visc[1])
+        self.results.insert(c.END,prod_temp_visc[2])
+        self.results.pack(pady=10)
 
     def create_result_graph(self,frame,prop:list,coordinates:list,title:str):
         # Convert lists to numpy arrays
