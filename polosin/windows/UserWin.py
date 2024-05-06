@@ -11,6 +11,7 @@ from polosin.windows.Params.materials_values import Material_values
 from polosin.windows.Params.math_model_values import Math_model_values
 from polosin.windows.Params.process_params import Process_values
 from polosin.windows.Params.solution_method_params import Solution_method_values
+import gc
 
 database = Database()
 
@@ -46,6 +47,12 @@ DATA = {
     'flow_index':'',
     'cover_heat_transfer_coefficient':'',
     "step": '',
+    "material": ''
+}
+prod_temp_visc_report = {
+    "Производительность": '',
+    "Температура продукта": '',
+    "Вязкость продукта": '',
 }
 
 class UserWin(c.CTk):
@@ -62,6 +69,8 @@ class UserWin(c.CTk):
         self.coordinates = []
         self.T = []
         self.viscosity = []
+
+
 
 
         # Create the menu bar
@@ -93,7 +102,8 @@ class UserWin(c.CTk):
             segmented_button_selected_color='grey',
             width=900,
             height=700,
-            fg_color='#F5F5F5'
+            fg_color='white',
+            text_color="black"
         )
         TABS.pack()
         self.params = TABS.add('Входные параметры')
@@ -106,7 +116,8 @@ class UserWin(c.CTk):
             segmented_button_selected_color='grey',
             width=800,
             height=600,
-            fg_color='#F5F5F5'
+            fg_color='white',
+            text_color="black"
         )
         self.temp_visco_tab.pack()
         self.temp_tab = self.temp_visco_tab.add('Температура')
@@ -131,6 +142,7 @@ class UserWin(c.CTk):
         id = 0
         for material in materials_list:
             if material['material'] == choice:
+                DATA['material'] = choice
                 id = material['id']
                 # Material parameters
                 DATA['density'] = material['density']
@@ -195,6 +207,11 @@ class UserWin(c.CTk):
     def calculate(self):
         # Get the data from the entries
 
+        # self.table_result = None
+        # self.temp_graph_result = None
+        # self.viscosity_graph_result = None
+        # gc.collect()
+
         # Geometry
         self.geometric_dict = self.geometric_values.get_values()
         self.parameters.append(self.geometric_dict)
@@ -250,68 +267,95 @@ class UserWin(c.CTk):
             Tr = float(self.math_model_dict['casting_temp'])
             To = float(self.materials_dict['melting_temperature'])
             step = float(self.solution_method_values_dict['step'])
+
+            if step == 0:
+                raise Exception("Step cannot be 0")
         except Exception as e:
             print(e)
-            self.message.configure(text='Invalid inputs, all fields must be floating numbers', text_color='red')
+            self.message.configure(text='Invalid inputs, all fields must be filled, floating numbers and not 0', text_color='red')
         else:
             self.message.configure(text='Success', text_color='green')
 
+            shear_rate = Vu / H
+
+            q_shear_rate = H * W * Uo * (shear_rate ** (n + 1))
+
+            q_a = W * au * ((b ** -1) - Tu + Tr)
+
+            F = 0.125 * ((H / W) ** 2) - 0.625 * (H / W) + 1
+
+            Qch = ((H * W * Vu) / 2) * F
+
+            self.T = [
+                round(Tr + 1 / b * (math.log(
+                    (((b * q_shear_rate) + (W * au)) / (b * q_a)) *
+                    (1 - math.exp(-(b * q_a) * z / (p * c * Qch))) + (
+                        math.exp(b * (To - Tr - z * (q_a / (p * c * Qch))))
+                    ))), 2)
+                for z in numpy.arange(0, L + step, step)
+            ]
+            print(self.T)
+
+            # material_temperature = float(self.math_model_dict['casting_temp']) + 1/
+            self.viscosity = [
+                round(Uo * math.exp(-b * (temp - Tr)) * (shear_rate ** (n - 1)), 2)
+                for temp in self.T
+            ]
+            print(self.viscosity)
+
+            # Channel output
+            Q = p * Qch * 3600
+            print(f'Производительность: {round(Q, 2)}')
+
+            # Product Temperature and viscosity
+            Tp = self.T[-1]
+            print(f'Температура продукта: {round(Tp, 2)}')
+
+            Viscosity_p = self.viscosity[-1]
+            print(f'Вязкость продукта: {round(Viscosity_p, 2)}')
+
+            prod_temp_visc_report["Производительность"] = Q
+            prod_temp_visc_report["Температура продукта"] = Tp
+            prod_temp_visc_report["Вязкость продукта"] = Viscosity_p
 
 
-        shear_rate = Vu / H
+            # Generate the table and graphs
+            self.coordinates = [round(n * step, 1) for n in range(len(self.T))]
+            self.table_result = Results(self.results)
 
-        q_shear_rate = H * W * Uo * (shear_rate ** (n + 1))
+            prod_temp_visc = [f'Производительность : {round(Q, 2)} [кг/ч]\n', f'Температура продукта: {round(Tp, 2)} [°C]\n',
+                              f'Вязкость продукта: {round(Viscosity_p, 2)} [Па*с]']
+            # table_result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
 
-        q_a = W * au * ((b ** -1) - Tu + Tr)
+            # def create_result_graph(self, frame, prop: list, coordinates: list, title: str):
 
-        F = 0.125 * ((H / W) ** 2) - 0.625 * (H / W) + 1
+            # temp_graph_result = Results(self.results)
+            #
+            # temp_graph = temp_graph_result.create_result_graph(frame=self.temp_tab, prop=self.T, title_main='температуры, °C',
+            #                                         title_y='Температура, °C',
+            #                                         coordinates=self.coordinates)
+            # viscosity_graph_result = Results(self.results)
+            # viscosity_graph = viscosity_graph_result.create_result_graph(frame=self.visco_tab, prop=self.viscosity,
+            #                                              title_main='вязкости, Па*с',title_y='Вязкость, Па*с',
+            #                                              coordinates=self.coordinates)
 
-        Qch = ((H * W * Vu) / 2) * F
 
-        self.T = [
-            round(Tr + 1 / b * (math.log(
-                (((b * q_shear_rate) + (W * au)) / (b * q_a)) *
-                (1 - math.exp(-(b * q_a) * z / (p * c * Qch))) + (
-                    math.exp(b * (To - Tr - z * (q_a / (p * c * Qch))))
-                ))), 4)
-            for z in numpy.arange(0, L + step, step)
-        ]
-        print(self.T)
+            # update the table with the new data
+            self.table_result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
 
-        # material_temperature = float(self.math_model_dict['casting_temp']) + 1/
-        self.viscosity = [
-            round(Uo * math.exp(-b * (temp - Tr)) * (shear_rate ** (n - 1)), 4)
-            for temp in self.T
-        ]
-        print(self.viscosity)
+            # update the temperature graph with the new data
+            self.temp_graph_result = Results(self.results)
+            self.temp_graph_result.create_result_graph(frame=self.temp_tab, prop=self.T, title_main='температуры, °C',
+                                                  title_y='Температура, °C',
+                                                  coordinates=self.coordinates)
 
-        # Channel output
-        Q = p * Qch
-        print(f'Производительность: {round(Q, 2)}')
+            # update the viscosity graph with the new data
+            self.viscosity_graph_result = Results(self.results)
+            self.viscosity_graph_result.create_result_graph(frame=self.visco_tab, prop=self.viscosity,
+                                                       title_main='вязкости, Па*с', title_y='Вязкость, Па*с',
+                                                       coordinates=self.coordinates)
 
-        # Product Temperature and viscosity
-        Tp = self.T[-1]
-        print(f'Температура продукта: {round(Tp, 2)}')
-
-        Viscosity_p = self.viscosity[-1]
-        print(f'Вязкость продукта: {round(Viscosity_p, 2)}')
-
-        # Generate the table
-        self.coordinates = [round(n * step, 1) for n in range(len(self.T))]
-        result = Results(self.results)
-
-        prod_temp_visc = [f'Производительность: {round(Q, 2)}\n', f'Температура продукта: {round(Tp, 2)}\n',
-                          f'Вязкость продукта: {round(Viscosity_p, 2)}']
-        result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
-
-        # def create_result_graph(self, frame, prop: list, coordinates: list, title: str):
-
-        temp_graph = result.create_result_graph(frame=self.temp_tab, prop=self.T, title='Температура, °C',
-                                                coordinates=self.coordinates)
-        viscosity_graph = result.create_result_graph(frame=self.visco_tab, prop=self.viscosity,
-                                                     title='Вязкость, Па*с',
-                                                     coordinates=self.coordinates)
-        return
+            return
 
     def save_data_click(self):
         # Top level window
@@ -334,7 +378,8 @@ class UserWin(c.CTk):
 
     def on_save_click(self):
         # Save Temperature
-        save = Save_to_excel(list1=self.coordinates,list2=self.T,list3=self.viscosity, file_name=self.filename.get())
+        save = Save_to_excel(list1=self.coordinates,list2=self.T,list3=self.viscosity, file_name=self.filename.get(),
+                             DATA=DATA,prod_temp_visc=prod_temp_visc_report)
 
 
     def change_user_click(self):

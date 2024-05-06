@@ -6,8 +6,10 @@ ENTRY_FONT = ("Arial",16)
 
 class Process_values:
     def __init__(self,params,DATA):
-        self.process_params_tab = c.CTkTabview(master=params, fg_color='#CECECE', width=430, height=200, state='disabled',
-                                          text_color='#000000',segmented_button_selected_color='#CECECE')
+        self.process_params_tab = c.CTkTabview(master=params, fg_color='#CECECE',
+            text_color="black", width=430, height=200, state='disabled',border_width=1,
+                                               segmented_button_selected_color='white',
+                                               segmented_button_unselected_color='white')
         # self.process_params_tab.grid(row=0, column=0, pady=5)
         self.process_params_tab.pack(pady=5)
 

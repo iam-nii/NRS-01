@@ -60,7 +60,7 @@ class ProcessParams(Base):
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     cover_speed = Column('cover_speed', Float)
-    cover_temperature = Column('heat_capacity', Integer)
+    cover_temperature = Column('cover_temperature', Integer)
 
     def __init__(self, cover_speed, cover_temperature):
         self.cover_speed = cover_speed

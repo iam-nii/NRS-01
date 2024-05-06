@@ -10,7 +10,8 @@ class Geometric:
     def __init__(self, params,DATA):
         # Geometric values
         self.geometric_tab = c.CTkTabview(master=params, fg_color='#CECECE', width=430, height=250, state='disabled',
-                                      text_color='#000000',segmented_button_selected_color='#CECECE')
+                                      text_color='black',segmented_button_selected_color='white',
+                                                       segmented_button_unselected_color='white',)
         self.geometric_tab.__setattr__('-alpha', 0.5)
         self.geometric_tab.grid(column=0, row=0, padx=5, pady=10)
 

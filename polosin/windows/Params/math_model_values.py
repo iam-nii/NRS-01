@@ -8,7 +8,8 @@ class Math_model_values:
     def __init__(self,params,DATA):
         # Math model
         self.math_model_tab = c.CTkTabview(master=params, fg_color='#CECECE', width=430, height=250, state='disabled',
-                                           text_color='#000000',segmented_button_selected_color='#CECECE')
+                                           text_color='black',segmented_button_selected_color='white',
+                                                       segmented_button_unselected_color='white')
         self.math_model_tab.grid(row=1, column=1, pady=5)
         self.math_model_frame = self.math_model_tab.add('Эмпирические коэффициенты модели')
 

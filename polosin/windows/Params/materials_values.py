@@ -10,7 +10,8 @@ class Material_values:
     def __init__(self, params,DATA):
         # Material properties
         self.material_props_tab = c.CTkTabview(master=params, fg_color='#CECECE', width=430, height=250, state='disabled',
-                                          text_color='#000000',segmented_button_selected_color='#CECECE')
+                                          text_color='black',segmented_button_selected_color='white',
+                                                       segmented_button_unselected_color='white')
         self.material_props_tab.grid(row=0, column=1, padx=5, pady=10)
 
         # Main Label
