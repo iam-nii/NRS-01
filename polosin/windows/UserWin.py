@@ -11,7 +11,10 @@ from polosin.windows.Params.materials_values import Material_values
 from polosin.windows.Params.math_model_values import Math_model_values
 from polosin.windows.Params.process_params import Process_values
 from polosin.windows.Params.solution_method_params import Solution_method_values
-import gc
+import psutil
+import time
+import os
+
 
 database = Database()
 
@@ -36,23 +39,26 @@ DATA = {
     'density': '',
     'heat_capacity':'',
     'melting_temperature':'',
-    'cover_speed':'',
-    'cover_temperature':'',
-    'width':'',
-    'depth':'',
-    'length':'',
-    'consistency_coefficient':'',
-    'temp_viscosity_coefficient':'',
-    'casting_temperature':'',
-    'flow_index':'',
-    'cover_heat_transfer_coefficient':'',
-    "step": '',
+    'cover_speed':'1.5',
+    'cover_temperature':'180',
+    'width':'0.2',
+    'depth':'0.003',
+    'length':'7.5',
+    'consistency_coefficient':'1500',
+    'temp_viscosity_coefficient':'0.015',
+    'casting_temperature':'185',
+    'flow_index':'0.38',
+    'cover_heat_transfer_coefficient':'1500',
+    "step": '0.1',
     "material": ''
 }
-prod_temp_visc_report = {
+data_report = {
     "Производительность": '',
     "Температура продукта": '',
     "Вязкость продукта": '',
+    "Память": '',
+    "Время рассчета":"",
+    "Количество операций": '',
 }
 
 class UserWin(c.CTk):
@@ -90,11 +96,7 @@ class UserWin(c.CTk):
         # Add the file menu to the menu bar
         menubar.add_cascade(label="Menu", menu=filemenu, font=('Arial', 20, 'normal'))
 
-        material_menu_list = [material['material'] for material in materials_list]
-        materials = c.CTkOptionMenu(self, values=material_menu_list,
-                                    command=self.print_materials)
-        materials.set("Materials")
-        materials.pack(anchor='w')
+
 
         # Creating the tabs
         TABS = c.CTkTabview(
@@ -125,16 +127,54 @@ class UserWin(c.CTk):
 
         self.parameters: [dict] = []
 
+        # Params tab
+        # Materials combobox
+        material_menu_list = [material['material'] for material in materials_list]
+        materials = c.CTkOptionMenu(self.params, values=material_menu_list,
+                                    command=self.print_materials)
+        materials.set("Materials")
+        materials.grid(column=1, row=0, padx=5, pady=5, sticky="E")
+
+        # ------------------------Geometric values-------------------------------------#
+        self.geometric_values = Geometric(self.params, DATA)
+        self.divider = c.CTkFrame(self.params, fg_color="white")
+        self.divider.grid(row=2, column=0, padx=5, pady=10)
+        # ---------------------------Process Parameters-----------------------------------#
+        self.process_values = Process_values(self.divider, DATA)
+        # ---------------------------Solution method parameters-----------------------------------#
+        self.solution_method_values = Solution_method_values(self.divider, DATA)
+        # # Calculation step
+        # self.calculation_step_frame = c.CTkFrame(master=self.divider, fg_color='#070809')
+        # self.calculation_step_frame.grid(row=1, column=0, sticky=tk.W, pady=10, padx=5)
+        # # Label
+        # self.calculation_step_label = c.CTkLabel(master=self.calculation_step_frame,
+        #                                          text='Шаг расчёта по длине канала  : ',
+        #                                          text_color='#D6D7D8',
+        #                                          font=FONT, justify='right', width=250, anchor='e')
+        # self.calculation_step_label.grid(row=0, column=0, padx=5, sticky='e')
+        # # Entry
+        # self.calculation_step_entry = c.CTkEntry(master=self.calculation_step_frame, fg_color='#1F2022',
+        #                                          font=ENTRY_FONT,
+        #                                          # validate="key",
+        #                                          # validatecommand=(params.register(validate_float), "%S"),
+        #                                          text_color='#D6D7D8', width=60)
+        # self.calculation_step_entry.grid(row=0, column=1, padx=5)
+
+        # ----------------------------------------Math Model------------------------------------#
+        self.math_model_values = Math_model_values(self.params, DATA)
+
+
+
 
 
 
         calculate = c.CTkButton(master=self.params, text='Расчёт', fg_color='#214569', command=self.calculate)
-        calculate.grid(row=2, column=1, padx=5, pady=10, sticky=tk.E)
+        calculate.grid(column=1, row=3, padx=5, pady=5, sticky="E")
 
         # self.message = c.CTkLabel(master=self.params, text='Invalid inputs, all fields must be floating numbers',
         #                           anchor='w', text_color='red')
         self.message = c.CTkLabel(master=self.params, anchor='w',text=' ')
-        self.message.grid(row=2, column=0, sticky=tk.W, pady=10, padx=5)
+        self.message.grid(row=3, column=0, sticky=tk.W, pady=10, padx=5)
 
 
 
@@ -170,39 +210,13 @@ class UserWin(c.CTk):
 
         print(DATA)
 
-        # Params tab
-        # ------------------------Geometric values-------------------------------------#
-        self.geometric_values = Geometric(self.params, DATA)
+
 
         # ---------------------------Materials-----------------------------------#
         self.material_values = Material_values(self.params, DATA)
 
 
-        self.divider = c.CTkFrame(self.params,fg_color="#F5F5F5")
-        self.divider.grid(row=1, column=0, padx=5, pady=10)
-        # ---------------------------Process Parameters-----------------------------------#
-        self.process_values = Process_values(self.divider, DATA)
-        # ---------------------------Solution method parameters-----------------------------------#
-        self.solution_method_values = Solution_method_values(self.divider,DATA)
-        # # Calculation step
-        # self.calculation_step_frame = c.CTkFrame(master=self.divider, fg_color='#070809')
-        # self.calculation_step_frame.grid(row=1, column=0, sticky=tk.W, pady=10, padx=5)
-        # # Label
-        # self.calculation_step_label = c.CTkLabel(master=self.calculation_step_frame,
-        #                                          text='Шаг расчёта по длине канала  : ',
-        #                                          text_color='#D6D7D8',
-        #                                          font=FONT, justify='right', width=250, anchor='e')
-        # self.calculation_step_label.grid(row=0, column=0, padx=5, sticky='e')
-        # # Entry
-        # self.calculation_step_entry = c.CTkEntry(master=self.calculation_step_frame, fg_color='#1F2022',
-        #                                          font=ENTRY_FONT,
-        #                                          # validate="key",
-        #                                          # validatecommand=(params.register(validate_float), "%S"),
-        #                                          text_color='#D6D7D8', width=60)
-        # self.calculation_step_entry.grid(row=0, column=1, padx=5)
 
-        # ----------------------------------------Math Model------------------------------------#
-        self.math_model_values = Math_model_values(self.params, DATA)
 
     def calculate(self):
         # Get the data from the entries
@@ -275,7 +289,7 @@ class UserWin(c.CTk):
             self.message.configure(text='Invalid inputs, all fields must be filled, floating numbers and not 0', text_color='red')
         else:
             self.message.configure(text='Success', text_color='green')
-
+            start = time.time()
             shear_rate = Vu / H
 
             q_shear_rate = H * W * Uo * (shear_rate ** (n + 1))
@@ -286,14 +300,25 @@ class UserWin(c.CTk):
 
             Qch = ((H * W * Vu) / 2) * F
 
-            self.T = [
-                round(Tr + 1 / b * (math.log(
+            count = 1
+
+            # self.T = [
+            #     round(Tr + 1 / b * (math.log(
+            #         (((b * q_shear_rate) + (W * au)) / (b * q_a)) *
+            #         (1 - math.exp(-(b * q_a) * z / (p * c * Qch))) + (
+            #             math.exp(b * (To - Tr - z * (q_a / (p * c * Qch))))
+            #         ))), 2)
+            #     for z in numpy.arange(0, L + step, step)
+            # ]
+            self.T = []
+            for z in numpy.arange(0, L + step, step):
+                self.T.append(round(Tr + 1 / b * (math.log(
                     (((b * q_shear_rate) + (W * au)) / (b * q_a)) *
                     (1 - math.exp(-(b * q_a) * z / (p * c * Qch))) + (
                         math.exp(b * (To - Tr - z * (q_a / (p * c * Qch))))
-                    ))), 2)
-                for z in numpy.arange(0, L + step, step)
-            ]
+                    ))), 2))
+                count += 1
+
             print(self.T)
 
             # material_temperature = float(self.math_model_dict['casting_temp']) + 1/
@@ -314,17 +339,31 @@ class UserWin(c.CTk):
             Viscosity_p = self.viscosity[-1]
             print(f'Вязкость продукта: {round(Viscosity_p, 2)}')
 
-            prod_temp_visc_report["Производительность"] = Q
-            prod_temp_visc_report["Температура продукта"] = Tp
-            prod_temp_visc_report["Вязкость продукта"] = Viscosity_p
+            end = time.time()
+            calc_time = end - start
+            memory_usage = psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
+
+            data_report["Производительность"] = Q
+            data_report["Температура продукта"] = Tp
+            data_report["Вязкость продукта"] = Viscosity_p
+            data_report["Память"] = memory_usage
+            data_report["Время рассчета"] = calc_time
+            data_report["Количество операций"] = count
 
 
             # Generate the table and graphs
             self.coordinates = [round(n * step, 1) for n in range(len(self.T))]
             self.table_result = Results(self.results)
+            # process = psutil.Process(os.getpid())
 
-            prod_temp_visc = [f'Производительность : {round(Q, 2)} [кг/ч]\n', f'Температура продукта: {round(Tp, 2)} [°C]\n',
-                              f'Вязкость продукта: {round(Viscosity_p, 2)} [Па*с]']
+            prod_temp_visc = [
+                f'Производительность : {round(Q, 2)} [кг/ч]\n',
+                f'Температура продукта: {round(Tp, 2)} [°C]\n',
+                f'Вязкость продукта: {round(Viscosity_p, 2)} [Па*с]\n',
+                f'Память: {round(memory_usage,2)}[мб]\n ',
+                f'Время рассчета: {calc_time} [c]\n',
+                f'Количество операций: {count}'
+            ]
             # table_result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
 
             # def create_result_graph(self, frame, prop: list, coordinates: list, title: str):
@@ -378,8 +417,8 @@ class UserWin(c.CTk):
 
     def on_save_click(self):
         # Save Temperature
-        save = Save_to_excel(list1=self.coordinates,list2=self.T,list3=self.viscosity, file_name=self.filename.get(),
-                             DATA=DATA,prod_temp_visc=prod_temp_visc_report)
+        save = Save_to_excel(list1=self.coordinates, list2=self.T, list3=self.viscosity, file_name=self.filename.get(),
+                             DATA=DATA, prod_temp_visc=data_report)
 
 
     def change_user_click(self):

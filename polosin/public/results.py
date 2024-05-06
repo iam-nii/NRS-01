@@ -8,7 +8,12 @@ class Results:
         self.root = root
 
         self.table = c.CTkScrollableFrame(master=self.root,width=700,height=500)
-        self.results = c.CTkTextbox(self.root,width=250,height=90,fg_color='white',text_color='black')
+
+        self.results_frame = c.CTkFrame(self.root,fg_color='white')
+        self.measurement_frame = c.CTkFrame(self.root,fg_color='white')
+
+        self.results = c.CTkTextbox(self.results_frame,width=300,height=90,fg_color='white',text_color='black')
+        self.measurement = c.CTkTextbox(self.measurement_frame,width=300,height=90,fg_color='white',text_color='black')
         self.canvas = None
         self.ax = None
         self.fig = None
@@ -21,7 +26,7 @@ class Results:
             print(e)
         else:
             self.table = c.CTkScrollableFrame(master=self.root, width=700, height=500)
-            self.results = c.CTkTextbox(self.root, width=250, height=90, fg_color='white', text_color='black')
+            self.results = c.CTkTextbox(self.results_frame, width=300, height=120, fg_color='white', text_color='black')
             print("New table")
 
     def create_result_table(self,temperatures:list,viscosities:list,coordinates:list,prod_temp_visc):
@@ -33,7 +38,7 @@ class Results:
         n.grid(row=0, column=0)
         temp_title.grid(row=0, column=1)
         viscosity_title.grid(row=0, column=2)
-        self.table.grid(column=1,row=1)
+        self.table.grid(column=1,row=1,columnspan=2)
 
         for i in range(len(temperatures)):
             for j in range(4):
@@ -54,7 +59,18 @@ class Results:
         self.results.insert(c.END,f'{prod_temp_visc[0]}')
         self.results.insert(c.END,prod_temp_visc[1])
         self.results.insert(c.END,prod_temp_visc[2])
-        self.results.grid(column=1,row=2)
+        self.results_label = c.CTkLabel(master=self.results_frame,text="Выходные параметры",text_color='black')
+        self.results_label.pack()
+        self.results.pack()
+        self.results_frame.grid(column=1,row=2,sticky='W',pady=5)
+
+        self.measurement.insert(c.END,f'{prod_temp_visc[3]}')
+        self.measurement.insert(c.END,f'{prod_temp_visc[4]}')
+        self.measurement.insert(c.END,f'{prod_temp_visc[5]}')
+        self.measurement_label = c.CTkLabel(master=self.measurement_frame,text="Показатели экономичности",text_color='black')
+        self.measurement_label.pack()
+        self.measurement.pack()
+        self.measurement_frame.grid(column=2,row=2,sticky='W',padx=20,pady=5)
 
     # def create_result_graph(self,frame,prop:list,coordinates:list,title_main:str,title_y:str):
     #     # Convert lists to numpy arrays

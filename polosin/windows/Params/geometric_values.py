@@ -13,7 +13,7 @@ class Geometric:
                                       text_color='black',segmented_button_selected_color='white',
                                                        segmented_button_unselected_color='white',)
         self.geometric_tab.__setattr__('-alpha', 0.5)
-        self.geometric_tab.grid(column=0, row=0, padx=5, pady=10)
+        self.geometric_tab.grid(column=0, row=1, padx=5, pady=10)
 
         # Main Label
         self.geometric_frame = self.geometric_tab.add('Геометрические параметры канала')

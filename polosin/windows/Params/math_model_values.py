@@ -10,7 +10,7 @@ class Math_model_values:
         self.math_model_tab = c.CTkTabview(master=params, fg_color='#CECECE', width=430, height=250, state='disabled',
                                            text_color='black',segmented_button_selected_color='white',
                                                        segmented_button_unselected_color='white')
-        self.math_model_tab.grid(row=1, column=1, pady=5)
+        self.math_model_tab.grid(row=2, column=1, pady=5)
         self.math_model_frame = self.math_model_tab.add('Эмпирические коэффициенты модели')
 
         # Consistence coefficient
