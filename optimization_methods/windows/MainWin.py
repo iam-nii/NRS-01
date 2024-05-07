@@ -6,73 +6,6 @@ import optimization_methods.data.PasswordGen as PasswordGen
 
 
 database = owu.Database()
-def tables_select(choice,frame:c.CTkFrame):
-    match choice:
-        case 'users':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_users()
-                table = result[0]
-                columns = result[1]
-
-                table = owu.User_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,padx=50,rowspan=2,columnspan=3)
-        case 'chanel':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_chanel_params()
-                table = result[0]
-                columns = result[1]
-
-                table = Chanel_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,padx=50,rowspan=2,columnspan=3)
-        case 'material':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_materials()
-                table = result[0]
-                columns = result[1]
-
-                table = Material_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,padx=50,rowspan=2,columnspan=3)
-        case 'math_model':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_math_module()
-                table = result[0]
-                columns = result[1]
-
-                table = MathModel_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,padx=50,rowspan=2,columnspan=3)
-        case 'process_params':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_process_params()
-                table = result[0]
-                columns = result[1]
-
-                table = ProcessParams_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,padx=50,rowspan=2,columnspan=3)
 
 def donothing():
     pass
@@ -115,7 +48,7 @@ class Main(c.CTk):
         tables_list = database.get_tables()
 
         tables_dict = {
-            table:tables_select for table in tables_list
+            table:self.tables_select for table in tables_list
         }
         print(tables_dict)
         self.table_frame = c.CTkFrame(self)
@@ -129,7 +62,7 @@ class Main(c.CTk):
 
         # Left frame
         self.left_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
-        self.left_frame.grid(row=0,column=0,pady=30,padx=20, rowspan=3)
+
 
         self.table_id = c.CTkLabel(self.left_frame,fg_color='#D9D9D9',
                                    text='sample text', width=150, text_color='black')
@@ -150,6 +83,75 @@ class Main(c.CTk):
         self.edit_button.pack(pady=10,padx=30)
         self.delete_button.pack(pady=10,padx=30)
         self.add_button.pack(pady=10,padx=30)
+
+    def tables_select(self,choice, frame: c.CTkFrame):
+        match choice:
+            case 'users':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_users()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = owu.User_Table(frame, table, columns)
+                    self.left_frame.grid(row=0, column=0, pady=30, padx=20, rowspan=3)
+                    frame.grid(row=0, column=1, pady=30, padx=50, rowspan=2, columnspan=3)
+            case 'solution_methods':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_chanel_params()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = Chanel_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, padx=50, rowspan=2, columnspan=3)
+            case 'material':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_materials()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = Material_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, padx=50, rowspan=2, columnspan=3)
+            case 'math_model':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_math_module()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = MathModel_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, padx=50, rowspan=2, columnspan=3)
+            case 'process_params':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_process_params()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = ProcessParams_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, padx=50, rowspan=2, columnspan=3)
 
     def file_click(self):
         print("file")

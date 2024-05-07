@@ -114,9 +114,10 @@ class Login(App):
         user = User(username,password,role)
 
         result = database.select_user(user, self.username.get())
+        print(result)
         db_password = result.password
         db_role = result.role
-        print(result)
+
         if result is not None:
             print(f'User password: {db_password}')
             decryptor = EncDecPass()

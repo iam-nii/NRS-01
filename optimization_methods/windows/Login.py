@@ -2,7 +2,13 @@ import customtkinter as c
 import optimization_methods.windows.utils as owu
 import optimization_methods.windows.Signup as Signup
 import optimization_methods.windows.MainWin as MainWin
+import optimization_methods.windows.ui_test as UserWindow
 import customtkinter as c
+from PyQt6 import QtWidgets, uic
+import sys
+
+
+app = UserWindow.APP
 
 width = 500
 height = 500
@@ -120,8 +126,11 @@ class Login(App):
             if password == user_password:
                 print('Login success')
                 self.destroy()
-                main = MainWin.Main()
-                main.mainloop()
+                user_window = UserWindow.MainWindow()
+                user_window.show()
+                app.exec()
+                # main = MainWin.Main()
+                # main.mainloop()
 
         else:
             self.label.grid(row=5)

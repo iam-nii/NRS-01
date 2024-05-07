@@ -13,74 +13,6 @@ def donothing():
 
 database = Database()
 
-def tables_select(choice,frame:c.CTkFrame):
-    match choice:
-        case 'users':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_users()
-                table = result[0]
-                columns = result[1]
-
-                table = User_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,columnspan=3)
-                # self.left_frame.grid(row=0, column=0, pady=30, padx=20, rowspan=3)
-        case 'chanel':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_chanel_params()
-                table = result[0]
-                columns = result[1]
-
-                table = Chanel_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,columnspan=3)
-        case 'material':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_materials()
-                table = result[0]
-                columns = result[1]
-
-                table = Material_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,columnspan=3)
-        case 'math_model':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_math_module()
-                table = result[0]
-                columns = result[1]
-
-                table = MathModel_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,columnspan=3)
-        case 'process_params':
-            try:
-                for widget in frame.winfo_children():
-                    widget.destroy()
-            except Exception as e:
-                print(e)
-            else:
-                result = database.get_process_params()
-                table = result[0]
-                columns = result[1]
-
-                table = ProcessParams_Table(frame, table, columns)
-                frame.grid(row=0,column=1,pady=30,columnspan=3)
 
 
 # Main window
@@ -118,7 +50,7 @@ class Admin(c.CTk):
         tables_list = database.get_tables()
 
         tables_dict = {
-            table:tables_select for table in tables_list
+            table:self.tables_select for table in tables_list
         }
         print(tables_dict)
         self.table_frame = c.CTkFrame(self)
@@ -130,35 +62,143 @@ class Admin(c.CTk):
 
         menubar.add_cascade(label="Select table", menu=tables_menu,font=('Arial', 20, 'normal'))
 
-        # Left frame
-        self.left_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
-        self.left_frame.grid(row=0,column=0,pady=10,padx=20)
+        # User Edit frame
+        self.user_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
 
-        self.table_id = c.CTkLabel(self.left_frame, fg_color='#D9D9D9',text=' '
+        self.table_id = c.CTkLabel(self.user_edit_frame, fg_color='#D9D9D9', text=' '
                                    , width=150, text_color='black')
         self.table_id.pack(pady=10, padx=30)
 
-        self.table_username = c.CTkEntry(self.left_frame, fg_color='#D9D9D9', corner_radius=0,
+        self.table_username = c.CTkEntry(self.user_edit_frame, fg_color='#D9D9D9', corner_radius=0,
                                          border_width=0, border_color='black', placeholder_text='Username', width=150,
                                          text_color='black')
         self.table_username.pack(pady=10, padx=30)
 
-        self.table_role = c.CTkEntry(self.left_frame, fg_color='#D9D9D9', placeholder_text='Role', corner_radius=0,
+        self.table_role = c.CTkEntry(self.user_edit_frame, fg_color='#D9D9D9', placeholder_text='Role', corner_radius=0,
                                      border_width=0, border_color='black', width=150, text_color='black')
         self.table_role.pack(pady=10, padx=30)
 
         # Buttons
-        self.edit_button = c.CTkButton(self.left_frame, width=150, text='EDIT', fg_color='#238FB1')
-        self.delete_button = c.CTkButton(self.left_frame, width=150, text='DELETE', fg_color='#FB5757')
-        self.add_button = c.CTkButton(self.left_frame, width=150, text='ADD', fg_color='#6CD63C',
-                                      command=self.on_add_click)
-        self.edit_button.pack(pady=10, padx=30)
-        self.delete_button.pack(pady=10, padx=30)
-        self.add_button.pack(pady=10, padx=30)
+        self.user_edit_button = c.CTkButton(self.user_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
+        self.user_delete_button = c.CTkButton(self.user_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
+        self.user_add_button = c.CTkButton(self.user_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
+                                           command=self.user_edit_on_add_click)
+        self.user_edit_button.pack(pady=10, padx=30)
+        self.user_delete_button.pack(pady=10, padx=30)
+        self.user_add_button.pack(pady=10, padx=30)
 
+        # Chanel Edit frame
+        self.chanel_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
 
+        self.chanel_id = c.CTkLabel(self.chanel_edit_frame, fg_color='#D9D9D9', text=' '
+                                   , width=150, text_color='black')
+        self.chanel_id.pack(pady=10, padx=30)
 
-    def on_add_click(self):
+        self.chanel_width = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', corner_radius=0,
+                                         border_width=0, border_color='black', placeholder_text='Ширина', width=150,
+                                         text_color='black')
+        self.chanel_width.pack(pady=10, padx=30)
+
+        self.chanel_depth = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', placeholder_text='Глубина', corner_radius=0,
+                                     border_width=0, border_color='black', width=150, text_color='black')
+        self.chanel_depth.pack(pady=10, padx=30)
+
+        self.chanel_length = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', placeholder_text='Длина',
+                                     corner_radius=0,
+                                     border_width=0, border_color='black', width=150, text_color='black')
+        self.chanel_length.pack(pady=10, padx=30)
+
+        # Buttons
+        self.chanel_edit_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
+        self.chanel_delete_button = c.CTkButton(self.chanel_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
+        self.chanel_add_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
+                                             command=self.user_edit_on_add_click)
+        self.chanel_edit_button.pack(pady=10, padx=30)
+        self.chanel_delete_button.pack(pady=10, padx=30)
+        self.chanel_add_button.pack(pady=10, padx=30)
+
+    def tables_select(self,choice, frame: c.CTkFrame):
+        match choice:
+            case 'users':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_users()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = User_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, columnspan=3)
+                    # self.user_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
+                    self.user_edit_frame.grid(row=0, column=0, pady=10, padx=20)
+                    # self.left_frame.grid(row=0, column=0, pady=30, padx=20, rowspan=3)
+            case 'chanel':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                    self.user_edit_frame.grid_forget()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_chanel_params()
+                    table = result[0]
+                    columns = result[1]
+                    print(table)
+
+                    table = Chanel_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, columnspan=3)
+
+                    self.chanel_edit_frame.grid(row=0, column=0, pady=10, padx=20)
+            case 'material':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_materials()
+                    print("Material results")
+                    print(result)
+                    table = result[0]
+                    columns = result[1]
+
+                    table = Material_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, columnspan=3)
+            case 'math_model':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_math_module()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = MathModel_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, columnspan=3)
+            case 'process_params':
+                try:
+                    for widget in frame.winfo_children():
+                        widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
+                except Exception as e:
+                    print(e)
+                else:
+                    result = database.get_process_params()
+                    table = result[0]
+                    columns = result[1]
+
+                    table = ProcessParams_Table(frame, table, columns)
+                    frame.grid(row=0, column=1, pady=30, columnspan=3)
+
+    def user_edit_on_add_click(self):
         # Top level window
         self.add_user_window = c.CTkToplevel(self,fg_color="#232E33")
         self.add_user_window.geometry('400x250')

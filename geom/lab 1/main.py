@@ -77,6 +77,7 @@ def reset():
         except ValueError:
             continue
     print(SHAPES)
+
 def go_callback(choice):
     if choice == 'menu':
         warning.pack(pady=5)
