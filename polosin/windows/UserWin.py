@@ -360,8 +360,8 @@ class UserWin(c.CTk):
                 f'Производительность : {round(Q, 2)} [кг/ч]\n',
                 f'Температура продукта: {round(Tp, 2)} [°C]\n',
                 f'Вязкость продукта: {round(Viscosity_p, 2)} [Па*с]\n',
-                f'Память: {round(memory_usage,2)}[мб]\n ',
-                f'Время рассчета: {calc_time} [c]\n',
+                f'Память: {round(memory_usage,2)} [Мбайт]\n ',
+                f'Время рассчета: {round(calc_time,4)} [c]\n',
                 f'Количество операций: {count}'
             ]
             # table_result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
