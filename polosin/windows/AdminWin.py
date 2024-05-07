@@ -79,9 +79,9 @@ class Admin(c.CTk):
         self.table_role.pack(pady=10, padx=30)
 
         # Buttons
-        self.user_edit_button = c.CTkButton(self.user_edit_frame, width=150, text='EDIT', fg_color='#238FB1')
-        self.user_delete_button = c.CTkButton(self.user_edit_frame, width=150, text='DELETE', fg_color='#FB5757')
-        self.user_add_button = c.CTkButton(self.user_edit_frame, width=150, text='ADD', fg_color='#6CD63C',
+        self.user_edit_button = c.CTkButton(self.user_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
+        self.user_delete_button = c.CTkButton(self.user_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
+        self.user_add_button = c.CTkButton(self.user_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
                                            command=self.user_edit_on_add_click)
         self.user_edit_button.pack(pady=10, padx=30)
         self.user_delete_button.pack(pady=10, padx=30)
@@ -95,23 +95,23 @@ class Admin(c.CTk):
         self.chanel_id.pack(pady=10, padx=30)
 
         self.chanel_width = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', corner_radius=0,
-                                         border_width=0, border_color='black', placeholder_text='Width', width=150,
+                                         border_width=0, border_color='black', placeholder_text='Ширина', width=150,
                                          text_color='black')
         self.chanel_width.pack(pady=10, padx=30)
 
-        self.chanel_depth = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', placeholder_text='Depth', corner_radius=0,
+        self.chanel_depth = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', placeholder_text='Глубина', corner_radius=0,
                                      border_width=0, border_color='black', width=150, text_color='black')
         self.chanel_depth.pack(pady=10, padx=30)
 
-        self.chanel_length = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', placeholder_text='Length',
+        self.chanel_length = c.CTkEntry(self.chanel_edit_frame, fg_color='#D9D9D9', placeholder_text='Длина',
                                      corner_radius=0,
                                      border_width=0, border_color='black', width=150, text_color='black')
         self.chanel_length.pack(pady=10, padx=30)
 
         # Buttons
-        self.chanel_edit_button = c.CTkButton(self.chanel_edit_frame, width=150, text='EDIT', fg_color='#238FB1')
-        self.chanel_delete_button = c.CTkButton(self.chanel_edit_frame, width=150, text='DELETE', fg_color='#FB5757')
-        self.chanel_add_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ADD', fg_color='#6CD63C',
+        self.chanel_edit_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
+        self.chanel_delete_button = c.CTkButton(self.chanel_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
+        self.chanel_add_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
                                              command=self.user_edit_on_add_click)
         self.chanel_edit_button.pack(pady=10, padx=30)
         self.chanel_delete_button.pack(pady=10, padx=30)
@@ -123,6 +123,7 @@ class Admin(c.CTk):
                 try:
                     for widget in frame.winfo_children():
                         widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
                 except Exception as e:
                     print(e)
                 else:
@@ -150,10 +151,13 @@ class Admin(c.CTk):
 
                     table = Chanel_Table(frame, table, columns)
                     frame.grid(row=0, column=1, pady=30, columnspan=3)
+
+                    self.chanel_edit_frame.grid(row=0, column=0, pady=10, padx=20)
             case 'material':
                 try:
                     for widget in frame.winfo_children():
                         widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
                 except Exception as e:
                     print(e)
                 else:
@@ -169,6 +173,7 @@ class Admin(c.CTk):
                 try:
                     for widget in frame.winfo_children():
                         widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
                 except Exception as e:
                     print(e)
                 else:
@@ -182,6 +187,7 @@ class Admin(c.CTk):
                 try:
                     for widget in frame.winfo_children():
                         widget.destroy()
+                    self.chanel_edit_frame.grid_forget()
                 except Exception as e:
                     print(e)
                 else:
