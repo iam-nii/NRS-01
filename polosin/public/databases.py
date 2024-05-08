@@ -9,6 +9,7 @@ class User(Base):
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     username = Column('username', String, unique=True)
     password = Column('password', String)
+    material_id = Column('material_id',Integer)
     role = Column('role', String)
 
     def __init__(self, username, password, role):
@@ -41,9 +42,9 @@ class Material(Base):
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     material = Column('material',String)
-    density = Column('density', Integer)
-    heat_capacity = Column('heat_capacity', Integer)
-    melting_temperature = Column('melting_temperature', Integer)
+    density = Column('density', Float)
+    heat_capacity = Column('heat_capacity', Float)
+    melting_temperature = Column('melting_temperature', Float)
 
     def __init__(self,material, density, heat_capacity, melting_temperature):
         self.material = material
@@ -60,7 +61,7 @@ class ProcessParams(Base):
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     cover_speed = Column('cover_speed', Float)
-    cover_temperature = Column('cover_temperature', Integer)
+    cover_temperature = Column('cover_temperature', Float)
 
     def __init__(self, cover_speed, cover_temperature):
         self.cover_speed = cover_speed
@@ -74,11 +75,11 @@ class MathModel(Base):
     __tablename__ = 'math_model'
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
-    consistency_coefficient = Column('consistency_coefficient', Integer)
+    consistency_coefficient = Column('consistency_coefficient', Float)
     temp_viscosity_coefficient = Column('temp_viscosity_coefficient', Float)
-    casting_temperature = Column('casting_temperature', Integer)
+    casting_temperature = Column('casting_temperature', Float)
     flow_index = Column('flow_index', Float)
-    cover_heat_transfer_coefficient = Column('cover_heat_transfer_coefficient', Integer)
+    cover_heat_transfer_coefficient = Column('cover_heat_transfer_coefficient', Float)
 
     def __init__(self, consistency_coefficient, temp_viscosity_coefficient, casting_temperature, flow_index,
                  cover_heat_transfer_coefficient):

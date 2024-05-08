@@ -74,12 +74,13 @@ class Admin(c.CTk):
                                          text_color='black')
         self.table_username.pack(pady=10, padx=30)
 
-        self.table_role = c.CTkEntry(self.user_edit_frame, fg_color='#D9D9D9', placeholder_text='Role', corner_radius=0,
+        self.table_role = c.CTkEntry(self.user_edit_frame, fg_color='#D9D9D9', placeholder_text='Password', corner_radius=0,
                                      border_width=0, border_color='black', width=150, text_color='black')
         self.table_role.pack(pady=10, padx=30)
 
         # Buttons
-        self.user_edit_button = c.CTkButton(self.user_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
+        self.user_edit_button = c.CTkButton(self.user_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1',
+                                            command=self.user_edit_on_edit_click)
         self.user_delete_button = c.CTkButton(self.user_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
         self.user_add_button = c.CTkButton(self.user_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
                                            command=self.user_edit_on_add_click)
@@ -112,10 +113,126 @@ class Admin(c.CTk):
         self.chanel_edit_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
         self.chanel_delete_button = c.CTkButton(self.chanel_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
         self.chanel_add_button = c.CTkButton(self.chanel_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
-                                             command=self.user_edit_on_add_click)
+                                             command=self.chanel_edit_on_add_click)
         self.chanel_edit_button.pack(pady=10, padx=30)
         self.chanel_delete_button.pack(pady=10, padx=30)
         self.chanel_add_button.pack(pady=10, padx=30)
+
+        # Material Edit frame
+        self.material_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
+
+        self.material_id = c.CTkLabel(self.material_edit_frame, fg_color='#D9D9D9', text=' '
+                                    , width=150, text_color='black')
+        self.material_id.pack(pady=10, padx=30)
+
+        self.material_name = c.CTkEntry(self.material_edit_frame, fg_color='#D9D9D9', corner_radius=0,
+                                       border_width=0, border_color='black', placeholder_text='Материал', width=150,
+                                       text_color='black')
+        self.material_name.pack(pady=10, padx=30)
+
+        self.material_density = c.CTkEntry(self.material_edit_frame, fg_color='#D9D9D9', placeholder_text='Плотность',
+                                       corner_radius=0,
+                                       border_width=0, border_color='black', width=150, text_color='black')
+        self.material_density.pack(pady=10, padx=30)
+
+        self.material_heat_capacity = c.CTkEntry(self.material_edit_frame, fg_color='#D9D9D9', placeholder_text='Уделбная теплоемкость',
+                                        corner_radius=0,
+                                        border_width=0, border_color='black', width=150, text_color='black')
+        self.material_heat_capacity.pack(pady=10, padx=30)
+
+        self.material_melting_temp = c.CTkEntry(self.material_edit_frame, fg_color='#D9D9D9',
+                                          placeholder_text='Температура плавления',
+                                          corner_radius=0,
+                                          border_width=0, border_color='black', width=150, text_color='black')
+        self.material_melting_temp.pack(pady=10, padx=30)
+
+        # Buttons
+        self.material_edit_button = c.CTkButton(self.material_edit_frame, width=150, text='ОБНОВЛЯТЬ', fg_color='#238FB1')
+        self.material_delete_button = c.CTkButton(self.material_edit_frame, width=150, text='УДАЛИТЬ', fg_color='#FB5757')
+        self.material_add_button = c.CTkButton(self.material_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
+                                             command=self.material_edit_on_add_click)
+        self.material_edit_button.pack(pady=10, padx=30)
+        self.material_delete_button.pack(pady=10, padx=30)
+        self.material_add_button.pack(pady=10, padx=30)
+
+        # Math model params Edit frame
+        self.math_model_params_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
+
+        self.math_model_params_id = c.CTkLabel(self.math_model_params_edit_frame, fg_color='#D9D9D9', text=' '
+                                      , width=150, text_color='black')
+        self.math_model_params_id.pack(pady=10, padx=30)
+
+        self.math_model_params_consistency_coeff = c.CTkEntry(self.math_model_params_edit_frame, fg_color='#D9D9D9', corner_radius=0,
+                                        border_width=0, border_color='black', placeholder_text='Коэффициент консистенции...', width=150,
+                                        text_color='black')
+        self.math_model_params_consistency_coeff.pack(pady=10, padx=30)
+
+        self.math_model_params_temp_coeff = c.CTkEntry(self.math_model_params_edit_frame, fg_color='#D9D9D9', placeholder_text='Температурный коэффициент...',
+                                           corner_radius=0,
+                                           border_width=0, border_color='black', width=150, text_color='black')
+        self.math_model_params_temp_coeff.pack(pady=10, padx=30)
+
+        self.math_model_params_casting_temp = c.CTkEntry(self.math_model_params_edit_frame, fg_color='#D9D9D9',
+                                                 placeholder_text='Температура приведения',
+                                                 corner_radius=0,
+                                                 border_width=0, border_color='black', width=150, text_color='black')
+        self.math_model_params_casting_temp.pack(pady=10, padx=30)
+
+        self.math_model_params_flow_index = c.CTkEntry(self.math_model_params_edit_frame, fg_color='#D9D9D9',
+                                                 placeholder_text='Индекс течения материала',
+                                                 corner_radius=0,
+                                                 border_width=0, border_color='black', width=150, text_color='black')
+        self.math_model_params_flow_index.pack(pady=10, padx=30)
+
+        self.math_model_params_cover_heat_trans = c.CTkEntry(self.math_model_params_edit_frame, fg_color='#D9D9D9',
+                                                 placeholder_text='Коэффициент теплоотдачи...',
+                                                 corner_radius=0,
+                                                 border_width=0, border_color='black', width=150, text_color='black')
+        self.math_model_params_cover_heat_trans.pack(pady=10, padx=30)
+
+        # Buttons
+        self.math_model_params_edit_button = c.CTkButton(self.math_model_params_edit_frame, width=150, text='ОБНОВЛЯТЬ',
+                                                fg_color='#238FB1')
+        self.math_model_params_delete_button = c.CTkButton(self.math_model_params_edit_frame, width=150, text='УДАЛИТЬ',
+                                                  fg_color='#FB5757')
+        self.math_model_params_add_button = c.CTkButton(self.math_model_params_edit_frame, width=150, text='ДОБАВИТЬ', fg_color='#6CD63C',
+                                               command=self.math_model_params_edit_on_add_click)
+        self.math_model_params_edit_button.pack(pady=10, padx=30)
+        self.math_model_params_delete_button.pack(pady=10, padx=30)
+        self.math_model_params_add_button.pack(pady=10, padx=30)
+
+
+
+        # Process params Edit frame
+        self.process_params_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
+
+        self.process_params_id = c.CTkLabel(self.process_params_edit_frame, fg_color='#D9D9D9', text=' '
+                                            , width=150, text_color='black')
+        self.process_params_id.pack(pady=10, padx=30)
+
+        self.cover_speed = c.CTkEntry(self.process_params_edit_frame, fg_color='#D9D9D9', corner_radius=0,
+                                              border_width=0, border_color='black', placeholder_text='Скорость крышки',
+                                              width=150,
+                                              text_color='black')
+        self.cover_speed.pack(pady=10, padx=30)
+
+        self.cover_temperature = c.CTkEntry(self.process_params_edit_frame, fg_color='#D9D9D9',
+                                                 placeholder_text='Температтура  крышки',
+                                                 corner_radius=0,
+                                                 border_width=0, border_color='black', width=150, text_color='black')
+        self.cover_temperature.pack(pady=10, padx=30)
+
+        # Buttons
+        self.process_params_edit_button = c.CTkButton(self.process_params_edit_frame, width=150, text='ОБНОВЛЯТЬ',
+                                                      fg_color='#238FB1')
+        self.process_params_delete_button = c.CTkButton(self.process_params_edit_frame, width=150, text='УДАЛИТЬ',
+                                                        fg_color='#FB5757')
+        self.process_params_add_button = c.CTkButton(self.process_params_edit_frame, width=150, text='ДОБАВИТЬ',
+                                                     fg_color='#6CD63C',
+                                                     command=self.process_params_edit_on_add_click)
+        self.process_params_edit_button.pack(pady=10, padx=30)
+        self.process_params_delete_button.pack(pady=10, padx=30)
+        self.process_params_add_button.pack(pady=10, padx=30)
 
     def tables_select(self,choice, frame: c.CTkFrame):
         match choice:
@@ -124,6 +241,10 @@ class Admin(c.CTk):
                     for widget in frame.winfo_children():
                         widget.destroy()
                     self.chanel_edit_frame.grid_forget()
+                    self.material_edit_frame.grid_forget()
+                    self.process_params_edit_frame.grid_forget()
+                    self.math_model_params_edit_frame.grid_forget()
+
                 except Exception as e:
                     print(e)
                 else:
@@ -141,6 +262,11 @@ class Admin(c.CTk):
                     for widget in frame.winfo_children():
                         widget.destroy()
                     self.user_edit_frame.grid_forget()
+                    self.material_edit_frame.grid_forget()
+                    self.process_params_edit_frame.grid_forget()
+                    self.math_model_params_edit_frame.grid_forget()
+
+
                 except Exception as e:
                     print(e)
                 else:
@@ -158,6 +284,11 @@ class Admin(c.CTk):
                     for widget in frame.winfo_children():
                         widget.destroy()
                     self.chanel_edit_frame.grid_forget()
+                    self.user_edit_frame.grid_forget()
+                    self.process_params_edit_frame.grid_forget()
+                    self.math_model_params_edit_frame.grid_forget()
+
+
                 except Exception as e:
                     print(e)
                 else:
@@ -169,11 +300,18 @@ class Admin(c.CTk):
 
                     table = Material_Table(frame, table, columns)
                     frame.grid(row=0, column=1, pady=30, columnspan=3)
+
+                    self.material_edit_frame.grid(row=0, column=0, pady=10, padx=20)
+
             case 'math_model':
                 try:
                     for widget in frame.winfo_children():
                         widget.destroy()
                     self.chanel_edit_frame.grid_forget()
+                    self.user_edit_frame.grid_forget()
+                    self.material_edit_frame.grid_forget()
+                    self.process_params_edit_frame.grid_forget()
+
                 except Exception as e:
                     print(e)
                 else:
@@ -183,11 +321,18 @@ class Admin(c.CTk):
 
                     table = MathModel_Table(frame, table, columns)
                     frame.grid(row=0, column=1, pady=30, columnspan=3)
+
+                    self.math_model_params_edit_frame.grid(row=0, column=0, pady=10, padx=20)
+
             case 'process_params':
                 try:
                     for widget in frame.winfo_children():
                         widget.destroy()
                     self.chanel_edit_frame.grid_forget()
+                    self.user_edit_frame.grid_forget()
+                    self.material_edit_frame.grid_forget()
+                    self.math_model_params_edit_frame.grid_forget()
+
                 except Exception as e:
                     print(e)
                 else:
@@ -197,6 +342,9 @@ class Admin(c.CTk):
 
                     table = ProcessParams_Table(frame, table, columns)
                     frame.grid(row=0, column=1, pady=30, columnspan=3)
+
+                    self.process_params_edit_frame.grid(row=0, column=0, pady=10, padx=20)
+
 
     def user_edit_on_add_click(self):
         # Top level window
@@ -227,8 +375,8 @@ class Admin(c.CTk):
 
         # Success
         self.success = c.CTkLabel(master=self.add_user_window,text='User successfully added',text_color='green')
-        self.success.pack(pady=10)
-        self.success.hide()
+        # self.success.pack(pady=10)
+        # self.success.pack_forget()
 
         # Pack elements
         self.new_username.pack(pady=10)
@@ -236,6 +384,22 @@ class Admin(c.CTk):
         self.new_password.pack(pady=10)
         self.new_add_button.pack(pady=10)
 
+    def user_edit_on_edit_click(self):
+        id = int(self.table_id.cget('text'))
+
+        user_to_update = database.session.query(User).filter(User.id == id).first()
+        user_to_update.email = 'new_email@example.com'
+        database.session.commit()
+    def math_model_params_edit_on_add_click(self):
+        pass
+    def material_edit_on_add_click(self):
+        pass
+
+    def chanel_edit_on_add_click(self):
+        pass
+
+    def process_params_edit_on_add_click(self):
+        pass
 
     def on_new_add_click(self):
         username = self.new_username.get()
@@ -248,8 +412,8 @@ class Admin(c.CTk):
             database.session.add(user)
             database.session.commit()
             print('User successfully added...')
-            self.success.show()
-            self.add_user_window.after(200,self.success.destroy())
+            self.success.pack()
+            self.add_user_window.after(200,self.success.pack_forget())
 
         except Exception:
             print(Exception)
