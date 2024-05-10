@@ -148,3 +148,7 @@ class Login(App):
         self.destroy()
         signup = Signup.SignUp()
         signup.mainloop()
+
+
+login = Login()
+login.mainloop()

@@ -10,6 +10,6 @@
 import sys
 from PyQt6 import QtWidgets as qw
 
-class Root:
+class RootEntry:
     def __init__(self, app):
         self.app = app

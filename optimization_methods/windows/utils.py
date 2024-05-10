@@ -23,6 +23,7 @@ class EncDecPass():
         return self.fernet.encrypt(password.encode())
 
     def decrypt_password(self, encoded_password):
+        print("decrypting...")
         return self.fernet.decrypt(encoded_password)#.decode()
 
 Base = declarative_base()
@@ -123,9 +124,13 @@ class User(Base):
     role = Column('role', String)
 
     def __init__(self,username,password,role):
+        print("User...")
         self.username = username
         self.password = EncDecPass().encrypt_password(password)
         self.role = role
+        print(self.username)
+        print(self.password)
+        print(self.role)
 
     def __repr__(self):
         return f"({self.id}) {self.username} {self.role}"
@@ -148,6 +153,7 @@ class Tasks(Base):
 class Database():
     def __init__(self):
         # Creating the database file
+        print("creating database...")
         self.engine = create_engine("sqlite:///optimization.db", echo=True)
 
         # Take all the classes that extends from base and create the tables
@@ -157,6 +163,7 @@ class Database():
         self.session = self.Session()
 
     def select_user(self, user: User,username):
+        print("selecting user...")
         row = self.session.query(User).filter(User.username == username).first()
         print(f"All users {self.get_users()}")
         return row

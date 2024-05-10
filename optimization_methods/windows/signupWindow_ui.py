@@ -1,10 +1,10 @@
 import sys
-from PyQt6 import QtWidgets as qw, uic
-from optimization_methods.windows.root import Root
+from PyQt6 import QtWidgets as qw, uic,QtGui
+from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.utils as owu
 import optimization_methods.windows.loginWindow_ui as Login
 
-class SignupWindow(Root):
+class SignupWindow(RootEntry):
     def __init__(self,app):
         super().__init__(app)
         self.app = app
@@ -19,6 +19,7 @@ class SignupWindow(Root):
         self.username: qw.QLineEdit = self.window.username_entry
         # Password Entry
         self.password: qw.QLineEdit = self.window.password_entry
+        self.password.setEchoMode(qw.QLineEdit.EchoMode.Password)
         # Role combobox
         self.role: qw.QComboBox = self.window.role_cbx
         # Login link
@@ -33,37 +34,53 @@ class SignupWindow(Root):
         self.signup_button.clicked.connect(self.signup_clicked)
 
         # User not found
-        self.user_not_found:qw.QLabel = self.window.user_not_found
-        self.user_not_found.setStyleSheet("color: red")
-        self.user_not_found.setHidden(True)
+        self.user_reg_failed:qw.QLabel = self.window.user_reg_failed
+        self.user_reg_failed.setStyleSheet("color: red")
+        self.user_reg_failed.setHidden(True)
+
+        # User Already exists
+        self.user_already_exist:qw.QLabel = self.window.user_already_exists
+        self.user_already_exist.setStyleSheet("color: red")
+        self.user_already_exist.setHidden(True)
 
 
         # self.window.show()
         # self.app.exec()
     def signup_clicked(self):
+        database = owu.Database()
         print("signing up...")
         username = self.username.text()
         password = self.password.text()
         role = self.role.currentText()
 
-        print(f"{username}: {password}: {role}")
-        if username == "admin" and password == "password":
-            print("true")
+        if username == "" or password == "":
+            self.user_reg_failed.setHidden(False)
+            return
 
-            self.login_window = Login.LoginWindow()
+
+            # self.login_window = Login.LoginWindow()
+            # self.login_window.window.show()
+            # self.window.close()
+
+        user = owu.User(username,password,role)
+        try:
+            result = database.select_user(user, username)
+            print(result)
+            if result is not None:
+                self.user_already_exist.setHidden(False)
+                return
+        except Exception as e:
+            print(e)
+        try:
+            database.session.add(user)
+            database.session.commit()
+            print('User successfully added...')
+            self.login_window = Login.LoginWindow(self.app)
             self.login_window.window.show()
             self.window.close()
 
-        # user = owu.User(username, password, ROLE)
-        # database = owu.Database()
-        # try:
-        #     database.session.add(user)
-        #     database.session.commit()
-        #     print('User successfully added...')
-        #     login = Login.Loginwindow()
-        #     self.close()
-        # except Exception:
-        #     print(Exception)
+        except Exception:
+            print(Exception)
 
     def login_clicked(self,event):
         print("Loggin in...")

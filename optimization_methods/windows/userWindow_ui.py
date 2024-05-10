@@ -1,8 +1,8 @@
 import sys
 from PyQt6 import QtWidgets as qw, uic
-from optimization_methods.windows.root import Root
+from optimization_methods.windows.rootentry import RootEntry
 
-class UserWindow(Root):
+class UserWindow(RootEntry):
     def __init__(self, app):
         super().__init__(app)
         self.app = app

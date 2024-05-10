@@ -188,17 +188,30 @@
      <string>Already have an account?</string>
     </property>
    </widget>
-   <widget class="QLabel" name="user_not_found">
+   <widget class="QLabel" name="user_reg_failed">
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>310</y>
+      <y>300</y>
       <width>161</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>User not found !</string>
+     <string>User Registration Error</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="user_already_exists">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>300</y>
+      <width>161</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>User Already exists</string>
     </property>
    </widget>
   </widget>

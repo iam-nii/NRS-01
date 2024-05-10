@@ -1,10 +1,11 @@
 import sys
 from PyQt6 import QtWidgets as qw, uic
-from optimization_methods.windows.root import Root
+import optimization_methods.windows.utils as owu
+from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.userWindow_ui as userWindow
 import optimization_methods.windows.signupWindow_ui as signUpWindow
 
-class LoginWindow(Root):
+class LoginWindow(RootEntry):
     def __init__(self, app):
         super().__init__(app)
         self.app = app
@@ -16,8 +17,9 @@ class LoginWindow(Root):
 
         # Initialize UI elements
         self.username = self.window.username_entry
-        self.password = self.window.password_entry
-        self.role = self.window.role_cbx
+        self.password:qw.QLineEdit = self.window.password_entry
+        self.password.setEchoMode(qw.QLineEdit.EchoMode.Password)
+        self.role:qw.QComboBox = self.window.role_cbx
         self.signup = self.window.signup_link
         self.signup.setStyleSheet("color: blue;")
         self.signup.mousePressEvent = self.signup_clicked
@@ -30,21 +32,41 @@ class LoginWindow(Root):
         self.user_not_found.setHidden(True)
 
     def login_clicked(self):
+        database = owu.Database()
+
         username = self.username.text()
-        print(username)
-
-        print("Logging in...")
-        # Create an instance of MainWindow
-        self.user_window = userWindow.UserWindow(self.app)
-        self.user_window.window.show()  # Show the main window
-        self.window.close()
-        # self.app.exec()
+        password = self.password.text()
+        role = self.role.currentText()
+        user = owu.User(username,password,role)
 
 
-        # app = qw.QApplication(sys.argv)
-        # login_window = LoginWindow(app)
-        # login_window.window.show()
-        # app.exec()
+        # if role == "Админ":
+        #     role = "Администратор"
+        print((username,password,role))
+
+        # self.database = owu.Database()
+
+        result = database.select_user(user, username)
+        print(result)
+        if result is not None:
+            print(f'User password: {result.password}')
+            self.decryptor = owu.EncDecPass()
+            user_password = self.decryptor.decrypt_password(encoded_password=result.password).decode()
+            print(f'Decrypted password: {user_password}')
+
+            if password == user_password and role == result.role:
+                print("Logging in...")
+                # Create an instance of MainWindow
+                self.user_window = userWindow.UserWindow(self.app)
+                self.user_window.window.show()  # Show the main window
+                self.window.close()
+            else:
+                self.user_not_found.setHidden(False)
+        else:
+            self.user_not_found.setHidden(False)
+
+
+
 
     def signup_clicked(self, event):
         print("Signing up...")
