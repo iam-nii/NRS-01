@@ -28,6 +28,11 @@ class EncDecPass():
 
 Base = declarative_base()
 
+def get_column_names(table: Base) -> list:
+    """Return a list of column names for a given table"""
+    return [column.name for column in table.__table__.columns]
+
+
 class User_Table:
 
     def __init__(self, root,table,columns:int):
@@ -112,9 +117,6 @@ class User_Table:
         # self.root.winfo_toplevel().table_role.configure(text=role, text_color='black',width=100)
 
 
-
-
-
 class User(Base):
     __tablename__ = 'users'
 
@@ -139,15 +141,12 @@ class User(Base):
 class SolutionMethods(Base):
     __tablename__ = 'solution_methods'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
-    username = Column('method', String, unique=True)
-    password = Column('password', String)
-    role = Column('role', String)
+    method = Column('method', String, unique=True)
 
 class Tasks(Base):
     __tablename__ = 'tasks'
     id = Column('id',Integer, primary_key=True,autoincrement=True)
     text = Column('text',String)
-
 
 
 class Database():
@@ -174,7 +173,15 @@ class Database():
         # for user in users:
         #     print(user.id, user.name, user.age)
         users = self.session.query(User).all()
-        return [users,2]
+        return users
+
+    def get_tasks(self):
+        tasks = self.session.query(Tasks).all()
+        return tasks
+
+    def get_solution_methods(self):
+        methods = self.session.query(SolutionMethods).all()
+        return methods
 
     def get_tables(self):
         insp = reflection.Inspector.from_engine(self.engine)

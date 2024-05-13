@@ -164,10 +164,6 @@ class UserWin(c.CTk):
         self.math_model_values = Math_model_values(self.params, DATA)
 
 
-
-
-
-
         calculate = c.CTkButton(master=self.params, text='Расчёт', fg_color='#214569', command=self.calculate)
         calculate.grid(column=1, row=3, padx=5, pady=5, sticky="E")
 

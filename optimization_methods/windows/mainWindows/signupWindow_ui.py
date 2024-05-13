@@ -1,8 +1,7 @@
-import sys
-from PyQt6 import QtWidgets as qw, uic,QtGui
+from PyQt6 import QtWidgets as qw, uic
 from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.utils as owu
-import optimization_methods.windows.loginWindow_ui as Login
+import optimization_methods.windows.mainWindows.loginWindow_ui as Login
 
 class SignupWindow(RootEntry):
     def __init__(self,app):
@@ -12,7 +11,7 @@ class SignupWindow(RootEntry):
 
     def init_ui(self):
         # Import the ui file
-        self.window:qw.QMainWindow = uic.loadUi("./windows/signup.ui")
+        self.window:qw.QMainWindow = uic.loadUi("./windows/mainWindows/signup.ui")
         # self.window.setStyleSheet("background-color:#ECECEC")
 
         # Username Entry
@@ -56,11 +55,6 @@ class SignupWindow(RootEntry):
         if username == "" or password == "":
             self.user_reg_failed.setHidden(False)
             return
-
-
-            # self.login_window = Login.LoginWindow()
-            # self.login_window.window.show()
-            # self.window.close()
 
         user = owu.User(username,password,role)
         try:

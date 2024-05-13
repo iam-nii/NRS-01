@@ -6,7 +6,7 @@
 
 import sys
 from PyQt6 import QtWidgets as qw
-from optimization_methods.windows.loginWindow_ui import LoginWindow
+from optimization_methods.windows.mainWindows.loginWindow_ui import LoginWindow
 
 def main():
     app = qw.QApplication(sys.argv)

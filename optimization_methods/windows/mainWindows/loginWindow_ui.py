@@ -1,9 +1,9 @@
-import sys
 from PyQt6 import QtWidgets as qw, uic
 import optimization_methods.windows.utils as owu
 from optimization_methods.windows.rootentry import RootEntry
-import optimization_methods.windows.userWindow_ui as userWindow
-import optimization_methods.windows.signupWindow_ui as signUpWindow
+import optimization_methods.windows.mainWindows.userWindow_ui as userWindow
+import optimization_methods.windows.mainWindows.adminWindow_ui as adminWindow
+import optimization_methods.windows.mainWindows.signupWindow_ui as signUpWindow
 
 class LoginWindow(RootEntry):
     def __init__(self, app):
@@ -13,7 +13,7 @@ class LoginWindow(RootEntry):
 
     def init_ui(self):
         # Import the ui file
-        self.window:qw.QMainWindow = uic.loadUi("./windows/login.ui")
+        self.window:qw.QMainWindow = uic.loadUi("./windows/mainWindows/login.ui")
 
         # Initialize UI elements
         self.username = self.window.username_entry
@@ -36,7 +36,7 @@ class LoginWindow(RootEntry):
 
         username = self.username.text()
         password = self.password.text()
-        role = self.role.currentText()
+        role:str = self.role.currentText()
         user = owu.User(username,password,role)
 
 
@@ -56,10 +56,15 @@ class LoginWindow(RootEntry):
 
             if password == user_password and role == result.role:
                 print("Logging in...")
-                # Create an instance of MainWindow
-                self.user_window = userWindow.UserWindow(self.app)
-                self.user_window.window.show()  # Show the main window
-                self.window.close()
+                if role.lower() == "пользователь":
+                    # Create an instance of MainWindow
+                    self.user_window = userWindow.UserWindow(self.app)
+                    self.user_window.window.show()  # Show the main window
+                    self.window.close()
+                if role.lower() == "админ":
+                    self.admin_window = adminWindow.AdminWindow(self.app)
+                    self.admin_window.window.show()
+                    self.window.close()
             else:
                 self.user_not_found.setHidden(False)
         else:
