@@ -1,5 +1,5 @@
 import customtkinter as c
-from polosin.public.databases import User,Chanel,Material,ProcessParams,MathModel
+from polosin.public.databases import User,Material,ProcessParams,MathModel
 
 
 class App(c.CTk):
@@ -9,13 +9,13 @@ class App(c.CTk):
         self.grid_columnconfigure(0, weight=1)
 
 ROLE = ''
-DATABASES = {
-    'users': User,
-    'chanel': Chanel,
-    'material': Material,
-    'math_model': MathModel,
-    'process_params': ProcessParams,
-}
+# DATABASES = {
+#     'users': User,
+#     'chanel': Chanel,
+#     'material': Material,
+#     'math_model': MathModel,
+#     'process_params': ProcessParams,
+# }
 # database = Database()
 
 def clear_frames(tables:list[c.CTkFrame]):

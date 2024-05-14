@@ -14,6 +14,7 @@ from polosin.windows.Params.solution_method_params import Solution_method_values
 import psutil
 import time
 import os
+import asyncio
 
 
 database = Database()
@@ -164,7 +165,7 @@ class UserWin(c.CTk):
         self.math_model_values = Math_model_values(self.params, DATA)
 
 
-        calculate = c.CTkButton(master=self.params, text='Расчёт', fg_color='#214569', command=self.calculate)
+        calculate = c.CTkButton(master=self.params, text='Расчёт', fg_color='#214569', command=self.run_calculate)
         calculate.grid(column=1, row=3, padx=5, pady=5, sticky="E")
 
         # self.message = c.CTkLabel(master=self.params, text='Invalid inputs, all fields must be floating numbers',
@@ -172,7 +173,8 @@ class UserWin(c.CTk):
         self.message = c.CTkLabel(master=self.params, anchor='w',text=' ')
         self.message.grid(row=3, column=0, sticky=tk.W, pady=10, padx=5)
 
-
+    def run_calculate(self):
+        asyncio.run(self.calculate())
 
     def print_materials(self, choice):
         id = 0
@@ -191,10 +193,10 @@ class UserWin(c.CTk):
         DATA['cover_temperature'] = process_params.cover_temperature
 
         # Chanel parameters
-        chanel_params = database.get_chanel_params(id)[0]
-        DATA['width'] = chanel_params.width
-        DATA['depth'] = chanel_params.depth
-        DATA['length'] = chanel_params.length
+        # chanel_params = database.get_chanel_params(id)[0]
+        # DATA['width'] = chanel_params.width
+        # DATA['depth'] = chanel_params.depth
+        # DATA['length'] = chanel_params.length
 
         # Math Model parameters
         math_model_params = database.get_math_module(id)[0]
@@ -214,7 +216,7 @@ class UserWin(c.CTk):
 
 
 
-    def calculate(self):
+    async def calculate(self):
         # Get the data from the entries
 
         # self.table_result = None
@@ -263,23 +265,47 @@ class UserWin(c.CTk):
 
         # Process the data received
         try:
+            params = []
             H = float(self.geometric_dict['depth'])
+            params.append(H)
             W = float(self.geometric_dict['width'])
+            params.append(W)
             L = float(self.geometric_dict['length'])
+            params.append(L)
             p = float(self.materials_dict['density'])
+            params.append(p)
             c = float(self.materials_dict['heat_capacity'])
+            params.append(c)
             Uo = float(self.math_model_dict['consistency_coefficient'])
+            params.append(Uo)
             n = float(self.math_model_dict['flow_index'])  # flow index
+            params.append(n)
             Vu = float(self.process_values_dict['cover_speed'])
+            params.append(Vu)
             au = float(self.math_model_dict['heat_transfer'])
+            params.append(au)
             b = float(self.math_model_dict['temp_viscosity_coeff'])
+            params.append(b)
             Tu = float(self.process_values_dict['cover_temperature'])
+            params.append(Tu)
             Tr = float(self.math_model_dict['casting_temp'])
+            params.append(Tr)
             To = float(self.materials_dict['melting_temperature'])
+            params.append(To)
             step = float(self.solution_method_values_dict['step'])
 
-            if step == 0:
-                raise Exception("Step cannot be 0")
+            if step == 0.01:
+                step = round(step, 2)
+
+            if step < 0.1 and step >= 0.009:
+                step = round(step, 2)
+
+            params.append(step)
+
+            for param in params:
+                if param == 0:
+                    raise Exception("Input cannot be 0")
+
         except Exception as e:
             print(e)
             self.message.configure(text='Invalid inputs, all fields must be filled, floating numbers and not 0', text_color='red')
@@ -287,16 +313,21 @@ class UserWin(c.CTk):
             self.message.configure(text='Success', text_color='green')
             start = time.time()
             shear_rate = Vu / H
+            count = 1
 
             q_shear_rate = H * W * Uo * (shear_rate ** (n + 1))
+            count+=5
 
             q_a = W * au * ((b ** -1) - Tu + Tr)
+            count+=5
 
             F = 0.125 * ((H / W) ** 2) - 0.625 * (H / W) + 1
+            count+=7
 
             Qch = ((H * W * Vu) / 2) * F
+            count+=4
 
-            count = 1
+
 
             # self.T = [
             #     round(Tr + 1 / b * (math.log(
@@ -313,19 +344,25 @@ class UserWin(c.CTk):
                     (1 - math.exp(-(b * q_a) * z / (p * c * Qch))) + (
                         math.exp(b * (To - Tr - z * (q_a / (p * c * Qch))))
                     ))), 2))
-                count += 1
+                count += 27
 
             print(self.T)
 
             # material_temperature = float(self.math_model_dict['casting_temp']) + 1/
-            self.viscosity = [
-                round(Uo * math.exp(-b * (temp - Tr)) * (shear_rate ** (n - 1)), 2)
-                for temp in self.T
-            ]
+            # self.viscosity = [
+            #     round(Uo * math.exp(-b * (temp - Tr)) * (shear_rate ** (n - 1)), 2)
+            #     for temp in self.T
+            # ]
+            self.viscosity = []
+            for temp in self.T:
+                self.viscosity.append(round(Uo * math.exp(-b * (temp - Tr)) * (shear_rate ** (n - 1)), 2))
+                count+=7
+
             print(self.viscosity)
 
             # Channel output
             Q = p * Qch * 3600
+            count+=3
             print(f'Производительность: {round(Q, 2)}')
 
             # Product Temperature and viscosity
@@ -376,6 +413,8 @@ class UserWin(c.CTk):
 
 
             # update the table with the new data
+
+
             self.table_result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
 
             # update the temperature graph with the new data
@@ -389,6 +428,7 @@ class UserWin(c.CTk):
             self.viscosity_graph_result.create_result_graph(frame=self.visco_tab, prop=self.viscosity,
                                                        title_main='вязкости, Па*с', title_y='Вязкость, Па*с',
                                                        coordinates=self.coordinates)
+
 
             return
 

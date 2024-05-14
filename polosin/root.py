@@ -1,5 +1,8 @@
 from polosin.windows.Login import Login
 
-app = Login()
-
-app.mainloop()
+try:
+    app = Login()
+except Exception as e:
+    print(e)
+else:
+    app.mainloop()

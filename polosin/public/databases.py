@@ -13,28 +13,31 @@ class User(Base):
     role = Column('role', String)
 
     def __init__(self, username, password, role):
-        self.username = username
-        self.password = EncDecPass().encrypt_password(password)
-        self.role = role
+        try:
+            self.username = username
+            self.password = EncDecPass().encrypt_password(password)
+            self.role = role
+        except Exception as e:
+            print(e)
 
     def __repr__(self):
         return f"({self.id}) {self.username} {self.role}"
 
 
-class Chanel(Base):
-    __tablename__ = 'chanel'
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    width = Column('width', Float)
-    depth = Column('depth', Float)
-    length = Column('length', Float)
-
-    def __init__(self, width, depth, length):
-        self.width = width
-        self.depth = depth
-        self.length = length
-
-    def __repr__(self):
-        return f"({self.width}) {self.depth} {self.length}"
+# class Chanel(Base):
+#     __tablename__ = 'chanel'
+#     id = Column('id', Integer, primary_key=True, autoincrement=True)
+#     width = Column('width', Float)
+#     depth = Column('depth', Float)
+#     length = Column('length', Float)
+#
+#     def __init__(self, width, depth, length):
+#         self.width = width
+#         self.depth = depth
+#         self.length = length
+#
+#     def __repr__(self):
+#         return f"({self.width}) {self.depth} {self.length}"
 
 
 class Material(Base):

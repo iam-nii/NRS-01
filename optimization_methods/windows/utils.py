@@ -110,7 +110,7 @@ class User_Table:
         entry.insert(0,username)
 
         # role
-        role_entry:c.CTkEntry = self.root.winfo_toplevel().table_role
+        role_entry:c.CTkEntry = self.root.winfo_toplevel().table_password
         role_entry.delete(0,c.END)
         role_entry.insert(0,role)
         # self.root.winfo_toplevel().table_username.configure(text=username, text_color='black',width=100)

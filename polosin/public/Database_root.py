@@ -2,7 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import reflection
 from customtkinter import CTkLabel
-from polosin.public.databases import User,Chanel,Material,MathModel,ProcessParams,Base
+from polosin.public.databases import User,Material,MathModel,ProcessParams,Base
+import shutil
+import os
+import time
 
 
 class Database:
@@ -18,26 +21,33 @@ class Database:
         self.session = self.Session()
 
     def select_user(self, user: User,username):
-
-        row = self.session.query(User).filter(User.username == username).first()
-        print(f"All users {self.get_users()}")
-        return row
+        try:
+            row = self.session.query(User).filter(User.username == username).first()
+            print(f"All users {self.get_users()}")
+        except Exception as e:
+            print(e)
+        else:
+            return row
 
     def get_users(self):
         # # query the data from the table
         # users = session.query(User).all()
         # for user in users:
         #     print(user.id, user.name, user.age)
-        users = self.session.query(User).all()
-        return [users,2]
-
-    def get_chanel_params(self,id=None):
-        if id is not None:
-            chanels = self.session.query(Chanel).filter(Chanel.id == id).first()
-
+        try:
+            users = self.session.query(User).all()
+        except Exception as e:
+            print(e)
         else:
-            chanels = self.session.query(Chanel).all()
-        return [chanels,3]
+           return [users,2]
+
+    # def get_chanel_params(self,id=None):
+    #     if id is not None:
+    #         chanels = self.session.query(Chanel).filter(Chanel.id == id).first()
+    #
+    #     else:
+    #         chanels = self.session.query(Chanel).all()
+    #     return [chanels,3]
 
     def get_materials(self):
         materials = self.session.query(Material).all()
@@ -61,3 +71,38 @@ class Database:
         insp = reflection.Inspector.from_engine(self.engine)
         # Return the table names
         return insp.get_table_names()
+
+    def create_reserve_copy(self):
+        # Get the current database file path
+        try:
+            db_path = str(self.engine.url)
+            db_path = db_path.replace("sqlite:///", "")
+
+            # Create a backup file path with the current date and time
+            backup_path = os.path.join(os.path.dirname(db_path), f"chemresearch_{time.strftime('%Y-%m-%d_%H-%M-%S')}.db")
+
+            # Copy the database file to the backup file path
+            shutil.copyfile(db_path, backup_path)
+
+            # Show a message box to confirm that the backup was created successfully
+            print(f"Backup backed up to {backup_path}")
+            return f"chemresearch_{time.strftime('%Y-%m-%d_%H-%M-%S')}.db created at {backup_path}"
+        except Exception as e:
+            print(f'{e} at Database_root.py create_reserve_copy()')
+            return "Error creating reserve copy"
+
+    def restore_from_reserve_copy(self, reserve_copy_path):
+        # Get the current database file path
+        try:
+            db_path = str(self.engine.url)
+            db_path = db_path.replace("sqlite:///", "")
+
+            # Copy the reserve copy file to the current database file path
+            shutil.copyfile(reserve_copy_path, db_path)
+
+            # Show a message box to confirm that the restore was successful
+            print(f"Database restored from {reserve_copy_path}")
+            return f"Database restored from {reserve_copy_path}"
+        except Exception as e:
+            print(e)
+            return "Error restoring file"
