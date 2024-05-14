@@ -11,15 +11,15 @@ class User_Table:
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='Username', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=300, height=30, text='Логин', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='Role', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=300, height=30, text='Роль', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='material_id', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=300, height=30, text='ID материала', fg_color='black',
                                 text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=3, padx=1, pady=1)  # position the entry within the frame
 
@@ -95,99 +95,97 @@ class User_Table:
         # self.root.winfo_toplevel().table_role.configure(text=role, text_color='black',width=100)
 
 
-class Chanel_Table:
-    def __init__(self, root,table,columns:int):
-        self.root = root
-        width_label_list: list[c.CTkLabel] = []
-        depth_label_list: list[c.CTkLabel] = []
-        length_label_list: list[c.CTkLabel] = []
-        id_label_list: list[c.CTkLabel] = []
-        self.chanels_dict = {}
-
-        # Header row
-        self.label = c.CTkLabel(self.root, width=100, height=30, text='id', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
-        self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
-
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='width', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
-        self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
-
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='depth', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
-        self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
-
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='length', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
-        self.label.grid(row=0, column=3, padx=1, pady=1)  # position the entry within the frame
-
-        # code for creating table
-        for i in range(len(table)):
-            for j in range(columns + 1):
-                if j == 1:
-                    self.label1 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].width}', fg_color='grey',
-                                             text_color='white', font=('Arial', 16, 'bold'))
-                    self.label1.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
-                    width_label_list.append(self.label1)
-                elif j == 2:
-                    self.label2 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].depth}', fg_color='grey',
-                                             text_color='white', font=('Arial', 16, 'bold'))
-                    self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
-                    depth_label_list.append(self.label2)
-                elif j == 3:
-                    self.label2 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].length}', fg_color='grey',
-                                             text_color='white', font=('Arial', 16, 'bold'))
-                    self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
-                    length_label_list.append(self.label2)
-
-                else:
-                    self.label3 = c.CTkLabel(self.root, width=100, height=30, text=f'{i + 1}', fg_color='black',
-                                             text_color='white', font=('Arial', 16, 'bold'))
-                    self.label3.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
-                    id_label_list.append(self.label3)
-
-        for i in range(len(width_label_list)):
-            self.chanels_dict[i] = {
-                'width': width_label_list[i].cget('text'),
-                'depth': depth_label_list[i].cget('text'),
-                'length': length_label_list[i].cget('text'),
-                'id': id_label_list[i].cget('text'),
-            }
-        print(self.chanels_dict)
-
-        for label in width_label_list:
-            label.bind('<Button-1>', lambda e, label=label: self.on_label_click(label))
-    def on_label_click(self,label:c.CTkLabel):
-        width = label.cget('text')
-        depth = ' '
-        length = ' '
-        id = ' '
-        print(width)
-        for key in self.chanels_dict:
-            value = self.chanels_dict[key]
-            if value['width'] == width:
-                depth = value['depth']
-                length = value['length']
-                id = value['id']
-
-
-        self.root.winfo_toplevel().chanel_id.configure(text=id, text_color='black')
-        # Width
-        entry:c.c.CTkEntry = self.root.winfo_toplevel().chanel_width
-        entry.delete(0,c.END)
-        entry.insert(0,width)
-
-        # depth
-        depth_entry:c.c.CTkEntry = self.root.winfo_toplevel().chanel_depth
-        depth_entry.delete(0,c.END)
-        depth_entry.insert(0,depth)
-
-        # length
-        length_entry: c.c.CTkEntry = self.root.winfo_toplevel().chanel_length
-        length_entry.delete(0, c.END)
-        length_entry.insert(0, length)
-
-
+# class Chanel_Table:
+#     def __init__(self, root,table,columns:int):
+#         self.root = root
+#         width_label_list: list[c.CTkLabel] = []
+#         depth_label_list: list[c.CTkLabel] = []
+#         length_label_list: list[c.CTkLabel] = []
+#         id_label_list: list[c.CTkLabel] = []
+#         self.chanels_dict = {}
+#
+#         # Header row
+#         self.label = c.CTkLabel(self.root, width=100, height=30, text='id', fg_color='black',
+#                               text_color='white', font=('Arial', 16, 'bold'))
+#         self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
+#
+#         self.label = c.CTkLabel(self.root, width=300, height=30, text='width', fg_color='black',
+#                               text_color='white', font=('Arial', 16, 'bold'))
+#         self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
+#
+#         self.label = c.CTkLabel(self.root, width=300, height=30, text='depth', fg_color='black',
+#                               text_color='white', font=('Arial', 16, 'bold'))
+#         self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
+#
+#         self.label = c.CTkLabel(self.root, width=300, height=30, text='length', fg_color='black',
+#                               text_color='white', font=('Arial', 16, 'bold'))
+#         self.label.grid(row=0, column=3, padx=1, pady=1)  # position the entry within the frame
+#
+#         # code for creating table
+#         for i in range(len(table)):
+#             for j in range(columns + 1):
+#                 if j == 1:
+#                     self.label1 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].width}', fg_color='grey',
+#                                              text_color='white', font=('Arial', 16, 'bold'))
+#                     self.label1.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
+#                     width_label_list.append(self.label1)
+#                 elif j == 2:
+#                     self.label2 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].depth}', fg_color='grey',
+#                                              text_color='white', font=('Arial', 16, 'bold'))
+#                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
+#                     depth_label_list.append(self.label2)
+#                 elif j == 3:
+#                     self.label2 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].length}', fg_color='grey',
+#                                              text_color='white', font=('Arial', 16, 'bold'))
+#                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
+#                     length_label_list.append(self.label2)
+#
+#                 else:
+#                     self.label3 = c.CTkLabel(self.root, width=100, height=30, text=f'{i + 1}', fg_color='black',
+#                                              text_color='white', font=('Arial', 16, 'bold'))
+#                     self.label3.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
+#                     id_label_list.append(self.label3)
+#
+#         for i in range(len(width_label_list)):
+#             self.chanels_dict[i] = {
+#                 'width': width_label_list[i].cget('text'),
+#                 'depth': depth_label_list[i].cget('text'),
+#                 'length': length_label_list[i].cget('text'),
+#                 'id': id_label_list[i].cget('text'),
+#             }
+#         print(self.chanels_dict)
+#
+#         for label in width_label_list:
+#             label.bind('<Button-1>', lambda e, label=label: self.on_label_click(label))
+#     def on_label_click(self,label:c.CTkLabel):
+#         width = label.cget('text')
+#         depth = ' '
+#         length = ' '
+#         id = ' '
+#         print(width)
+#         for key in self.chanels_dict:
+#             value = self.chanels_dict[key]
+#             if value['width'] == width:
+#                 depth = value['depth']
+#                 length = value['length']
+#                 id = value['id']
+#
+#
+#         self.root.winfo_toplevel().chanel_id.configure(text=id, text_color='black')
+#         # Width
+#         entry:c.c.CTkEntry = self.root.winfo_toplevel().chanel_width
+#         entry.delete(0,c.END)
+#         entry.insert(0,width)
+#
+#         # depth
+#         depth_entry:c.c.CTkEntry = self.root.winfo_toplevel().chanel_depth
+#         depth_entry.delete(0,c.END)
+#         depth_entry.insert(0,depth)
+#
+#         # length
+#         length_entry: c.c.CTkEntry = self.root.winfo_toplevel().chanel_length
+#         length_entry.delete(0, c.END)
+#         length_entry.insert(0, length)
 
 class Material_Table:
     def __init__(self, root, table, columns: int):
@@ -205,19 +203,19 @@ class Material_Table:
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='material', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=200, height=30, text='Материал', fg_color='black',
                                 text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='Density', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=200, height=30, text='Плотность (кг/м^3)', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='Heat Capacity', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=300, height=30, text='Удельная теплоемкость (Дж/(кг*°С))', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=3, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='Melting Temperature', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=250, height=30, text='Температура плавления (°С)', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=4, padx=1, pady=1)  # position the entry within the frame
 
@@ -236,13 +234,13 @@ class Material_Table:
                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     density_label_list.append(self.label2)
                 elif j == 3:
-                    self.label3 = c.CTkLabel(self.root, width=200, height=30, text=f'{table[i].heat_capacity}', fg_color='grey',
+                    self.label3 = c.CTkLabel(self.root, width=300, height=30, text=f'{table[i].heat_capacity}', fg_color='grey',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label3.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     heat_capacity_label_list.append(self.label3)
                 elif j == 4:
                     print(f'melting temperature: {table[i].melting_temperature}')
-                    self.label4 = c.CTkLabel(self.root, width=200, height=30, text=f'{table[i].melting_temperature}', fg_color='grey',
+                    self.label4 = c.CTkLabel(self.root, width=250, height=30, text=f'{table[i].melting_temperature}', fg_color='grey',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label4.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     melting_temperature_label_list.append(self.label4)
@@ -312,44 +310,50 @@ class MathModel_Table:
         melting_temperature_label_list: list[c.CTkLabel] = []
         flow_index_label_list: list[c.CTkLabel] = []
         cover_heat_transfer_coefficient_label_list: list[c.CTkLabel] = []
+        material_id_label_list: list[c.CTkLabel] = []
         id_label_list: list[c.CTkLabel] = []
 
 
         # Header row
-        self.label = c.CTkLabel(self.root, width=100, height=30, text='id', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label = c.CTkLabel(self.root, width=60, height=30, text='id', fg_color='black',
+                              text_color='white', font=('Arial', 13, 'bold'))
         self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='Consistency coefficient', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label = c.CTkLabel(self.root, width=200, height=30, text='Коэфф. консистенции (Па*с^n)...', fg_color='black',
+                              text_color='white', font=('Arial', 13, 'bold'))
         self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='Temp Viscosity coefficient', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label = c.CTkLabel(self.root, width=250, height=30, text='Темп. коэфф. вязкости (1/°С) ...', fg_color='black',
+                              text_color='white', font=('Arial', 13, 'bold'))
         self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=200, height=30, text='Casting coefficient', fg_color='black',
-                                text_color='white', font=('Arial', 16, 'bold'))
+        self.label = c.CTkLabel(self.root, width=200, height=30, text='Темп. приведения (°С)', fg_color='black',
+                                text_color='white', font=('Arial', 13, 'bold'))
         self.label.grid(row=0, column=3, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=100, height=30, text='Flow index', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label = c.CTkLabel(self.root, width=90, height=30, text='Индекс течения', fg_color='black',
+                              text_color='white', font=('Arial', 13, 'bold'))
         self.label.grid(row=0, column=4, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=250, height=30, text='Cover heat transfer coefficient', fg_color='black',
-                              text_color='white', font=('Arial', 16, 'bold'))
+        self.label = c.CTkLabel(self.root, width=250, height=30, text='Коэфф. теплоотдачи (Вт/(м2*°С))...', fg_color='black',
+                              text_color='white', font=('Arial', 13, 'bold'))
         self.label.grid(row=0, column=5, padx=1, pady=1)  # position the entry within the frame
+
+        self.label = c.CTkLabel(self.root, width=100, height=30, text='ID материала',
+                                fg_color='black',
+                                text_color='white', font=('Arial', 13, 'bold'))
+        self.label.grid(row=0, column=6, padx=1, pady=1)  # position the entry within the frame
 
         # code for creating table
         for i in range(len(table)):
-            for j in range(columns + 1):
+            for j in range(columns + 2):
                 if j == 1:
                     self.label1 = c.CTkLabel(self.root, width=200, height=30, text=f'{table[i].consistency_coefficient}', fg_color='grey',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label1.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     consistency_coefficient_label_list.append(self.label1)
                 elif j == 2:
-                    self.label2 = c.CTkLabel(self.root, width=200, height=30, text=f'{table[i].temp_viscosity_coefficient}', fg_color='grey',
+                    self.label2 = c.CTkLabel(self.root, width=250, height=30, text=f'{table[i].temp_viscosity_coefficient}', fg_color='grey',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     temp_viscosity_coefficient_label_list.append(self.label2)
@@ -359,7 +363,7 @@ class MathModel_Table:
                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     casting_temperature_label_list.append(self.label2)
                 elif j == 4:
-                    self.label2 = c.CTkLabel(self.root, width=100, height=30, text=f'{table[i].flow_index}', fg_color='grey',
+                    self.label2 = c.CTkLabel(self.root, width=90, height=30, text=f'{table[i].flow_index}', fg_color='grey',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     flow_index_label_list.append(self.label2)
@@ -368,9 +372,14 @@ class MathModel_Table:
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     cover_heat_transfer_coefficient_label_list.append(self.label2)
+                elif j == 6:
+                    self.label2 = c.CTkLabel(self.root, width=100, height=30, text=f'{table[i].material_id}', fg_color='grey',
+                                             text_color='white', font=('Arial', 16, 'bold'))
+                    self.label2.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
+                    material_id_label_list.append(self.label2)
 
                 else:
-                    self.label3 = c.CTkLabel(self.root, width=100, height=30, text=f'{i + 1}', fg_color='black',
+                    self.label3 = c.CTkLabel(self.root, width=60, height=30, text=f'{i + 1}', fg_color='black',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label3.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     id_label_list.append(self.label3)
@@ -383,6 +392,7 @@ class MathModel_Table:
                 'casting_temperature': casting_temperature_label_list[i].cget('text'),
                 'flow_index': flow_index_label_list[i].cget('text'),
                 'id': id_label_list[i].cget('text'),
+                'material_id': material_id_label_list[i].cget('text'),
             }
         print(self.math_model_dict)
 
@@ -395,6 +405,7 @@ class MathModel_Table:
         casting_temperature = ' '
         flow_index = ' '
         id = ' '
+        material_id = ' '
         print(consistency_coefficient)
         for key in self.math_model_dict:
             value = self.math_model_dict[key]
@@ -404,6 +415,8 @@ class MathModel_Table:
                 flow_index = value['flow_index']
                 cover_heat_transfer_coefficient = value['cover_heat_transfer_coefficient']
                 id = value['id']
+                material_id = value['material_id']
+
 
         self.root.winfo_toplevel().math_model_params_id.configure(text=id, text_color='black')
 
@@ -432,6 +445,11 @@ class MathModel_Table:
         cover_heat_trans_entry.delete(0, c.END)
         cover_heat_trans_entry.insert(0, cover_heat_transfer_coefficient)
 
+        # Material id
+        material_id_entry: c.c.CTkEntry = self.root.winfo_toplevel().math_model_material_id
+        material_id_entry.delete(0, c.END)
+        material_id_entry.insert(0, material_id)
+
 class ProcessParams_Table:
     def __init__(self, root, table, columns: int):
 
@@ -446,11 +464,11 @@ class ProcessParams_Table:
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=0, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='Cover speed', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=300, height=30, text='Скорость крышки (м/с)', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=1, padx=1, pady=1)  # position the entry within the frame
 
-        self.label = c.CTkLabel(self.root, width=300, height=30, text='Cover temperatuure', fg_color='black',
+        self.label = c.CTkLabel(self.root, width=300, height=30, text='Температура крышки (°С)', fg_color='black',
                               text_color='white', font=('Arial', 16, 'bold'))
         self.label.grid(row=0, column=2, padx=1, pady=1)  # position the entry within the frame
 

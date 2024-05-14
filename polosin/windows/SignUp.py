@@ -17,8 +17,9 @@ width = 500
 height = 500
 # Sign up window
 class SignUp(App):
-    def __init__(self):
+    def __init__(self,database):
         super().__init__()
+        self.database = database
         x = (self.winfo_screenwidth() // 2) - (width // 2)
         y = (self.winfo_screenheight() // 2) - (height // 2)
 
@@ -101,10 +102,10 @@ class SignUp(App):
         # role = ROLE
         print((username, password, ROLE))
         user = User(username, password, ROLE)
-        database = Database()
+        # database = Database()
         try:
-            database.session.add(user)
-            database.session.commit()
+            self.database.session.add(user)
+            self.database.session.commit()
             print('User successfully added...')
             self.signup_command(True)
         except Exception:
@@ -112,7 +113,7 @@ class SignUp(App):
 
     def login_command(self, event):
         self.destroy()
-        login = Login.Login()
+        login = Login.Login(self.database)
         login.mainloop()
 
     def signup_command(self, event: bool):

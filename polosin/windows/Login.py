@@ -12,7 +12,7 @@ def donothing():
 
 width = 500
 height = 500
-database = Database()
+# database = Database()
 
 def combobox_callback(choice):
     print("combobox dropdown clicked:", choice)
@@ -20,8 +20,9 @@ def combobox_callback(choice):
 
 # Login window
 class Login(App):
-    def __init__(self):
+    def __init__(self,database):
         super().__init__()
+        self.database = database
 
         try:
             x = (self.winfo_screenwidth() // 2) - (width // 2)
@@ -121,7 +122,7 @@ class Login(App):
             print(e)
 
         try:
-            result = database.select_user(user, self.username.get())
+            result = self.database.select_user(user, self.username.get())
             print(result)
             db_password = result.password
             db_role = result.role
@@ -137,12 +138,12 @@ class Login(App):
             if password == user_password and db_role == 'Администратор':
                 print('Admin Login success')
                 self.destroy()
-                main = Main.Admin()
+                main = Main.Admin(self.database)
                 main.mainloop()
             elif password == user_password and db_role == 'Исследователь':
                 print('User Login success')
                 self.destroy()
-                userWin = UserWin.UserWin()
+                userWin = UserWin.UserWin(self.database)
                 userWin.mainloop()
 
         else :
@@ -154,5 +155,5 @@ class Login(App):
         except Exception:
             print(Exception)
         finally:
-            signup = SignUp.SignUp()
+            signup = SignUp.SignUp(self.database)
             signup.mainloop()

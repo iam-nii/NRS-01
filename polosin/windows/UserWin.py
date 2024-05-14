@@ -17,20 +17,11 @@ import os
 import asyncio
 
 
-database = Database()
+# database = Database()
 
 # Import the materials from the database
-materials_list = [
-    {
-        'id':material.id,
-        'material':str(material.material),
-        'density':material.density,
-        'heat_capacity':material.heat_capacity,
-        'melting_temperature':material.melting_temperature,
-    }
-    for material in database.get_materials()[0]
-]
-print(materials_list)
+
+# print(materials_list)
 
 # Create a font object
 FONT = ("MS Serif", 20)
@@ -63,12 +54,13 @@ data_report = {
 }
 
 class UserWin(c.CTk):
-    def __init__(self):
+    def __init__(self,database):
         super().__init__()
+        self.database = database
         # Geometry and window config
         self.main_width = 1028
         self.main_height = 820
-        self.title('Research window')
+        self.title('Окно исследователя')
         self.geometry(f"{self.main_width}x{self.main_height}")
         self.configure(fg_color='#F5F5F5', padx=0)
         self.rowconfigure(2, weight=1)
@@ -76,6 +68,17 @@ class UserWin(c.CTk):
         self.coordinates = []
         self.T = []
         self.viscosity = []
+
+        self.materials_list = [
+            {
+                'id':material.id,
+                'material':str(material.material),
+                'density':material.density,
+                'heat_capacity':material.heat_capacity,
+                'melting_temperature':material.melting_temperature,
+            }
+            for material in self.database.get_materials()[0]
+        ]
 
 
 
@@ -88,14 +91,14 @@ class UserWin(c.CTk):
         filemenu = tk.Menu(menubar, tearoff=0)
 
         # Add menu items to the file menu
-        filemenu.add_command(label="Change User", command=self.change_user_click, font=('Arial', 20, 'normal'))
-        filemenu.add_command(label="Save data", command=self.save_data_click, font=('Arial', 20, 'normal'))
-        filemenu.add_command(label="Help", command=self.help_click, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Сменить пользователя", command=self.change_user_click, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Сохранить данные", command=self.save_data_click, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Справка", command=self.help_click, font=('Arial', 20, 'normal'))
         filemenu.add_separator()
-        filemenu.add_command(label="Exit", command=self.quit, font=('Arial', 20, 'normal'))
+        filemenu.add_command(label="Выход", command=self.quit, font=('Arial', 20, 'normal'))
 
         # Add the file menu to the menu bar
-        menubar.add_cascade(label="Menu", menu=filemenu, font=('Arial', 20, 'normal'))
+        menubar.add_cascade(label="Меню", menu=filemenu, font=('Arial', 20, 'normal'))
 
 
 
@@ -130,10 +133,10 @@ class UserWin(c.CTk):
 
         # Params tab
         # Materials combobox
-        material_menu_list = [material['material'] for material in materials_list]
+        material_menu_list = [material['material'] for material in self.materials_list]
         materials = c.CTkOptionMenu(self.params, values=material_menu_list,
                                     command=self.print_materials)
-        materials.set("Materials")
+        materials.set("Материалы")
         materials.grid(column=1, row=0, padx=5, pady=5, sticky="E")
 
         # ------------------------Geometric values-------------------------------------#
@@ -178,7 +181,7 @@ class UserWin(c.CTk):
 
     def print_materials(self, choice):
         id = 0
-        for material in materials_list:
+        for material in self.materials_list:
             if material['material'] == choice:
                 DATA['material'] = choice
                 id = material['id']
@@ -188,9 +191,9 @@ class UserWin(c.CTk):
                 DATA['melting_temperature'] = material['melting_temperature']
 
         # Process parameters
-        process_params = database.get_process_params(id)[0]
-        DATA['cover_speed'] = process_params.cover_speed,
-        DATA['cover_temperature'] = process_params.cover_temperature
+        # process_params = self.database.get_process_params(id)[0]
+        # DATA['cover_speed'] = process_params.cover_speed,
+        # DATA['cover_temperature'] = process_params.cover_temperature
 
         # Chanel parameters
         # chanel_params = database.get_chanel_params(id)[0]
@@ -199,12 +202,12 @@ class UserWin(c.CTk):
         # DATA['length'] = chanel_params.length
 
         # Math Model parameters
-        math_model_params = database.get_math_module(id)[0]
-        DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
-        DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
-        DATA['casting_temperature'] = math_model_params.casting_temperature
-        DATA['flow_index'] = math_model_params.flow_index
-        DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
+        # math_model_params = self.database.get_math_module(id)[0]
+        # DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
+        # DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
+        # DATA['casting_temperature'] = math_model_params.casting_temperature
+        # DATA['flow_index'] = math_model_params.flow_index
+        # DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
 
         print(DATA)
 
@@ -373,7 +376,7 @@ class UserWin(c.CTk):
             print(f'Вязкость продукта: {round(Viscosity_p, 2)}')
 
             end = time.time()
-            calc_time = end - start
+            calc_time = (end - start) * 1000
             memory_usage = psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
 
             data_report["Производительность"] = Q
@@ -394,7 +397,7 @@ class UserWin(c.CTk):
                 f'Температура продукта: {round(Tp, 2)} [°C]\n',
                 f'Вязкость продукта: {round(Viscosity_p, 2)} [Па*с]\n',
                 f'Память: {round(memory_usage,2)} [Мбайт]\n ',
-                f'Время рассчета: {round(calc_time,4)} [c]\n',
+                f'Время рассчета: {round(calc_time,4)} [мc]\n',
                 f'Количество операций: {count}'
             ]
             # table_result.create_result_table(self.T, self.viscosity, self.coordinates, prod_temp_visc)
@@ -436,15 +439,15 @@ class UserWin(c.CTk):
         # Top level window
         self.save_to_file_window = c.CTkToplevel(self, fg_color="#F5F5F5")
         self.save_to_file_window.geometry('400x250')
-        self.save_to_file_window.title('Save data to excel file')
+        self.save_to_file_window.title(' Сохранить в Excel')
         self.save_to_file_window.resizable(False, False)
         self.save_to_file_window.attributes('-topmost', 'true')
 
         # Filename
-        self.filename = c.CTkEntry(master=self.save_to_file_window, placeholder_text='File name', width=200)
+        self.filename = c.CTkEntry(master=self.save_to_file_window, placeholder_text='Имя файла', width=200)
 
         # Save button
-        self.save_button = c.CTkButton(master=self.save_to_file_window, text='SAVE', fg_color='#6CD63C',
+        self.save_button = c.CTkButton(master=self.save_to_file_window, text='СОХРАНИТЬ', fg_color='#6CD63C',
                                           command=self.on_save_click)
 
         # Pack elements
@@ -459,7 +462,7 @@ class UserWin(c.CTk):
 
     def change_user_click(self):
         self.destroy()
-        login = Login.Login()
+        login = Login.Login(self.database)
         login.mainloop()
 
     def help_click(self):

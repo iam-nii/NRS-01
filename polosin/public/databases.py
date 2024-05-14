@@ -83,15 +83,17 @@ class MathModel(Base):
     casting_temperature = Column('casting_temperature', Float)
     flow_index = Column('flow_index', Float)
     cover_heat_transfer_coefficient = Column('cover_heat_transfer_coefficient', Float)
+    material_id = Column('material_id',Integer)
 
     def __init__(self, consistency_coefficient, temp_viscosity_coefficient, casting_temperature, flow_index,
-                 cover_heat_transfer_coefficient):
+                 cover_heat_transfer_coefficient,material_id):
         self.consistency_coefficient = consistency_coefficient
         self.temp_viscosity_coefficient = temp_viscosity_coefficient
         self.casting_temperature = casting_temperature
         self.flow_index = flow_index
         self.cover_heat_transfer_coefficient = cover_heat_transfer_coefficient
+        self.material_id = material_id
 
     def __repr__(self):
-        return (f"({self.consistency_coefficient}) {self.temp_viscosity_coefficient}{self.casting_temperature}"
-                f"{self.flow_index}{self.cover_heat_transfer_coefficient}")
+        return (f"({self.consistency_coefficient}) {self.temp_viscosity_coefficient} {self.casting_temperature}"
+                f"{self.flow_index} {self.cover_heat_transfer_coefficient} {self.material_id}")
