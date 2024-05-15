@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Администратор</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="edit_btn">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Edit</string>
+     <string>Редактировать</string>
     </property>
    </widget>
    <widget class="QTableView" name="table">
@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Delete</string>
+     <string>Удалить</string>
     </property>
    </widget>
    <widget class="QPushButton" name="add_btn">
@@ -60,7 +60,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Add</string>
+     <string>Добавить</string>
     </property>
    </widget>
    <widget class="QLabel" name="role_warning">
@@ -73,7 +73,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Role must ne &quot;пользователь&quot; or &quot;админ&quot;</string>
+     <string>Роль должен быть &quot;пользователь&quot; или &quot;админ&quot;</string>
     </property>
    </widget>
   </widget>
@@ -88,11 +88,11 @@
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>Menu</string>
+     <string>Меню</string>
     </property>
     <widget class="QMenu" name="select_tables">
      <property name="title">
-      <string>Select Table</string>
+      <string>Выбрать таблиц</string>
      </property>
      <addaction name="select_users_tables_menu"/>
      <addaction name="tasks_table_menu"/>
@@ -108,12 +108,12 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="change_user_menu">
    <property name="text">
-    <string>Change user</string>
+    <string>Сменить пользователя</string>
    </property>
   </action>
   <action name="exit_menu">
    <property name="text">
-    <string>Exit</string>
+    <string>Выход</string>
    </property>
   </action>
   <action name="action_2">
@@ -123,17 +123,17 @@
   </action>
   <action name="select_users_tables_menu">
    <property name="text">
-    <string>Users</string>
+    <string>Пользователи</string>
    </property>
   </action>
   <action name="tasks_table_menu">
    <property name="text">
-    <string>Tasks</string>
+    <string>Задания</string>
    </property>
   </action>
   <action name="select_methods_table">
    <property name="text">
-    <string>Method</string>
+    <string>Методы решения</string>
    </property>
   </action>
  </widget>

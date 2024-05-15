@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Регистрация</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QComboBox" name="role_cbx">
@@ -76,9 +76,9 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>50</x>
       <y>10</y>
-      <width>161</width>
+      <width>241</width>
       <height>41</height>
      </rect>
     </property>
@@ -91,7 +91,7 @@
      </font>
     </property>
     <property name="text">
-     <string>SignUp</string>
+     <string>Регистрация</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
@@ -112,7 +112,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Username</string>
+     <string>Логин</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_10">
@@ -133,7 +133,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Role</string>
+     <string>Роль</string>
     </property>
    </widget>
    <widget class="QLabel" name="login_link">
@@ -151,7 +151,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Login</string>
+     <string>Вход</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -172,7 +172,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Password</string>
+     <string>Пароль</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
@@ -180,12 +180,12 @@
      <rect>
       <x>70</x>
       <y>240</y>
-      <width>141</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Already have an account?</string>
+     <string>Уже есть аккаунт?</string>
     </property>
    </widget>
    <widget class="QLabel" name="user_reg_failed">
@@ -198,7 +198,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>User Registration Error</string>
+     <string>Ошибка регитрации ползователя</string>
     </property>
    </widget>
    <widget class="QLabel" name="user_already_exists">
@@ -211,7 +211,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>User Already exists</string>
+     <string>Пользователь уже существует</string>
     </property>
    </widget>
   </widget>

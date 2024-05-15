@@ -9,12 +9,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
+    <width>335</width>
     <height>370</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Авторизация</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="login_btn">
@@ -23,7 +23,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>150</x>
       <y>280</y>
       <width>111</width>
       <height>21</height>
@@ -39,7 +39,7 @@
    <widget class="QComboBox" name="role_cbx">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>80</x>
       <y>220</y>
       <width>171</width>
       <height>20</height>
@@ -59,7 +59,7 @@
    <widget class="QLineEdit" name="username_entry">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>80</x>
       <y>100</y>
       <width>171</width>
       <height>21</height>
@@ -69,9 +69,9 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>50</x>
       <y>20</y>
-      <width>121</width>
+      <width>251</width>
       <height>41</height>
      </rect>
     </property>
@@ -84,13 +84,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Login</string>
+     <string>Авторизация</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>80</x>
       <y>80</y>
       <width>101</width>
       <height>21</height>
@@ -105,13 +105,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Username</string>
+     <string>Логин</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="password_entry">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>80</x>
       <y>160</y>
       <width>171</width>
       <height>21</height>
@@ -121,7 +121,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>80</x>
       <y>140</y>
       <width>101</width>
       <height>21</height>
@@ -136,13 +136,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Password</string>
+     <string>Пароль</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>80</x>
       <y>200</y>
       <width>51</width>
       <height>21</height>
@@ -157,28 +157,28 @@
      </font>
     </property>
     <property name="text">
-     <string>Role</string>
+     <string>Роль</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>70</x>
       <y>250</y>
-      <width>131</width>
+      <width>91</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>Don't have an account?</string>
+     <string>Нет аккаунта?</string>
     </property>
    </widget>
    <widget class="QLabel" name="signup_link">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>170</x>
       <y>250</y>
-      <width>41</width>
+      <width>111</width>
       <height>21</height>
      </rect>
     </property>
@@ -188,20 +188,20 @@
      </font>
     </property>
     <property name="text">
-     <string>SingUp</string>
+     <string>Зарегистрироваться</string>
     </property>
    </widget>
    <widget class="QLabel" name="user_not_found">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>70</x>
       <y>310</y>
       <width>161</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>User not found !</string>
+     <string>Пользователь не найден</string>
     </property>
    </widget>
   </widget>
@@ -210,7 +210,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>306</width>
+     <width>335</width>
      <height>20</height>
     </rect>
    </property>

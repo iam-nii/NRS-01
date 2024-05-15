@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Исследователь</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="FRAMES">
@@ -726,7 +726,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>Menu</string>
+     <string>Меню</string>
     </property>
     <addaction name="changeUser_menu"/>
     <addaction name="help_menu"/>
@@ -738,7 +738,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QStatusBar" name="statusbar"/>
   <action name="changeUser_menu">
    <property name="text">
-    <string>Change user</string>
+    <string>Сменить пользователя</string>
    </property>
   </action>
   <action name="help_menu">
@@ -748,7 +748,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="exit_menu">
    <property name="text">
-    <string>Exit</string>
+    <string>Выход</string>
    </property>
   </action>
  </widget>

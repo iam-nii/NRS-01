@@ -146,7 +146,7 @@ class AdminWindow(RootEntry):
             users = [[user.id, user.username, user.role] for user in self.database.get_users()]
             if len(users) == 0:
                 users.insert(0,[' ', ' '])
-            users.insert(0,["id","Username","role"])
+            users.insert(0,["ID","Логин","Роль"])
 
             print(users)
 
@@ -158,7 +158,7 @@ class AdminWindow(RootEntry):
                 self.TABLE.setModel(data_model)
                 self.TABLE.setColumnWidth(0, 100)  # Set the width of the first column to 100 pixels
                 self.TABLE.setColumnWidth(1, 200)
-                self.TABLE.setColumnWidth(2, 200)
+                self.TABLE.setColumnWidth(2, 210)
             except Exception as e:
                 print(e)
 
@@ -168,7 +168,7 @@ class AdminWindow(RootEntry):
             tasks = [[task.id, task.text] for task in self.database.get_tasks()]
             if len(tasks) == 0:
                 tasks.insert(0,[' ',' '])
-            tasks.insert(0,["ID","Task"])
+            tasks.insert(0,["ID","Задание"])
             print(tasks)
 
             try:
@@ -189,7 +189,7 @@ class AdminWindow(RootEntry):
             methods = [[method.id, method.text] for method in self.database.get_solution_methods()]
             if len(methods) == 0:
                 methods.insert(0,[' ',' '])
-            methods.insert(0,['ID',"Method"])
+            methods.insert(0,['ID',"Метод решения"])
             print(methods)
 
             delegate = CustomDelegate(self.TABLE)

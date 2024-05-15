@@ -66,8 +66,10 @@ class LoginWindow(RootEntry):
                     self.admin_window.window.show()
                     self.window.close()
             else:
+                print("user not found...")
                 self.user_not_found.setHidden(False)
         else:
+            print("user not found..")
             self.user_not_found.setHidden(False)
 
 

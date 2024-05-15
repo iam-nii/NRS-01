@@ -18,6 +18,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextBrowser" name="textBrowser">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -25,6 +28,18 @@
       <width>371</width>
       <height>551</height>
      </rect>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.1pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt;Объектом оптимизации является  химико-технологическая система, состоящая  из двух реакторов непрерывного действия. В них в  результате химического взаимодействия из двух сырьевых компонентов, объемные расходы которых А1 и А2 (м^3/ч),   образуется целевой компонент   в количестве  С  (кг/ ч). Для исследования процесса разработана эмпирическая математическая модель, в соответствии с которой количество С   зависит от объемных расходов компонентов по следующему правилу:  &lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt;       С  =α (A1^2 +β A2 – µV1)^ N + α1(β1A1 + A2^2 – µ1V2)^N,&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt;где  α, α1, β, β1, µ, µ1 – нормирующие коэффициенты, равные 1;&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt;        N – количество реакторов ( 2 шт.);&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt;        V1 и V2 –       (11 и 7 м^3 соответственно). &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt; Технологическим регламентом установлены следующие требования к проведению процесса. Объемные расходы сырьевых компонентов А1 и А2 могут изменяться в диапазоне от 1 до 10 м^3/ч    соответственно; кроме того,  необходимо, чтобы суммарная производительность реакторов была не больше 8 м^3 /час.&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; &lt;/span&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:11pt;&quot;&gt;Необходимо найти такие условия проведения процесса ( значения А1 и А2 ), при которых обеспечивается максимальный выход целевого компонента в кг за рабочую смену ( 8 часов). Точность решения –0,0 1 м^3/ч .&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -55,6 +70,11 @@
       <height>31</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>1</string>
+     </property>
+    </item>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">

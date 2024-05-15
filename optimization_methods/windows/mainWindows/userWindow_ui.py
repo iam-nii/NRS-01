@@ -1,10 +1,11 @@
 import sys
+import pyqtgraph as pg
 from PyQt6 import QtWidgets as qw, uic
 from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, QRunnable,QThreadPool, pyqtSlot
 from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.mainWindows.loginWindow_ui as Login
 
-
+DATA = [["A1", "A2","C" ,"Целевая Функция"]]
 
 class Worker(QRunnable):
     '''
@@ -84,17 +85,17 @@ class UserWindow(RootEntry):
             # self.window = uic.loadUi("./windows/mainWindows/userWindow_ui.ui")
             self.window = uic.loadUi("./windows/mainWindows/userWindow1_ui.ui")
             # Input frame
-            self.input_frame:qw.QTabWidget = self.window.input_frame
+            self.input_frame:qw.QWidget = self.window.input_frame
 
             # Table frame
-            self.table_frame:qw.QTabWidget = self.window.table_frame
+            self.table_frame:qw.QWidget = self.window.table_frame
             self.TABLE = self.table_frame.findChild(qw.QTableView,"results_table")
 
             # 2d Graph frame
-            self.twod_frame:qw.QTabWidget = self.window.twod_graph_frame
+            self.twod_frame:qw.QWidget = self.window.twod_graph_frame
 
             # 3d Graph frame
-            self.threed_frame:qw.QTabWidget = self.window.threed_frame
+            self.threed_frame:qw.QWidget = self.window.threed_frame
 
             # Menu options
             self.change_user_menu: qw.QWidgetAction = self.window.changeUser_menu.triggered.connect(
@@ -144,34 +145,73 @@ class UserWindow(RootEntry):
         total_production = []
         A1 = float(self.min_a1.text())
         A2 = float(self.min_a2.text())
-        step = 0.01  # set the step size for incrementing A1 and A2
+        step = 0.1  # set the step size for incrementing A1 and A2
         while A1 <= float(self.max_a1.text()):
             A2 = float(self.min_a2.text())  # reset A2 to its initial value
             while A2 <= float(self.max_a2.text()):
                 # print("Calculating...")
                 # Calculate the production of C in kg/h
                 output = alpha * (A1 ** 2 + beta * A2 - mu * V1) ** N + alpha1 * (beta1 * A1 + A2 ** 2 - mu1 * V2) ** N
-                C.append(round(output, 2))
+                # C.append(round(output, 2))
                 A1_list.append(A1)
                 A2_list.append(A2)
 
                 # Calculate the total production in 8 hours (workday)
-                total_production.append(output * 8)
+                function = output * 8
+                # total_production.append(output * 8)
+                DATA.append([A1,A2,round(output,2),function])
                 A2 += step
             A1 += step
-        print(A1_list)
-        print(A2_list)
-        print(len(C))
-        print(len(total_production))
+        print(DATA)
+        self.plot_2d_graph(A1_list,A2_list)
+        # DATA.append(A1_list)
+        # DATA.append(A2_list)
+        # DATA.append(C)
+        # DATA.append(total_production)
+        # print(A1_list)
+        # print(A2_list)
+        # print(len(C))
+        # print(len(total_production))
+
+        data_model = TableModel(DATA)
+        self.TABLE.setModel(data_model)
+        self.TABLE.setColumnWidth(0, 200)  # Set the width of the first column to 100 pixels
+        self.TABLE.setColumnWidth(1, 200)
+        self.TABLE.setColumnWidth(2, 200)
+        self.TABLE.setColumnWidth(3, 200)
 
     def calculate_btn_clicked(self):
         worker = Worker(self.thread_calculate_btn)
         self.threadpool.start(worker)
 
+    def plot_2d_graph(self, x_data: list, y_data: list) -> None:
+        """
+        Plot a 2D graph in the QTabWidget based on two list arguments.
+
+        Args:
+            x_data (list): X-axis data
+            y_data (list): Y-axis data
+        """
+        # Create a new tab for the graph
+        graph_tab: qw.QWidget = qw.QWidget()
+        # self.twod_frame.addW(graph_tab, "2D Graph")
+
+        # Create a layout for the graph tab
+        graph_layout: qw.QVBoxLayout = qw.QVBoxLayout()
+        self.twod_frame.setLayout(graph_layout)
+
+        # Create the plot widget
+        self.plot_widget: pg.PlotWidget = pg.PlotWidget()
+        graph_layout.addWidget(self.plot_widget)
+
+        # Plot the data
+        self.plot_widget.plot(x_data, y_data)
+
+
 
     def change_user(self):
         print("Changing user...")
-        self.login_window = Login.LoginWindow()
+        self.login_window = Login.LoginWindow(self.app)
         self.login_window.window.show()
         self.window.close()
 
