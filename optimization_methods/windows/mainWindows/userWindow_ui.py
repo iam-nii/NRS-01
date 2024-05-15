@@ -1,9 +1,38 @@
 import sys
 from PyQt6 import QtWidgets as qw, uic
-from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, QRunnable,QThreadPool
 from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.mainWindows.loginWindow_ui as Login
 
+
+
+class Worker(QRunnable):
+    '''
+    Worker thread
+
+    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
+
+    '''
+
+    def __init__(self, fn, *args, **kwargs):
+        super(Worker, self).__init__()
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+
+    @pyqtSlot()
+    def run(self):
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+        self.fn(*self.args, **self.kwargs)
 class TableModel(QAbstractTableModel):
     def __init__(self, data):
         super().__init__()
@@ -47,6 +76,8 @@ class UserWindow(RootEntry):
         super().__init__(app)
         self.app = app
         self.init_ui()
+        self.threadpool = QThreadPool()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
 
     def init_ui(self):
         try:
@@ -132,6 +163,9 @@ class UserWindow(RootEntry):
         print(A2_list)
         print(len(C))
         print(len(total_production))
+
+    def thread_calculate_btn(self):
+        worker = Worker(self.calculate_btn_clicked)
 
 
     def change_user(self):

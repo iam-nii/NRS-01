@@ -2,7 +2,5 @@
 *.txt
 *.db
 *.spec
-build
-dist
-polosin/build
-polosing/dist
+*build
+*dist
