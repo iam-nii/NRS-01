@@ -1,6 +1,6 @@
 import sys
 from PyQt6 import QtWidgets as qw, uic
-from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, QRunnable,QThreadPool
+from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, QRunnable,QThreadPool, pyqtSlot
 from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.mainWindows.loginWindow_ui as Login
 
@@ -123,7 +123,7 @@ class UserWindow(RootEntry):
             print(e)
 
 
-    def calculate_btn_clicked(self):
+    def thread_calculate_btn(self):
         # Define the constants
         N = 2  # Number of reactors
         V1 = float(self.v1.text())  # Working volume of reactor 1 (m^3)
@@ -164,8 +164,9 @@ class UserWindow(RootEntry):
         print(len(C))
         print(len(total_production))
 
-    def thread_calculate_btn(self):
-        worker = Worker(self.calculate_btn_clicked)
+    def calculate_btn_clicked(self):
+        worker = Worker(self.thread_calculate_btn)
+        self.threadpool.start(worker)
 
 
     def change_user(self):
