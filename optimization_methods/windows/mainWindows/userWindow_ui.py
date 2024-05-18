@@ -14,12 +14,19 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 from PyQt6.QtCore import QMetaObject, Qt
 from PyQt6.QtWidgets import QVBoxLayout
+from mpl_toolkits.mplot3d import Axes3D
 
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
+
+class MplCanvas_3d(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111, projection='3d')  # Add a 3D subplot
+        super().__init__(fig)
 
 DATA = [["A1", "A2","C" ,"Целевая Функция"]]
 
@@ -108,20 +115,20 @@ class UserWindow(qw.QWidget):
             self.TABLE = self.table_frame.findChild(qw.QTableView,"results_table")
 
             # 2d Graph frame
-            # self.graph = MplCanvas(self, width=5, height=4, dpi=100)
-            # self.twod_frame = QWidget(self)
-            # layout = QVBoxLayout()
-            # layout.addWidget(self.graph)
-            # self.twod_frame.setLayout(layout)
-            # self.plot_2d_graph(DATA)  # Call your plotting function
             self.graph = MplCanvas(self,width=10,height=7,dpi=100)
             self.twod_frame = self.window.twod_graph_frame
-            layout = QVBoxLayout()
-            layout.addWidget(self.graph)
-            self.twod_frame.setLayout(layout)
+            self.twod_layout  = QVBoxLayout()
+            self.twod_layout.addWidget(self.graph)
+            self.twod_frame.setLayout(self.twod_layout)
 
             # 3d Graph frame
-            self.threed_frame:qw.QWidget = self.window.threed_frame
+            self.graph_3d = MplCanvas_3d(self,width=9,height=7,dpi=100)
+            self.three_d_frame:qw.QWidget = self.window.threed_frame
+            self.three_d_layout = QVBoxLayout()
+            self.three_d_layout.addWidget(self.graph_3d)
+            self.three_d_frame.setLayout(self.three_d_layout)
+
+
 
             # Menu options
             self.change_user_menu: qw.QWidge-tAction = self.window.changeUser_menu.triggered.connect(
@@ -214,6 +221,7 @@ class UserWindow(qw.QWidget):
         print("Table build done.")
 
         self.thread_plot_2d_graph(DATA)
+        self.thread_plot_3d_graph(DATA)
 
     def calculate_btn_clicked(self):
         worker = Worker(self.thread_calculate_btn)
@@ -252,14 +260,6 @@ class UserWindow(qw.QWidget):
 
             cbar = self.graph.figure.colorbar(contour, ax=self.graph.axes)
             cbar.set_label('Целевая функция')
-            # # Create the contour plot with filled contours
-            # contour_filled = self.graph.axes.contourf(xi, yi, zi, levels=100, cmap="RdYlBu")
-            #
-            #
-            # # Add a color bar
-            # print("Adding color to bar")
-            # cbar = plt.colorbar(contour_filled)
-            # cbar.set_label('Целевая функция')
 
             # Set labels and title
             print("Setting titles and labels...")
@@ -283,6 +283,42 @@ class UserWindow(qw.QWidget):
         except Exception as e:
             print(f"Error in plot_2d_graph: {e}")
 
+    def thread_plot_3d_graph(self,data):
+        worker = Worker(lambda: self.plot_3d_graph(data))
+        self.threadpool.start(worker)
+
+    def plot_3d_graph(self, data):
+        print("Inititating 3d plot...")
+        try:
+            x = [float(d[0]) for d in data[1:]]
+            y = [float(d[1]) for d in data[1:]]
+            z = [float(d[3]) for d in data[1:]]
+
+            print("Creating the x, y and z grid...")
+
+            xi = np.linspace(min(x), max(x), 100)
+            yi = np.linspace(min(y), max(y), 100)
+            xi, yi = np.meshgrid(xi, yi)
+
+            zi = griddata((x, y), z, (xi, yi), method='cubic')
+
+            self.graph_3d.axes.clear()  # Clear the existing plot on the canvas
+
+            print("Plotting the 3d graph")
+            surf = self.graph_3d.axes.plot_surface(xi, yi, zi, cmap="RdYlBu")  # Plot directly onto self.graph_3d
+
+            cbar = self.graph_3d.figure.colorbar(surf, ax=self.graph_3d.axes)
+            cbar.set_label('Целевая функция')
+
+            self.graph_3d.axes.set_xlabel('A1')
+            self.graph_3d.axes.set_ylabel('A2')
+            self.graph_3d.axes.set_zlabel('Целевая функция')
+            self.graph_3d.axes.set_title('Визуализация 3д-графика')
+
+            self.graph_3d.draw()  # Update the canvas
+
+        except Exception as e:
+            print(f"Error in plot_3d_graph: {e}")
 
     def change_user(self):
         print("Changing user...")
