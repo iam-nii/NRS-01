@@ -60,7 +60,6 @@ class LoginWindow(QWidget):
         if username == "admin" and password == "secret":
             # Create an instance of MainWindow
             self.main_window = MainWindow()
-
             self.close()
             self.main_window.show()  # Show the main window
         else:

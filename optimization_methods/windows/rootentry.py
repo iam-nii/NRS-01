@@ -8,8 +8,8 @@
 #         self.grid_columnconfigure(0, weight=1)
 
 import sys
-from PyQt6 import QtWidgets as qw
+from PyQt6 import QtWidgets
 
-class RootEntry:
+class RootEntry():
     def __init__(self, app):
         self.app = app

@@ -1,9 +1,25 @@
 import sys
-import pyqtgraph as pg
+import numpy as np
 from PyQt6 import QtWidgets as qw, uic
 from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex, QRunnable,QThreadPool, pyqtSlot
+import pyqtgraph as pg
 from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.mainWindows.loginWindow_ui as Login
+# from optimization_methods.windows.ui_test import GraphWindow
+import matplotlib
+matplotlib.use('QtAgg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
+from PyQt6.QtCore import QMetaObject, Qt
+from PyQt6.QtWidgets import QVBoxLayout
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
 
 DATA = [["A1", "A2","C" ,"Целевая Функция"]]
 
@@ -72,9 +88,9 @@ class TableModel(QAbstractTableModel):
             if orientation == Qt.Orientation.Horizontal:
                 return self._headers[section]
 
-class UserWindow(RootEntry):
+class UserWindow(qw.QWidget):
     def __init__(self, app):
-        super().__init__(app)
+        super().__init__()
         self.app = app
         self.init_ui()
         self.threadpool = QThreadPool()
@@ -92,13 +108,23 @@ class UserWindow(RootEntry):
             self.TABLE = self.table_frame.findChild(qw.QTableView,"results_table")
 
             # 2d Graph frame
-            self.twod_frame:qw.QWidget = self.window.twod_graph_frame
+            # self.graph = MplCanvas(self, width=5, height=4, dpi=100)
+            # self.twod_frame = QWidget(self)
+            # layout = QVBoxLayout()
+            # layout.addWidget(self.graph)
+            # self.twod_frame.setLayout(layout)
+            # self.plot_2d_graph(DATA)  # Call your plotting function
+            self.graph = MplCanvas(self,width=10,height=7,dpi=100)
+            self.twod_frame = self.window.twod_graph_frame
+            layout = QVBoxLayout()
+            layout.addWidget(self.graph)
+            self.twod_frame.setLayout(layout)
 
             # 3d Graph frame
             self.threed_frame:qw.QWidget = self.window.threed_frame
 
             # Menu options
-            self.change_user_menu: qw.QWidgetAction = self.window.changeUser_menu.triggered.connect(
+            self.change_user_menu: qw.QWidge-tAction = self.window.changeUser_menu.triggered.connect(
                 self.change_user)
             self.help_menu: qw.QWidgetAction = self.window.help_menu.triggered.connect(self.help_menu_click)
             self.exit: qw.QWidgetAction = self.window.exit_menu.triggered.connect(self.exit_menu_click)
@@ -139,74 +165,123 @@ class UserWindow(RootEntry):
 
         # print("Calculating...")
 
+        # Ensure all required variables are initialized
         C = []
         A1_list = []
         A2_list = []
         total_production = []
-        A1 = float(self.min_a1.text())
-        A2 = float(self.min_a2.text())
-        step = 0.1  # set the step size for incrementing A1 and A2
-        while A1 <= float(self.max_a1.text()):
-            A2 = float(self.min_a2.text())  # reset A2 to its initial value
-            while A2 <= float(self.max_a2.text()):
-                # print("Calculating...")
-                # Calculate the production of C in kg/h
-                output = alpha * (A1 ** 2 + beta * A2 - mu * V1) ** N + alpha1 * (beta1 * A1 + A2 ** 2 - mu1 * V2) ** N
-                # C.append(round(output, 2))
-                A1_list.append(A1)
-                A2_list.append(A2)
+        # DATA = []  # Ensure DATA is defined
 
-                # Calculate the total production in 8 hours (workday)
-                function = output * 8
-                # total_production.append(output * 8)
-                DATA.append([A1,A2,round(output,2),function])
-                A2 += step
+        # Convert text inputs to float and handle potential conversion errors
+        try:
+            min_a1 = float(self.min_a1.text())  # 1
+            max_a1 = float(self.max_a1.text())  # 10
+            min_a2 = float(self.min_a2.text())  # 1
+            max_a2 = float(self.max_a2.text())  # 10
+        except ValueError:
+            print("Error: Ensure that the text inputs are valid numeric values.")
+            raise
+
+        step = 0.1  # Step size for incrementing A1 and A2
+        print("Calculating...")
+
+        A1 = min_a1
+        while A1 <= max_a1:
+            A2 = max_a2  # Reset A2 to its initial value at the start of each A1 loop
+            while A2 >= min_a2:
+                if A1 + A2 < 8:
+                    # Calculate the production of C in kg/h
+                    output = alpha * (A1 ** 2 + beta * A2 - mu * V1) ** N + alpha1 * (
+                            beta1 * A1 + A2 ** 2 - mu1 * V2) ** N
+
+                    A1_list.append(A1)
+                    A2_list.append(A2)
+
+                    # Calculate the total production in 8 hours (workday)
+                    function = output * 8
+                    DATA.append([round(A1, 1), round(A2, 1), round(output, 2), round(function, 2)])
+                A2 -= step
             A1 += step
-        print(DATA)
-        self.plot_2d_graph(A1_list,A2_list)
-        # DATA.append(A1_list)
-        # DATA.append(A2_list)
-        # DATA.append(C)
-        # DATA.append(total_production)
-        # print(A1_list)
-        # print(A2_list)
-        # print(len(C))
-        # print(len(total_production))
 
+        print("Calculation completed.")
+        print("Building table...")
         data_model = TableModel(DATA)
         self.TABLE.setModel(data_model)
-        self.TABLE.setColumnWidth(0, 200)  # Set the width of the first column to 100 pixels
-        self.TABLE.setColumnWidth(1, 200)
-        self.TABLE.setColumnWidth(2, 200)
-        self.TABLE.setColumnWidth(3, 200)
+        self.TABLE.setColumnWidth(0, 120)  # Set the width of the first column to 100 pixels
+        self.TABLE.setColumnWidth(1, 120)
+        self.TABLE.setColumnWidth(2, 120)
+        self.TABLE.setColumnWidth(3, 150)
+        print("Table build done.")
+
+        self.thread_plot_2d_graph(DATA)
 
     def calculate_btn_clicked(self):
         worker = Worker(self.thread_calculate_btn)
         self.threadpool.start(worker)
 
-    def plot_2d_graph(self, x_data: list, y_data: list) -> None:
-        """
-        Plot a 2D graph in the QTabWidget based on two list arguments.
+    def thread_plot_2d_graph(self,data):
+        worker = Worker(lambda :self.plot_2d_graph(data))
+        self.threadpool.start(worker)
+    def plot_2d_graph(self, data) -> None:
+        print("Plotting 2d graph...")
+        try:
+            x = [float(d[0]) for d in data[1:]]
+            y = [float(d[1]) for d in data[1:]]
+            z = [float(d[3]) for d in data[1:]]  # Assuming the third element in data is the value to contour
+            print((x,y,z))
 
-        Args:
-            x_data (list): X-axis data
-            y_data (list): Y-axis data
-        """
-        # Create a new tab for the graph
-        graph_tab: qw.QWidget = qw.QWidget()
-        # self.twod_frame.addW(graph_tab, "2D Graph")
+            print("Creating the x and y grid...")
+            # Create a grid of x and y values
+            xi = np.linspace(min(x), max(x), 100)
+            yi = np.linspace(min(y), max(y), 100)
+            xi, yi = np.meshgrid(xi, yi)
 
-        # Create a layout for the graph tab
-        graph_layout: qw.QVBoxLayout = qw.QVBoxLayout()
-        self.twod_frame.setLayout(graph_layout)
+            # Interpolate z values on the grid
+            print("Interpolating z values on the grid...")
+            zi = griddata((x, y), z, (xi, yi), method='cubic')
 
-        # Create the plot widget
-        self.plot_widget: pg.PlotWidget = pg.PlotWidget()
-        graph_layout.addWidget(self.plot_widget)
+            # Clear any existing plots
+            print("clearing existing plots...")
+            self.graph.axes.clear()
 
-        # Plot the data
-        self.plot_widget.plot(x_data, y_data)
+            # # Create a contour plot
+            print("Creating contout plot...")
+            contour = self.graph.axes.contourf(xi, yi, zi, levels=100, cmap="RdYlBu")
 
+            # Add a color bar
+
+            cbar = self.graph.figure.colorbar(contour, ax=self.graph.axes)
+            cbar.set_label('Целевая функция')
+            # # Create the contour plot with filled contours
+            # contour_filled = self.graph.axes.contourf(xi, yi, zi, levels=100, cmap="RdYlBu")
+            #
+            #
+            # # Add a color bar
+            # print("Adding color to bar")
+            # cbar = plt.colorbar(contour_filled)
+            # cbar.set_label('Целевая функция')
+
+            # Set labels and title
+            print("Setting titles and labels...")
+            self.graph.axes.set_xlabel('A1')
+            self.graph.axes.set_ylabel('A2')
+            self.graph.axes.set_title('Визуализация 2д-графика')
+
+            # Refresh the plot
+            print("Refreshing the plot...")
+            self.graph.draw()
+
+            # Update the layout
+            print("Updating the layout...")
+            try:
+                layout = QVBoxLayout()
+                layout.addWidget(self.graph)
+                self.twod_frame.setLayout(layout)
+            except Exception as e:
+                print(f"Error in updating layout: {e}")
+            print("Contour graph plotted!")
+        except Exception as e:
+            print(f"Error in plot_2d_graph: {e}")
 
 
     def change_user(self):
@@ -229,3 +304,6 @@ class UserWindow(RootEntry):
 # window = UserWindow(app)
 # window.window.show()
 # app.exec()
+
+
+
