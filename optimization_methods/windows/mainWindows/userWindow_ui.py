@@ -210,18 +210,17 @@ class UserWindow(qw.QWidget):
         while A1 <= max_a1:
             A2 = max_a2  # Reset A2 to its initial value at the start of each A1 loop
             while A2 >= min_a2:
-                if A1 + A2 < 8:
-                    # Calculate the production of C in kg/h
-                    output = alpha * (A1 ** 2 + beta * A2 - mu * V1) ** N + alpha1 * (
-                            beta1 * A1 + A2 ** 2 - mu1 * V2) ** N
+                # Calculate the production of C in kg/h
+                output = alpha * (A1 ** 2 + beta * A2 - mu * V1) ** N + alpha1 * (
+                        beta1 * A1 + A2 ** 2 - mu1 * V2) ** N
 
-                    A1_list.append(round(A1, 1))
-                    A2_list.append(round(A2, 1))
+                A1_list.append(round(A1, 1))
+                A2_list.append(round(A2, 1))
 
-                    # Calculate the total production in 8 hours (workday)
-                    function = output * 8
-                    total_production.append(round(function, 2))
-                    DATA.append([round(A1, 1), round(A2, 1), round(output, 2), round(function, 2)])
+                # Calculate the total production in 8 hours (workday)
+                function = output * 8
+                total_production.append(round(function, 2))
+                DATA.append([round(A1, 1), round(A2, 1), round(output, 2), round(function, 2)])
                 A2 -= step
             A1 += step
 
@@ -263,7 +262,11 @@ class UserWindow(qw.QWidget):
             print(f"Error calculating extreme: {e}")
 
         self.thread_plot_2d_graph(DATA)
-        self.thread_plot_3d_graph(DATA)
+        try:
+            self.thread_plot_3d_graph([DATA[row] for row in range(1, len(DATA)) if DATA[row][0] + DATA[row][1] < 8])
+        except Exception as e:
+            print(f"Exception: {e}. Details: {traceback.print_exc()}")
+
 
     def calculate_btn_clicked(self):
         worker = Worker(self.thread_calculate_btn)
@@ -311,7 +314,6 @@ class UserWindow(qw.QWidget):
             x = [float(d[0]) for d in data[1:]]
             y = [float(d[1]) for d in data[1:]]
             z = [float(d[3]) for d in data[1:]]  # Assuming the third element in data is the value to contour
-            # print((x,y,z))
 
             print("Creating the x and y grid...")
             # Create a grid of x and y values
@@ -324,23 +326,33 @@ class UserWindow(qw.QWidget):
             zi = griddata((x, y), z, (xi, yi), method='cubic')
 
             # Clear any existing plots
-            print("clearing existing plots...")
+            print("Clearing existing plots...")
             self.graph.axes.clear()
 
-            # # Create a contour plot
-            print("Creating contout plot...")
+            # Create a contour plot
+            print("Creating contour plot...")
             contour = self.graph.axes.contourf(xi, yi, zi, levels=100, cmap="RdYlBu")
 
             # Add a color bar
-
             cbar = self.graph.figure.colorbar(contour, ax=self.graph.axes)
             cbar.set_label('Целевая функция')
+
+            # Plot the line x + y = 8
+            print("Plotting x + y = 8 line...")
+            x_line = np.linspace(min(xi.flatten()), max(xi.flatten()), 100)
+            y_line = 9   - x_line
+            self.graph.axes.plot(x_line, y_line, 'k--', label='x + y = 8')
+
+            # Set the x and y axis limits to start from 0
+            self.graph.axes.set_xlim(1, max(xi.flatten()))
+            self.graph.axes.set_ylim(1, max(yi.flatten()))
 
             # Set labels and title
             print("Setting titles and labels...")
             self.graph.axes.set_xlabel('A1')
             self.graph.axes.set_ylabel('A2')
             self.graph.axes.set_title('Визуализация 2д-графика')
+            self.graph.axes.legend()
 
             # Refresh the plot
             print("Refreshing the plot...")
