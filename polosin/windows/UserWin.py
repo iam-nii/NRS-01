@@ -1,4 +1,6 @@
 import math
+import traceback
+
 from polosin.public.Save_to_excel import Save_to_excel
 import tkinter as tk
 from polosin.public.results import Results
@@ -68,6 +70,7 @@ class UserWin(c.CTk):
         self.coordinates = []
         self.T = []
         self.viscosity = []
+        self.solution_method_values = None
 
         self.materials_list = [
             {
@@ -79,6 +82,7 @@ class UserWin(c.CTk):
             }
             for material in self.database.get_materials()[0]
         ]
+        print(self.materials_list)
 
 
 
@@ -147,6 +151,7 @@ class UserWin(c.CTk):
         self.process_values = Process_values(self.divider, DATA)
         # ---------------------------Solution method parameters-----------------------------------#
         self.solution_method_values = Solution_method_values(self.divider, DATA)
+
         # # Calculation step
         # self.calculation_step_frame = c.CTkFrame(master=self.divider, fg_color='#070809')
         # self.calculation_step_frame.grid(row=1, column=0, sticky=tk.W, pady=10, padx=5)
@@ -185,6 +190,7 @@ class UserWin(c.CTk):
             if material['material'] == choice:
                 DATA['material'] = choice
                 id = material['id']
+                print(id)
                 # Material parameters
                 DATA['density'] = material['density']
                 DATA['heat_capacity'] = material['heat_capacity']
@@ -202,12 +208,16 @@ class UserWin(c.CTk):
         # DATA['length'] = chanel_params.length
 
         # Math Model parameters
-        # math_model_params = self.database.get_math_module(id)[0]
-        # DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
-        # DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
-        # DATA['casting_temperature'] = math_model_params.casting_temperature
-        # DATA['flow_index'] = math_model_params.flow_index
-        # DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
+        math_model_params = self.database.get_math_module(id)[0]
+        print(f"math model: {math_model_params}")
+        try:
+            DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
+            DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
+            DATA['casting_temperature'] = math_model_params.casting_temperature
+            DATA['flow_index'] = math_model_params.flow_index
+            DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
+        except Exception:
+            print(traceback.print_exc())
 
         print(DATA)
 
@@ -215,6 +225,11 @@ class UserWin(c.CTk):
 
         # ---------------------------Materials-----------------------------------#
         self.material_values = Material_values(self.params, DATA)
+        # ----------------------------------------Math Model------------------------------------#
+        self.math_model_values = Math_model_values(self.params, DATA)
+
+
+
 
 
 

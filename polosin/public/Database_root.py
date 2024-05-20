@@ -49,13 +49,16 @@ class Database:
     #         chanels = self.session.query(Chanel).all()
     #     return [chanels,3]
 
-    def get_materials(self):
-        materials = self.session.query(Material).all()
+    def get_materials(self,id=None):
+        if id is None:
+            materials = self.session.query(Material).all()
+        else:
+            materials = self.session.query(Material).filter(Material.id == id).first()
         return [materials,4]
 
     def get_math_module(self,id=None):
         if id is not None:
-            math_modules = self.session.query(MathModel).filter(MathModel.id == id).first()
+            math_modules = self.session.query(MathModel).filter(MathModel.material_id == id).first()
         else:
             math_modules = self.session.query(MathModel).all()
         return [math_modules,5]

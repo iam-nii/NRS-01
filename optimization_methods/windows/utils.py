@@ -130,9 +130,9 @@ class User(Base):
         self.username = username
         self.password = EncDecPass().encrypt_password(password)
         self.role = role
-        print(self.username)
-        print(self.password)
-        print(self.role)
+        # print(self.username)
+        # print(self.password)
+        # print(self.role)
 
     def __repr__(self):
         return f"({self.id}) {self.username} {self.role}"
@@ -143,10 +143,20 @@ class SolutionMethods(Base):
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     method = Column('method', String, unique=True)
 
+    def __init__(self,method):
+        print("Method...")
+        self.method = method
+        # print(self.method)
+
 class Tasks(Base):
     __tablename__ = 'tasks'
     id = Column('id',Integer, primary_key=True,autoincrement=True)
     text = Column('text',String)
+
+    def __init__(self,task):
+        print("User...")
+        self.task = task
+        # print(self.task)
 
 
 class Database():

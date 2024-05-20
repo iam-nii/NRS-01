@@ -48,7 +48,7 @@ class User_Table:
                     self.label2.grid(row=i+1, column=j, padx=1, pady=1)  # position the entry within the frame
                     material_id_list.append(self.label2)
                 else:
-                    self.label3 = c.CTkLabel(root, width=100, height=30, text=f'{i+1}', fg_color='black',
+                    self.label3 = c.CTkLabel(root, width=100, height=30, text=f'{table[i].id}', fg_color='black',
                                           text_color='white', font=('Arial', 16, 'bold'))
                     self.label3.grid(row=i+1, column=j, padx=1, pady=1)  # position the entry within the frame
                     id_label_list.append(self.label3)
@@ -245,7 +245,7 @@ class Material_Table:
                     self.label4.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     melting_temperature_label_list.append(self.label4)
                 else:
-                    self.label5 = c.CTkLabel(self.root, width=100, height=30, text=f'{i + 1}', fg_color='black',
+                    self.label5 = c.CTkLabel(self.root, width=100, height=30, text=f'{table[i].id}', fg_color='black',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label5.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     id_label_list.append(self.label5)
@@ -379,7 +379,7 @@ class MathModel_Table:
                     material_id_label_list.append(self.label2)
 
                 else:
-                    self.label3 = c.CTkLabel(self.root, width=60, height=30, text=f'{i + 1}', fg_color='black',
+                    self.label3 = c.CTkLabel(self.root, width=60, height=30, text=f'{table[i].id}', fg_color='black',
                                              text_color='white', font=('Arial', 16, 'bold'))
                     self.label3.grid(row=i + 1, column=j, padx=1, pady=1)  # position the entry within the frame
                     id_label_list.append(self.label3)

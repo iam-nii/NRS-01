@@ -1,3 +1,5 @@
+import traceback
+
 import customtkinter as c
 import tkinter as tk
 from tkinter import filedialog
@@ -377,6 +379,7 @@ class Admin(c.CTk):
             self.success.pack(in_=self.user_edit_frame)
         except Exception as e:
             print(e,': on_edit_user_click')
+            print(traceback.print_exc())
 
     def on_edit_material_click(self):
         try:
@@ -438,7 +441,7 @@ class Admin(c.CTk):
                     raise Exception(f"Материала с id:{material_id} не существует")
 
             except Exception as e:
-                self.input_warning.configure(text=e)
+                self.input_warning.configure(text=f"Материала с id:{material_id} не существует")
                 self.input_warning.pack(in_=self.math_model_params_edit_frame)
                 print(f'{e} in edit math model')
         except Exception as e:
@@ -649,6 +652,8 @@ class Admin(c.CTk):
         self.new_heat_capacity.pack(pady=10)
         self.new_melting_temp.pack(pady=10)
         self.new_add_button.pack(pady=10)
+
+        self.math_model_params_on_add_click()
     def process_params_on_add_click(self):
         # Top level window
         self.add_process_params_window = c.CTkToplevel(self, fg_color="#232E33")
@@ -733,24 +738,34 @@ class Admin(c.CTk):
             cover_heat_transfer_coeff = float(self.new_cover_heat_trans_coeff.get())
             material_id = float(self.new_material_id.get())
 
-            if consistency_coeff or temp_visc_coeff or casting_temp or flow_index or cover_heat_transfer_coeff or material_id <= 0:
+            if consistency_coeff <= 0 or temp_visc_coeff <= 0 or casting_temp <= 0 or flow_index <= 0 or cover_heat_transfer_coeff <= 0 or material_id <= 0:
                 raise Exception("Cannot be zero")
         except Exception as e:
+
             self.warning.configure(text="Вводимое число должно быть больше 0")
+            self.success.pack_forget()
             print(e)
         # print((consistency_coeff, temp_visc_coeff, casting_temp, flow_index, cover_heat_transfer_coeff,material_id))
 
         math_model = MathModel(consistency_coeff, temp_visc_coeff,casting_temp,flow_index,cover_heat_transfer_coeff,material_id)
-        print(math_model)
+        # print(math_model)
         try:
-            self.database.session.add(math_model)
-            self.database.session.commit()
-            print('Math Model successfully added...')
-            self.success.pack()
+            material = self.database.get_materials(material_id)
+            print(material)
+            if  material[0] != None:
+                print("Material with id exists")
+                self.database.session.add(math_model)
+                self.database.session.commit()
+                print('Math Model successfully added...')
+                self.success.pack()
+            else:
+                self.success.pack_forget()
+                self.warning.configure(text="Не существует материал с таким id")
+                self.warning.pack()
             # self.add_user_window.after(200,self.success.pack_forget())
 
-        except Exception:
-            print(Exception)
+        except Exception as e:
+            print(traceback.print_exc())
             self.warning.pack()
             # self.add_user_window.after(1000, self.warning.destroy())
     def on_new_process_params_add_click(self):

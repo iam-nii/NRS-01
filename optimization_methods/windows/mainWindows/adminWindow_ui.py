@@ -1,8 +1,10 @@
 import sys
+import traceback
+
 from PyQt6 import QtWidgets as qw, uic
 from sqlalchemy import func
 from PyQt6.QtCore import Qt, QAbstractTableModel, QModelIndex
-from optimization_methods.windows.utils import Database,User
+from optimization_methods.windows.utils import Database,User, Tasks,SolutionMethods
 from optimization_methods.windows.rootentry import RootEntry
 import optimization_methods.windows.mainWindows.loginWindow_ui as Login
 from PyQt6.QtWidgets import QApplication, QTableView, QVBoxLayout, QWidget, QLineEdit, QItemDelegate,QMessageBox,QDialog
@@ -186,13 +188,16 @@ class AdminWindow(RootEntry):
 
         if table == "methods":
             table_ = "methods"
-            methods = [[method.id, method.text] for method in self.database.get_solution_methods()]
-            if len(methods) == 0:
-                methods.insert(0,[' ',' '])
-            methods.insert(0,['ID',"Метод решения"])
-            print(methods)
+            try:
+                methods = [[method.id, method.method] for method in self.database.get_solution_methods()]
+                if len(methods) == 0:
+                    methods.insert(0,[' ',' '])
+                methods.insert(0,['ID',"Метод решения"])
+                print(methods)
 
-            delegate = CustomDelegate(self.TABLE)
+                delegate = CustomDelegate(self.TABLE)
+            except :
+                print(traceback.print_exc())
             self.TABLE.setItemDelegate(delegate)
             data_model = TableModel(methods)
 
@@ -248,7 +253,7 @@ class AdminWindow(RootEntry):
         if table_ == 'users':
             try:
                 self.add_user_dialog:qw.QDialog = uic.loadUi('./windows/mainWindows/add_user_dialog_ui.ui')
-                self.add_user_dialog.setWindowTitle("Add a new User")
+                self.add_user_dialog.setWindowTitle("Добавить пользователя")
 
                 self.username = self.add_user_dialog.findChild(QLineEdit, "username_txt")
                 self.password = self.add_user_dialog.findChild(QLineEdit, "password_txt")
@@ -275,9 +280,50 @@ class AdminWindow(RootEntry):
             except Exception as e:
                 print(e)
         elif table_ == 'tasks':
-            pass
+            try:
+                self.add_task_dialog:qw.QDialog = uic.loadUi('./windows/mainWindows/add_task_dialog_ui.ui')
+                self.add_task_dialog.setWindowTitle("Добавить задание")
+
+                self.task:qw.QTextEdit = self.add_task_dialog.findChild(qw.QTextEdit, 'new_task_txt')
+                button = self.add_task_dialog.exec()
+            except Exception:
+                print(traceback.print_exc())
+
+            try:
+                if button == 1:
+                    task_text = self.task.toPlainText()
+                    if task_text != ' ':
+                        print("adding...")
+                        task = Tasks(task_text)
+                        print(task)
+                        self.database.session.add(task)
+                        self.database.session.commit()
+                        print("Task successfully added...")
+
+            except Exception as e:
+                print(traceback.print_exc())
         elif table_ == 'methods':
-            pass
+            try:
+                self.add_method_dialog: qw.QDialog = uic.loadUi('./windows/mainWindows/add_method_dialog_ui.ui')
+                self.add_method_dialog.setWindowTitle("Добавить метод оптимизации")
+
+                self.method: qw.QLineEdit = self.add_method_dialog.findChild(qw.QLineEdit, 'new_method_txt')
+                button = self.add_method_dialog.exec()
+            except Exception:
+                print(traceback.print_exc())
+
+            try:
+                if button == 1:
+                    method_text = self.method.text()
+                    if method_text != ' ':
+                        print("adding...")
+                        method = SolutionMethods(method_text)
+                        self.database.session.add(method)
+                        self.database.session.commit()
+                        print("Method successfully added...")
+
+            except Exception as e:
+                print(traceback.print_exc())
         else:
             return
 
@@ -288,10 +334,10 @@ class AdminWindow(RootEntry):
             print(delete_data)
             id = delete_data[0]
             session = self.database.session
-            row = session.query(User).filter(User.id == id).first()
 
-            print(row)
             if table_ == "users":
+                row = session.query(User).filter(User.id == id).first()
+                print(row)
                 dlg = QMessageBox()
                 dlg.setWindowTitle("Delete user")
                 dlg.setText(f"Are you sure you want to delete the user with id: {id} ?")
@@ -311,7 +357,7 @@ class AdminWindow(RootEntry):
                         try:
                             if max_id is not None:
                                 for i in range(int(id), int(max_id)):
-                                    row = session.query(TableName).filter(TableName.id == i + 1).first()
+                                    row = session.query(User).filter(User.id == i + 1).first()
                                     if row:
                                         row.id = i
                                         session.commit()
@@ -322,6 +368,41 @@ class AdminWindow(RootEntry):
                     users.insert(0, ["id", "Username", "role"])
                     print(users)
                     data_model = TableModel(users)
+
+
+            if table_ == "methods":
+                row = session.query(SolutionMethods).filter(SolutionMethods.id == id).first()
+                print(row)
+                dlg = QMessageBox()
+                dlg.setWindowTitle("Удалить метод?")
+                dlg.setText(f"Are you sure you want to delete method {id} ?")
+                dlg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
+                dlg.setIcon(QMessageBox.Icon.Question)
+                button = dlg.exec()
+
+                if button == QMessageBox.StandardButton.Yes:
+                    if row:
+                        session.delete(row)
+                        session.commit()
+
+                        # Find the maximum id value in the table
+                        max_id = session.query(func.max(SolutionMethods.id)).scalar()
+
+                        # Update the id values of all the rows with id values greater than the deleted row's id
+                        try:
+                            if max_id is not None:
+                                for i in range(int(id), int(max_id)):
+                                    row = session.query(SolutionMethods).filter(SolutionMethods.id == i + 1).first()
+                                    if row:
+                                        row.id = i
+                                        session.commit()
+                        except Exception as e:
+                            print(e)
+
+                    methods = [[method.method] for method in self.database.get_solution_methods()]
+                    methods.insert(0, ["id", "Method"])
+                    print(methods)
+                    data_model = TableModel(methods)
 
         except Exception as e:
             print(e)

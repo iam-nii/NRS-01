@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Исследователь</string>
+   <string>Исследователь - Программный комплекс для решения задачи оптимизации</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="FRAMES">
@@ -169,7 +169,7 @@
       </property>
       <item>
        <property name="text">
-        <string>Метод Бокса</string>
+        <string>Метод решения</string>
        </property>
       </item>
      </widget>
@@ -267,7 +267,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>0.01</string>
+       <string>0.1</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_27">
@@ -655,7 +655,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Расчитать</string>
+       <string>Раcсчитать</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="f_txt">
@@ -669,6 +669,9 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>S * 8</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_74">
@@ -688,6 +691,25 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>F</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="warning_txt">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>640</y>
+        <width>371</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:red</string>
+      </property>
+      <property name="text">
+       <string>Значение не может быть 0 и все поля должные быть заполнены</string>
       </property>
      </widget>
     </widget>
@@ -752,7 +774,7 @@ p, li { white-space: pre-wrap; }
             </font>
            </property>
            <property name="text">
-            <string>Максимальный экстремум</string>
+            <string>Максимальное значение экстремума</string>
            </property>
           </widget>
          </item>
@@ -821,7 +843,7 @@ p, li { white-space: pre-wrap; }
             </font>
            </property>
            <property name="text">
-            <string>Минимальный экстремум</string>
+            <string>Минимальное значение экстремум</string>
            </property>
           </widget>
          </item>
@@ -911,7 +933,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="help_menu">
    <property name="text">
-    <string>Help</string>
+    <string>Справка</string>
    </property>
   </action>
   <action name="exit_menu">
