@@ -7,7 +7,7 @@ import polosin.windows.Login as Login
 from polosin.public.Database_root import Database
 from polosin.public.Tables import *
 import polosin.public.PasswordGen as PasswordGen
-from polosin.public.databases import User, Material, MathModel, ProcessParams
+from polosin.public.databases import User, Material, MathModel
 from polosin.public.Tables import *
 from polosin.public.Encryption import EncDecPass
 
@@ -221,36 +221,36 @@ class Admin(c.CTk):
 
 
 
-        # Process params Edit frame
-        self.process_params_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
-
-        self.process_params_id = c.CTkLabel(self.process_params_edit_frame, fg_color='#D9D9D9', text=' '
-                                            , width=150, text_color='black')
-        self.process_params_id.pack(pady=10, padx=30)
-
-        self.cover_speed = c.CTkEntry(self.process_params_edit_frame, fg_color='#D9D9D9', corner_radius=0,
-                                              border_width=0, border_color='black', placeholder_text='Скорость крышки',
-                                              width=150,
-                                              text_color='black')
-        self.cover_speed.pack(pady=10, padx=30)
-
-        self.cover_temperature = c.CTkEntry(self.process_params_edit_frame, fg_color='#D9D9D9',
-                                                 placeholder_text='Температтура  крышки',
-                                                 corner_radius=0,
-                                                 border_width=0, border_color='black', width=150, text_color='black')
-        self.cover_temperature.pack(pady=10, padx=30)
-
-        # Buttons
-        self.process_params_edit_button = c.CTkButton(self.process_params_edit_frame, width=150, text='ОБНОВИТЬ',
-                                                      fg_color='#238FB1',command=self.on_edit_process_params)
-        self.process_params_delete_button = c.CTkButton(self.process_params_edit_frame, width=150, text='УДАЛИТЬ',
-                                                        fg_color='#FB5757',command=self.on_delete_process_params_click)
-        self.process_params_add_button = c.CTkButton(self.process_params_edit_frame, width=150, text='ДОБАВИТЬ',
-                                                     fg_color='#6CD63C',
-                                                     command=self.process_params_on_add_click)
-        self.process_params_edit_button.pack(pady=10, padx=30)
-        self.process_params_delete_button.pack(pady=10, padx=30)
-        self.process_params_add_button.pack(pady=10, padx=30)
+        # # Process params Edit frame
+        # self.process_params_edit_frame = c.CTkFrame(self, fg_color='#1C414D', width=100)
+        #
+        # self.process_params_id = c.CTkLabel(self.process_params_edit_frame, fg_color='#D9D9D9', text=' '
+        #                                     , width=150, text_color='black')
+        # self.process_params_id.pack(pady=10, padx=30)
+        #
+        # self.cover_speed = c.CTkEntry(self.process_params_edit_frame, fg_color='#D9D9D9', corner_radius=0,
+        #                                       border_width=0, border_color='black', placeholder_text='Скорость крышки',
+        #                                       width=150,
+        #                                       text_color='black')
+        # self.cover_speed.pack(pady=10, padx=30)
+        #
+        # self.cover_temperature = c.CTkEntry(self.process_params_edit_frame, fg_color='#D9D9D9',
+        #                                          placeholder_text='Температтура  крышки',
+        #                                          corner_radius=0,
+        #                                          border_width=0, border_color='black', width=150, text_color='black')
+        # self.cover_temperature.pack(pady=10, padx=30)
+        #
+        # # Buttons
+        # self.process_params_edit_button = c.CTkButton(self.process_params_edit_frame, width=150, text='ОБНОВИТЬ',
+        #                                               fg_color='#238FB1',command=self.on_edit_process_params)
+        # self.process_params_delete_button = c.CTkButton(self.process_params_edit_frame, width=150, text='УДАЛИТЬ',
+        #                                                 fg_color='#FB5757',command=self.on_delete_process_params_click)
+        # self.process_params_add_button = c.CTkButton(self.process_params_edit_frame, width=150, text='ДОБАВИТЬ',
+        #                                              fg_color='#6CD63C',
+        #                                              command=self.process_params_on_add_click)
+        # self.process_params_edit_button.pack(pady=10, padx=30)
+        # self.process_params_delete_button.pack(pady=10, padx=30)
+        # self.process_params_add_button.pack(pady=10, padx=30)
 
         self.success = c.CTkLabel(master=None,text="Таблица успешно обновлена", text_color='green')
 
@@ -262,7 +262,7 @@ class Admin(c.CTk):
                         widget.destroy()
                     # self.chanel_edit_frame.grid_forget()
                     self.material_edit_frame.grid_forget()
-                    self.process_params_edit_frame.grid_forget()
+                    # self.process_params_edit_frame.grid_forget()
                     self.math_model_params_edit_frame.grid_forget()
 
                 except Exception as e:
@@ -305,7 +305,7 @@ class Admin(c.CTk):
                         widget.destroy()
                     # self.chanel_edit_frame.grid_forget()
                     self.user_edit_frame.grid_forget()
-                    self.process_params_edit_frame.grid_forget()
+                    # self.process_params_edit_frame.grid_forget()
                     self.math_model_params_edit_frame.grid_forget()
 
 
@@ -330,7 +330,7 @@ class Admin(c.CTk):
                     # self.chanel_edit_frame.grid_forget()
                     self.user_edit_frame.grid_forget()
                     self.material_edit_frame.grid_forget()
-                    self.process_params_edit_frame.grid_forget()
+                    # self.process_params_edit_frame.grid_forget()
 
                 except Exception as e:
                     print(e)
@@ -344,26 +344,26 @@ class Admin(c.CTk):
 
                     self.math_model_params_edit_frame.grid(row=0, column=0, pady=10, padx=20)
 
-            case 'process_params':
-                try:
-                    for widget in frame.winfo_children():
-                        widget.destroy()
-                    # self.chanel_edit_frame.grid_forget()
-                    self.user_edit_frame.grid_forget()
-                    self.material_edit_frame.grid_forget()
-                    self.math_model_params_edit_frame.grid_forget()
-
-                except Exception as e:
-                    print(e)
-                else:
-                    result = self.database.get_process_params()
-                    table = result[0]
-                    columns = result[1]
-
-                    table = ProcessParams_Table(frame, table, columns)
-                    frame.grid(row=0, column=1, pady=30, columnspan=3)
-
-                    self.process_params_edit_frame.grid(row=0, column=0, pady=10, padx=20)
+            # case 'process_params':
+            #     try:
+            #         for widget in frame.winfo_children():
+            #             widget.destroy()
+            #         # self.chanel_edit_frame.grid_forget()
+            #         self.user_edit_frame.grid_forget()
+            #         self.material_edit_frame.grid_forget()
+            #         self.math_model_params_edit_frame.grid_forget()
+            #
+            #     except Exception as e:
+            #         print(e)
+            #     else:
+            #         result = self.database.get_process_params()
+            #         table = result[0]
+            #         columns = result[1]
+            #
+            #         table = ProcessParams_Table(frame, table, columns)
+            #         frame.grid(row=0, column=1, pady=30, columnspan=3)
+            #
+            #         self.process_params_edit_frame.grid(row=0, column=0, pady=10, padx=20)
 
     # Edit tables
     def on_edit_user_click(self):
@@ -376,7 +376,8 @@ class Admin(c.CTk):
             user_to_update.username = username
             user_to_update.password = EncDecPass().encrypt_password(password)
             self.database.session.commit()
-            self.success.pack(in_=self.user_edit_frame)
+            self.success_user.configure("Обновлен")
+            self.success_user.pack()
         except Exception as e:
             print(e,': on_edit_user_click')
             print(traceback.print_exc())
@@ -389,7 +390,7 @@ class Admin(c.CTk):
             heat_capacity = float(self.material_heat_capacity.get())
             melting_temp = float(self.material_melting_temp.get())
 
-            if density <=0 or heat_capacity <= 0 or melting_temp <= 0:
+            if density <= 0 or heat_capacity <= 0 or melting_temp <= 0:
                 raise Exception("Не может быть 0")
         except Exception as e:
             print(e)
@@ -402,8 +403,10 @@ class Admin(c.CTk):
             material_to_update.melting_tempterature = melting_temp
 
             self.database.session.commit()
+            self.success.configure(text="материал успешно обновлен")
             self.success.pack(in_=self.material_edit_frame)
         except Exception as e:
+            print(traceback.print_exc())
             print(e)
 
     def on_edit_mathModel_click(self):
@@ -436,6 +439,7 @@ class Admin(c.CTk):
                     mathModel_update.material_id = material_id
 
                     self.database.session.commit()
+                    self.success.configure(text="Параметры математической модели успешно обновлены")
                     self.success.pack(in_=self.math_model_params_edit_frame)
                 else:
                     raise Exception(f"Материала с id:{material_id} не существует")
@@ -449,31 +453,31 @@ class Admin(c.CTk):
             self.input_warning.configure(text="Ошибка обновления параметров математической модели")
             self.input_warning.pack(in_=self.math_model_params_edit_frame)
 
-    def on_edit_process_params(self):
-        try:
-            id = int(self.process_params_id.cget('text'))
-            consistency_coeff = float(self.math_model_params_consistency_coeff.get())
-            cover_speed = float(self.cover_speed.get())
-            cover_temp = float(self.cover_temperature.get())
-
-            if cover_speed <= 0 or cover_temp <= 0:
-                raise Exception("Не может быть 0")
-
-        except Exception as e:
-            print(e)
-            self.input_warning.configure(master=self.math_model_params_edit_frame)
-        try:
-            # material_to_update = self.database.session.query(Material).filter(Material.id == id).first()
-
-            process_params_update = self.database.session.query(ProcessParams).filter(ProcessParams.id == id).first()
-            process_params_update.cover_speed = cover_speed
-            process_params_update.cover_temperature = cover_temp
-            self.database.session.commit()
-            self.success.pack(in_=self.process_params_edit_frame)
-        except Exception as e:
-            print(e)
-            self.input_warning.configure(text="Ошибка обновления параметров процесса")
-            self.input_warning.pack(in_=self.process_params_edit_frame)
+    # def on_edit_process_params(self):
+    #     try:
+    #         id = int(self.process_params_id.cget('text'))
+    #         consistency_coeff = float(self.math_model_params_consistency_coeff.get())
+    #         cover_speed = float(self.cover_speed.get())
+    #         cover_temp = float(self.cover_temperature.get())
+    #
+    #         if cover_speed <= 0 or cover_temp <= 0:
+    #             raise Exception("Не может быть 0")
+    #
+    #     except Exception as e:
+    #         print(e)
+    #         self.input_warning.configure(master=self.math_model_params_edit_frame)
+    #     try:
+    #         # material_to_update = self.database.session.query(Material).filter(Material.id == id).first()
+    #
+    #         process_params_update = self.database.session.query(ProcessParams).filter(ProcessParams.id == id).first()
+    #         process_params_update.cover_speed = cover_speed
+    #         process_params_update.cover_temperature = cover_temp
+    #         self.database.session.commit()
+    #         self.success.pack(in_=self.process_params_edit_frame)
+    #     except Exception as e:
+    #         print(e)
+    #         self.input_warning.configure(text="Ошибка обновления параметров процесса")
+    #         self.input_warning.pack(in_=self.process_params_edit_frame)
 
     # Deleting records from tables
     def on_delete_user_click(self):
@@ -492,12 +496,17 @@ class Admin(c.CTk):
         id = int(self.material_id.cget('text'))
         try:
             delete_material = self.database.session.query(Material).filter(Material.id == id).first()
+            try:
+                delete_mathModel = self.database.session.query(MathModel).filter(MathModel.material_id == id).first()
+                self.database.session.delete(delete_mathModel)
+            except:
+                print(traceback.print_exc())
             self.database.session.delete(delete_material)
             self.database.session.commit()
             self.success.configure(text="Материал успешно удален")
             self.success.pack(in_=self.material_edit_frame)
         except Exception as e:
-            print(e)
+            print(traceback.print_exc())
             self.input_warning.configure(text="Ошибка удаления материала")
             self.input_warning.pack(in_=self.material_edit_frame)
     def on_delete_mathModel_click(self):
@@ -512,18 +521,18 @@ class Admin(c.CTk):
             print(e)
             self.input_warning.configure(text="Ошибка удаления параметров математической модели")
             self.input_warning.pack(in_=self.math_model_params_edit_frame)
-    def on_delete_process_params_click(self):
-        id = int(self.process_params_id.cget('text'))
-        try:
-            delete_process_params = self.database.session.query(ProcessParams).filter(ProcessParams.id == id).first()
-            self.database.session.delete(delete_process_params)
-            self.database.session.commit()
-            self.success.configure(text="Параметры процесса успешно удалены")
-            self.success.pack(in_=self.process_params_edit_frame)
-        except Exception as e:
-            print(e)
-            self.input_warning.configure(text="Ошибка удаления параметров процесса")
-            self.input_warning.pack(in_=self.process_params_edit_frame)
+    # def on_delete_process_params_click(self):
+    #     id = int(self.process_params_id.cget('text'))
+    #     try:
+    #         delete_process_params = self.database.session.query(ProcessParams).filter(ProcessParams.id == id).first()
+    #         self.database.session.delete(delete_process_params)
+    #         self.database.session.commit()
+    #         self.success.configure(text="Параметры процесса успешно удалены")
+    #         self.success.pack(in_=self.process_params_edit_frame)
+    #     except Exception as e:
+    #         print(e)
+    #         self.input_warning.configure(text="Ошибка удаления параметров процесса")
+    #         self.input_warning.pack(in_=self.process_params_edit_frame)
 
     # Adding data to the database
     def user_on_add_click(self):
@@ -551,10 +560,10 @@ class Admin(c.CTk):
         self.new_add_button = c.CTkButton(master=self.add_user_window, text='ДОБАВИТЬ', fg_color='#6CD63C', command=self.on_new_user_add_click)
 
         # Warning
-        self.warning = c.CTkLabel(master=self.add_user_window,text='Ошибка добавления нового пользователя',text_color='red')
+        self.warning_user = c.CTkLabel(master=self.add_user_window,text='Ошибка добавления нового пользователя',text_color='red')
 
         # Success
-        self.success = c.CTkLabel(master=self.add_user_window,text='Пользователь успешно добавлен',text_color='green')
+        self.success_user = c.CTkLabel(master=self.add_user_window,text='Пользователь успешно добавлен',text_color='green')
         # self.success.pack(pady=10)
         # self.success.pack_forget()
 
@@ -597,10 +606,10 @@ class Admin(c.CTk):
                                           command=self.on_new_mathModel_add_click)
 
         # Warning
-        self.warning = c.CTkLabel(master=self.add_mathModel_window, text='Ошибка добавления новой математической модели', text_color='red')
+        self.warning_mathModel = c.CTkLabel(master=self.add_mathModel_window, text='Ошибка добавления новой математической модели', text_color='red')
 
         # Success
-        self.success = c.CTkLabel(master=self.add_mathModel_window, text='Математическая модель успешно добавлена',
+        self.success_mathModel = c.CTkLabel(master=self.add_mathModel_window, text='Математическая модель успешно добавлена',
                                   text_color='green')
         # self.success.pack(pady=10)
         # self.success.pack_forget()
@@ -639,10 +648,10 @@ class Admin(c.CTk):
                                           command=self.on_new_material_add_click)
 
         # Warning
-        self.warning = c.CTkLabel(master=self.add_material_window, text='Ошибка добавления нового материала', text_color='red')
+        self.warning_material = c.CTkLabel(master=self.add_material_window, text='Ошибка добавления нового материала', text_color='red')
 
         # Success
-        self.success = c.CTkLabel(master=self.add_material_window, text='Материал успешно добавлен', text_color='green')
+        self.success_material = c.CTkLabel(master=self.add_material_window, text='Материал успешно добавлен', text_color='green')
         # self.success.pack(pady=10)
         # self.success.pack_forget()
 
@@ -654,37 +663,37 @@ class Admin(c.CTk):
         self.new_add_button.pack(pady=10)
 
         self.math_model_params_on_add_click()
-    def process_params_on_add_click(self):
-        # Top level window
-        self.add_process_params_window = c.CTkToplevel(self, fg_color="#232E33")
-        self.add_process_params_window.geometry('450x250')
-        self.add_process_params_window.title('Добавить новые параметры процесса')
-        self.add_process_params_window.resizable(False, False)
-        self.add_process_params_window.attributes('-topmost', 'true')
-
-        # Материал
-        self.new_cover_speed = c.CTkEntry(master=self.add_process_params_window, placeholder_text='Скорость крышки', width=250)
-
-        # Плотность
-        self.new_cover_temperature = c.CTkEntry(master=self.add_process_params_window, placeholder_text='Температура крышки', width=250)
-
-        # Add button
-        self.new_add_button = c.CTkButton(master=self.add_process_params_window, text='ДОБАВИТЬ', fg_color='#6CD63C',
-                                          command=self.on_new_process_params_add_click)
-
-        # Warning
-        self.warning = c.CTkLabel(master=self.add_process_params_window, text='Добавить новые параметры процесса', text_color='red')
-
-        # Success
-        self.success = c.CTkLabel(master=self.add_process_params_window, text='Параметры процесса успешно добавлены',
-                                  text_color='green')
-        # self.success.pack(pady=10)
-        # self.success.pack_forget()
-
-        # Pack elements
-        self.new_cover_speed.pack(pady=10)
-        self.new_cover_temperature.pack(pady=10)
-        self.new_add_button.pack(pady=10)
+    # def process_params_on_add_click(self):
+    #     # Top level window
+    #     self.add_process_params_window = c.CTkToplevel(self, fg_color="#232E33")
+    #     self.add_process_params_window.geometry('450x250')
+    #     self.add_process_params_window.title('Добавить новые параметры процесса')
+    #     self.add_process_params_window.resizable(False, False)
+    #     self.add_process_params_window.attributes('-topmost', 'true')
+    #
+    #     # Материал
+    #     self.new_cover_speed = c.CTkEntry(master=self.add_process_params_window, placeholder_text='Скорость крышки', width=250)
+    #
+    #     # Плотность
+    #     self.new_cover_temperature = c.CTkEntry(master=self.add_process_params_window, placeholder_text='Температура крышки', width=250)
+    #
+    #     # Add button
+    #     self.new_add_button = c.CTkButton(master=self.add_process_params_window, text='ДОБАВИТЬ', fg_color='#6CD63C',
+    #                                       command=self.on_new_process_params_add_click)
+    #
+    #     # Warning
+    #     self.warning = c.CTkLabel(master=self.add_process_params_window, text='Добавить новые параметры процесса', text_color='red')
+    #
+    #     # Success
+    #     self.success = c.CTkLabel(master=self.add_process_params_window, text='Параметры процесса успешно добавлены',
+    #                               text_color='green')
+    #     # self.success.pack(pady=10)
+    #     # self.success.pack_forget()
+    #
+    #     # Pack elements
+    #     self.new_cover_speed.pack(pady=10)
+    #     self.new_cover_temperature.pack(pady=10)
+    #     self.new_add_button.pack(pady=10)
 
 
     def on_new_user_add_click(self):
@@ -698,22 +707,25 @@ class Admin(c.CTk):
             self.database.session.add(user)
             self.database.session.commit()
             print('Пользователь добавлен успешно...')
-            self.success.pack()
+            self.success_user.pack()
 
         except Exception:
             print(Exception)
-            self.warning.pack()
+            self.warning_user.pack()
+            print(traceback.print_exc())
     def on_new_material_add_click(self):
         try:
             material = self.new_material.get()
             density = float(self.new_density.get())
             heat_capacity = float(self.new_heat_capacity.get())
             melting_temp = float(self.new_melting_temp.get())
-            if density or heat_capacity or melting_temp <=0:
+            if density <=0 or heat_capacity <=0 or melting_temp <=0:
                 raise Exception("Не может быть 0")
         except Exception as e:
             print(e)
-            self.warning.configure(text="Вводимое число должно быть больше 0")
+            self.warning_material.configure(text="Вводимое число должно быть больше 0")
+            self.warning_material.pack()
+            print(traceback.print_exc())
         print((material, density, heat_capacity,melting_temp))
 
         material = Material(material,density,heat_capacity,melting_temp)
@@ -722,12 +734,14 @@ class Admin(c.CTk):
             self.database.session.add(material)
             self.database.session.commit()
             print('Material successfully added...')
-            self.success.pack()
+            self.success_material.configure(text='Материал успешно добавлен')
+            self.success_material.pack()
             # self.add_user_window.after(200,self.success.pack_forget())
 
         except Exception:
             print(Exception)
-            self.warning.pack()
+            self.warning_material.pack()
+            print(traceback.print_exc())
             # self.add_user_window.after(1000, self.warning.destroy())
     def on_new_mathModel_add_click(self):
         try:
@@ -742,8 +756,9 @@ class Admin(c.CTk):
                 raise Exception("Cannot be zero")
         except Exception as e:
 
-            self.warning.configure(text="Вводимое число должно быть больше 0")
-            self.success.pack_forget()
+            self.warning_mathModel.configure(text="Вводимое число должно быть больше 0")
+            print(traceback.print_exc())
+            self.success_mathModel.pack_forget()
             print(e)
         # print((consistency_coeff, temp_visc_coeff, casting_temp, flow_index, cover_heat_transfer_coeff,material_id))
 
@@ -757,45 +772,50 @@ class Admin(c.CTk):
                 self.database.session.add(math_model)
                 self.database.session.commit()
                 print('Math Model successfully added...')
-                self.success.pack()
+                self.success_mathModel.pack()
+                try:
+                    self.self.warning_mathModel.pack_forget()
+                except:
+                    print(traceback.print_exc())
             else:
-                self.success.pack_forget()
-                self.warning.configure(text="Не существует материал с таким id")
-                self.warning.pack()
+                self.success_mathModel.pack_forget()
+                self.warning_mathModel.configure(text="Не существует материал с таким id")
+                self.warning_mathModel.pack(in_=self.math_model_params_edit_frame)
             # self.add_user_window.after(200,self.success.pack_forget())
 
         except Exception as e:
             print(traceback.print_exc())
-            self.warning.pack()
+            self.warning_mathModel.pack()
+            print(traceback.print_exc())
             # self.add_user_window.after(1000, self.warning.destroy())
-    def on_new_process_params_add_click(self):
-        try:
-            cover_speed = float(self.new_cover_speed.get())
-            cover_temp = float(self.new_cover_temperature.get())
-            print(cover_speed <=0)
-            print(cover_temp <=0)
-            if cover_temp <= 0 or cover_speed <= 0:
-                raise Exception("Cannot be zero")
-        except Exception as e:
-            self.warning.configure(text="Вводимое число должно быть больше 0")
-            self.warning.pack()
-            print(e)
-            return
-        # print((consistency_coeff, temp_visc_coeff, casting_temp, flow_index, cover_heat_transfer_coeff,material_id))
-
-        process_params = ProcessParams(cover_speed,cover_temp)
-        print(process_params)
-        try:
-            self.database.session.add(process_params)
-            self.database.session.commit()
-            print('Process params successfully added...')
-            self.success.pack()
-            # self.add_user_window.after(200,self.success.pack_forget())
-
-        except Exception:
-            print(Exception)
-            self.warning.pack()
-            # self.add_user_window.after(1000, self.warning.destroy())
+    # def on_new_process_params_add_click(self):
+    #     try:
+    #         cover_speed = float(self.new_cover_speed.get())
+    #         cover_temp = float(self.new_cover_temperature.get())
+    #         print(cover_speed <=0)
+    #         print(cover_temp <=0)
+    #         if cover_temp <= 0 or cover_speed <= 0:
+    #             raise Exception("Cannot be zero")
+    #     except Exception as e:
+    #         self.warning.configure(text="Вводимое число должно быть больше 0")
+    #         self.warning.pack()
+    #         print(e)
+    #         return
+    #     # print((consistency_coeff, temp_visc_coeff, casting_temp, flow_index, cover_heat_transfer_coeff,material_id))
+    #
+    #     process_params = ProcessParams(cover_speed,cover_temp)
+    #     print(process_params)
+    #     try:
+    #         self.database.session.add(process_params)
+    #         self.database.session.commit()
+    #         print('Process params successfully added...')
+    #         self.success.pack()
+    #         # self.add_user_window.after(200,self.success.pack_forget())
+    #
+    #     except Exception:
+    #         print(Exception)
+    #         self.warning.pack()
+    #         # self.add_user_window.after(1000, self.warning.destroy())
 
 
     def change_user_click(self):

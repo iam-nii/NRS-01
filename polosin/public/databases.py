@@ -59,19 +59,19 @@ class Material(Base):
         return f"({self.material}) {self.density} {self.heat_capacity} {self.melting_temperature}"
 
 
-class ProcessParams(Base):
-    __tablename__ = 'process_params'
-
-    id = Column('id', Integer, primary_key=True, autoincrement=True)
-    cover_speed = Column('cover_speed', Float)
-    cover_temperature = Column('cover_temperature', Float)
-
-    def __init__(self, cover_speed, cover_temperature):
-        self.cover_speed = cover_speed
-        self.cover_temperature = cover_temperature
-
-    def __repr__(self):
-        return f"({self.cover_speed}) {self.cover_temperature}"
+# class ProcessParams(Base):
+#     __tablename__ = 'process_params'
+#
+#     id = Column('id', Integer, primary_key=True, autoincrement=True)
+#     cover_speed = Column('cover_speed', Float)
+#     cover_temperature = Column('cover_temperature', Float)
+#
+#     def __init__(self, cover_speed, cover_temperature):
+#         self.cover_speed = cover_speed
+#         self.cover_temperature = cover_temperature
+#
+#     def __repr__(self):
+#         return f"({self.cover_speed}) {self.cover_temperature}"
 
 
 class MathModel(Base):

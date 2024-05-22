@@ -1,5 +1,4 @@
 import customtkinter as c
-from polosin.public.databases import User,Material,ProcessParams,MathModel
 
 
 class App(c.CTk):

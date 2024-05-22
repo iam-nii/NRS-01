@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import reflection
 from customtkinter import CTkLabel
-from polosin.public.databases import User,Material,MathModel,ProcessParams,Base
+from polosin.public.databases import User,Material,MathModel,Base
 import shutil
 import os
 import time
@@ -63,12 +63,12 @@ class Database:
             math_modules = self.session.query(MathModel).all()
         return [math_modules,5]
 
-    def get_process_params(self,id=None):
-        if id is not None:
-            process_params = self.session.query(ProcessParams).filter(ProcessParams.id == id).first()
-        else:
-                process_params = self.session.query(ProcessParams).all()
-        return [process_params,2]
+    # def get_process_params(self,id=None):
+    #     if id is not None:
+    #         process_params = self.session.query(ProcessParams).filter(ProcessParams.id == id).first()
+    #     else:
+    #             process_params = self.session.query(ProcessParams).all()
+    #     return [process_params,2]
 
     def get_tables(self):
         insp = reflection.Inspector.from_engine(self.engine)

@@ -207,15 +207,23 @@ class UserWin(c.CTk):
         # DATA['depth'] = chanel_params.depth
         # DATA['length'] = chanel_params.length
 
+
         # Math Model parameters
         math_model_params = self.database.get_math_module(id)[0]
         print(f"math model: {math_model_params}")
         try:
-            DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
-            DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
-            DATA['casting_temperature'] = math_model_params.casting_temperature
-            DATA['flow_index'] = math_model_params.flow_index
-            DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
+            if math_model_params is None:
+                DATA['consistency_coefficient'] = 0
+                DATA['temp_viscosity_coefficient'] = 0
+                DATA['casting_temperature'] = 0
+                DATA['flow_index'] = 0
+                DATA['cover_heat_transfer_coefficient'] = 0
+            else:
+                DATA['consistency_coefficient'] = math_model_params.consistency_coefficient
+                DATA['temp_viscosity_coefficient'] = math_model_params.temp_viscosity_coefficient
+                DATA['casting_temperature'] = math_model_params.casting_temperature
+                DATA['flow_index'] = math_model_params.flow_index
+                DATA['cover_heat_transfer_coefficient'] = math_model_params.cover_heat_transfer_coefficient
         except Exception:
             print(traceback.print_exc())
 

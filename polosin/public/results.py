@@ -6,29 +6,33 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 class Results:
     def __init__(self,root):
         self.root = root
+        self.table = None
 
-        self.table = c.CTkScrollableFrame(master=self.root,width=700,height=500)
+        self.results_frame = c.CTkFrame(self.root, fg_color='white')
+        self.measurement_frame = c.CTkFrame(self.root, fg_color='white')
 
-        self.results_frame = c.CTkFrame(self.root,fg_color='white')
-        self.measurement_frame = c.CTkFrame(self.root,fg_color='white')
-
-        self.results = c.CTkTextbox(self.results_frame,width=300,height=90,fg_color='white',text_color='black')
-        self.measurement = c.CTkTextbox(self.measurement_frame,width=300,height=90,fg_color='white',text_color='black')
+        self.results = c.CTkTextbox(self.results_frame, width=300, height=90, fg_color='white', text_color='black')
+        self.measurement = c.CTkTextbox(self.measurement_frame, width=300, height=90, fg_color='white',
+                                        text_color='black')
         self.canvas = None
         self.ax = None
         self.fig = None
 
     def update_results(self):
+
         try:
-            self.table.grid_forget()
+            # self.table.grid_forget()
+            if self.table != None:
+                self.table = None
+            else:
+                self.table = c.CTkScrollableFrame(master=self.root, width=700, height=500)
             self.results.grid_forget()
         except Exception as e:
             print(e)
         else:
-            self.table = c.CTkScrollableFrame(master=self.root, width=700, height=500)
+            # self.table = c.CTkScrollableFrame(master=self.root, width=700, height=500)
             self.results = c.CTkTextbox(self.results_frame, width=300, height=120, fg_color='white', text_color='black')
             print("New table")
-
     def create_result_table(self,temperatures:list,viscosities:list,coordinates:list,prod_temp_visc):
         self.update_results()
         # code for creating table
